@@ -10,7 +10,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 
 const Navbar = () => {
   return (
-    <nav className="h-16 flex items-center justify-between px-10  bg-[#3d5da3]">
+    <nav className="h-16 flex items-center justify-between px-10  bg-[#25537e]">
       {/* Name / Brand */}
       <h1 className="text-lg font-semibold text-white">
         Rajashekar Mudigonda 
