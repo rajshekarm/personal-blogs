@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 // npm install lucide-react
 import { ArrowDown } from "lucide-react" 
 
+
+
 const About = () => {
   return (
     // Changed main to min-h-screen and flex-col to allow scrolling
@@ -134,5 +136,7 @@ const About = () => {
     </main>
   )
 }
+
+
 
 export default About
