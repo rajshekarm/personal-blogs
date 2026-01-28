@@ -86,10 +86,9 @@ const About = () => {
               Hi, I'm Rajashekar.
             </h1>
 
-            <p className="text-base text-gray-700 leading-relaxed mb-10">
-              I am a Master’s graduate in Computer Science from Illinois Tech, Chicago, 
-              and a Backend Engineer passionate about distributed systems.
-              Currently, I’m building backend AI infrastructure at Fashion AI using Python, FastAPI, and React on AWS cloud.
+             <p className="text-base text-gray-700 leading-relaxed mb-10">
+              I am a Software Engineer with experience in designing and developing appkications for trading systems. I have recently finished my Master’s degree in Computer Science from Illinois Instiute of Technology Tech, Chicago, 
+              and Currently, working as backend developer intern at fashion ecommerce. Working on Generative application developing features and learning the Gen AI trend.
             </p>
 
             <div className="flex gap-4">
