@@ -3,6 +3,62 @@ import type { Blog } from "../types/blog"
 export const blogs: Blog[] = [
 
 
+{
+  slug: "ai-assistant-vs-ai-agent",
+  title: "AI Assistant vs AI Agent",
+  description: "A simple way to understand reactive assistants and autonomous agents",
+  content: `
+# AI Assistant vs AI Agent
+
+As AI systems become part of everyday software, two terms appear again and again: AI Assistant and AI Agent. They sound similar, but they represent very different ways of designing intelligence inside a system.
+
+Understanding this distinction is important, especially if you are building or evaluating AI-powered products.
+
+## AI Assistant
+
+An AI Assistant is fundamentally reactive.
+
+It exists to respond to user input. The assistant waits, receives a prompt, produces an answer, and stops. It does not decide what to do next, and it does not act unless explicitly asked.
+
+Most chat-based AI tools today fall into this category. They are extremely capable at reasoning, explaining, and generating content, but they remain under direct human control at all times.
+
+In simple terms, the human thinks and decides. The assistant helps.
+
+## AI Agent
+
+An AI Agent is designed around a goal rather than a prompt.
+
+Instead of waiting for step-by-step instructions, an agent is given an objective and the freedom to determine how to achieve it. It can plan a sequence of actions, use tools, observe outcomes, and adjust its behavior over time.
+
+An agent does not stop after a single response. It operates in a loop, continuously moving closer to its goal unless constrained by rules or boundaries.
+
+In this model, the human sets direction. The agent executes.
+
+## Why the Difference Matters
+
+The difference between assistants and agents is not just academic. It changes how systems behave in production.
+
+Assistants are predictable and easy to control. Agents are powerful but introduce new challenges around reliability, safety, and monitoring. Choosing between them is a system design decision, not just an AI capability choice.
+
+As software moves toward automation and autonomy, more systems will shift from assistant-like behavior to agent-like behavior.
+
+## A Simple Way to Think About It
+
+If the AI always waits for your next instruction, it is acting as an assistant.
+
+If the AI decides what should happen next in order to reach a goal, it is acting as an agent.
+
+## Closing Thoughts
+
+AI Assistants help humans think better.
+
+AI Agents help systems act on their own.
+
+Knowing which one you are designing, using, or deploying is essential when building modern AI-driven systems.
+  `,
+  Url: ""
+},
+  
    {
     slug: "hierarchical-permissions-tree",
     title: "Beyond RBAC: Building a Recursive Entitlement Engine for Buy-Side SaaS",
@@ -41,10 +97,5 @@ that scale horizontally and handle failures gracefully.
     `,
     Url:""
   },
-
-
-  
-
-
   
 ]
