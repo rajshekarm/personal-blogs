@@ -105,7 +105,7 @@ const Resume = () => {
               Aug 2020 – Jul 2023
             </p>
             <h3 className="font-semibold">
-              Software Engineer II · SS&C Eze
+              Software Engineer II · JP Morgan
             </h3>
             <p className="text-gray-500 text-sm mb-3">
               Hyderabad, India

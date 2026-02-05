@@ -1,36 +1,51 @@
+import { useEffect, useState } from "react"
+import { fetchBlogs } from "../api/blog"
+import type { Blog } from "../types/blog"
 import { Link } from "react-router-dom"
-import { blogs } from "../data/blogs"
 
 const Blogs = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchBlogs()
+      .then(setBlogs)
+      .catch((err) => {
+        console.error("Failed to fetch blogs", err)
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) {
+    return <div className="p-20">Loading blogs...</div>
+  }
+
+  if (blogs.length === 0) {
+    return (
+      <div className="max-w-5xl mx-auto px-6 py-20">
+        <h1 className="text-4xl font-bold mb-10">Blogs</h1>
+        <p className="text-gray-500">No blogs found.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-20">
       <h1 className="text-4xl font-bold mb-10">Blogs</h1>
 
       <div className="space-y-6">
         {blogs.map((blog) => {
-          const isExternal = !!blog.Url
+          const isExternal = !!blog.external_url
 
           const Card = (
             <div className="block p-6 border rounded-lg hover:bg-gray-50 transition group">
               <div className="flex justify-between items-start">
-                <h2 className="text-2xl font-semibold group-hover:text-blue-600 transition-colors">
+                <h2 className="text-2xl font-semibold group-hover:text-blue-600">
                   {blog.title}
                 </h2>
 
                 {isExternal && (
-                  <svg
-                    className="w-5 h-5 text-gray-400 group-hover:text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  <span className="text-xs text-gray-400">Medium ↗</span>
                 )}
               </div>
 
@@ -47,7 +62,7 @@ const Blogs = () => {
           return isExternal ? (
             <a
               key={blog.slug}
-              href={blog.Url}
+              href={blog.external_url}
               target="_blank"
               rel="noopener noreferrer"
             >

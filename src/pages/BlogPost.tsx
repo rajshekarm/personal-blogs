@@ -1,23 +1,32 @@
-import { useParams, Navigate } from "react-router-dom"
-import { blogs } from "../data/blogs"
+import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
 import ReactMarkdown from "react-markdown"
+import { fetchBlog } from "../api/blog"
+import type { Blog } from "../types/blog"
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
-  const blog = blogs.find(b => b.slug === slug)
+  const [blog, setBlog] = useState<Blog | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  if (!blog) {
-    return (
-      <div className="max-w-3xl mx-auto px-6 py-20">
-        <h1 className="text-3xl font-bold">404</h1>
-        <p className="text-gray-600 mt-4">Blog not found.</p>
-      </div>
-    )
+  useEffect(() => {
+    if (!slug) return
+
+    fetchBlog(slug)
+      .then(setBlog)
+      .finally(() => setLoading(false))
+  }, [slug])
+
+  if (loading) {
+    return <div className="p-20">Loading...</div>
   }
 
-  // 🔑 External blog → redirect
-  if (blog.Url) {
-    window.location.href = blog.Url
+  if (!blog) {
+    return <div className="p-20">Blog not found</div>
+  }
+
+  if (blog.external_url) {
+    window.location.href = blog.external_url
     return null
   }
 
@@ -29,7 +38,7 @@ const BlogPost = () => {
 
       <article className="prose prose-lg max-w-none leading-relaxed">
         <ReactMarkdown>
-          {blog.content}
+          {blog.content ?? ""}
         </ReactMarkdown>
       </article>
     </div>

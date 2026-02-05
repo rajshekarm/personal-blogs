@@ -87,11 +87,14 @@ const About = () => {
             </h1>
 
              <p className="text-base text-gray-700 leading-relaxed mb-4">
-                I worked as a Software Engineer on the EMS team at Eze Software, where I built and optimized high-performance trading systems capable of processing massive order volumes with ultra-low latency. My core strengths include distributed systems, streaming pipelines, and API design.
+                I worked as a Software Engineer, where I built and optimized high-performance trading systems capable of processing massive order volumes with ultra-low latency. My core strengths include distributed systems, streaming pipelines, and API design.
               </p>
 
               <p className="text-base text-gray-700 leading-relaxed mb-10">
-                I recently completed my Master’s degree in Computer Science from Illinois Institute of Technology, Chicago. Currently, I’m a Backend Developer Intern in the fashion e-commerce industry, building scalable backend services and developing features for Generative AI–driven applications.
+                I recently completed my Master’s degree in Computer Science from Illinois Institute of Technology, Chicago. 
+                <br></br>
+                I enjoy exploring complex technical problems and break them down into simple, reliable solutions. I value continuous learning and thrive on problem-solving, whether that's diving into Parallel Computing (GPU Programming) or  Nueral Networks.
+                
               </p>
 
 
