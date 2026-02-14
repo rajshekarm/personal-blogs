@@ -26,6 +26,8 @@ const BlogPost = () => {
   const [error, setError] = useState<string | null>(null)
   const [previewMode, setPreviewMode] = useState(false)
   const [showSections, setShowSections] = useState(true)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showNewSectionForm, setShowNewSectionForm] = useState(false)
   const [formState, setFormState] = useState<BlogEditFormState>({
     title: "",
     subheader: "",
@@ -36,8 +38,14 @@ const BlogPost = () => {
     status: "draft",
     tags: "",
   })
-  const [pendingFocusSectionId, setPendingFocusSectionId] = useState<string | null>(null)
-  const sectionTitleInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const [newSectionDraft, setNewSectionDraft] = useState<BlogSection>({
+    id: "",
+    title: "",
+    level: 2,
+    content: "",
+    children: [],
+  })
+  const newSectionTitleRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (!slug) return
@@ -69,6 +77,7 @@ const BlogPost = () => {
   const startEdit = () => {
     setError(null)
     setEditing(true)
+    setShowNewSectionForm(false)
   }
 
   const cancelEdit = () => {
@@ -78,6 +87,7 @@ const BlogPost = () => {
 
     setError(null)
     setEditing(false)
+    setShowNewSectionForm(false)
     setFormState({
       title: blog.title,
       subheader: blog.subheader ?? "",
@@ -87,6 +97,13 @@ const BlogPost = () => {
       external_url: blog.external_url ?? "",
       status: blog.status,
       tags: blog.tags?.join(", ") ?? "",
+    })
+    setNewSectionDraft({
+      id: "",
+      title: "",
+      level: 2,
+      content: "",
+      children: [],
     })
   }
 
@@ -158,58 +175,52 @@ const BlogPost = () => {
   const handleAddSection = () => {
     setError(null)
     setShowSections(true)
+    setShowNewSectionForm(true)
+    setTimeout(() => {
+      newSectionTitleRef.current?.focus()
+    }, 0)
+  }
 
-    const newSection: BlogSection = {
+  const updateNewSection = <K extends keyof BlogSection>(
+    key: K,
+    value: BlogSection[K]
+  ) => {
+    setNewSectionDraft((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const appendNewSection = () => {
+    if (!newSectionDraft.title.trim()) {
+      setError("New section subtitle is required.")
+      return
+    }
+
+    const sectionToAdd: BlogSection = {
       id: `section-${Date.now()}`,
+      title: newSectionDraft.title.trim(),
+      level: newSectionDraft.level,
+      content: newSectionDraft.content?.trim() ?? "",
+      children: [],
+    }
+
+    setFormState((prev) => {
+      const next = [...prev.sections, sectionToAdd]
+      return { ...prev, sections: next }
+    })
+    setNewSectionDraft({
+      id: "",
       title: "",
       level: 2,
       content: "",
       children: [],
-    }
-
-    const nextSections = [...formState.sections, newSection]
-    setFormState((prev) => ({
-      ...prev,
-      sections: nextSections,
-    }))
-    setPendingFocusSectionId(newSection.id)
-  }
-
-  const updateSection = <K extends keyof BlogSection>(
-    index: number,
-    key: K,
-    value: BlogSection[K]
-  ) => {
-    setFormState((prev) => {
-      const next = [...prev.sections]
-      next[index] = { ...next[index], [key]: value }
-      return { ...prev, sections: next }
     })
-  }
-
-  const removeSection = (index: number) => {
-    setFormState((prev) => {
-      const next = prev.sections.filter((_, i) => i !== index)
-      return { ...prev, sections: next }
-    })
+    setShowNewSectionForm(false)
+    setError(null)
   }
 
   const autoResizeTextarea = (element: HTMLTextAreaElement) => {
     element.style.height = "auto"
     element.style.height = `${element.scrollHeight}px`
   }
-
-  useEffect(() => {
-    if (!pendingFocusSectionId) {
-      return
-    }
-
-    const input = sectionTitleInputRefs.current[pendingFocusSectionId]
-    if (input) {
-      input.focus()
-      setPendingFocusSectionId(null)
-    }
-  }, [formState.sections, pendingFocusSectionId])
 
   useEffect(() => {
     if (!editing) {
@@ -351,6 +362,13 @@ const BlogPost = () => {
               <button
                 type="button"
                 className="px-4 py-2 border rounded-md text-sm"
+                onClick={() => setShowAdvanced((prev) => !prev)}
+              >
+                {showAdvanced ? "Hide Advanced" : "Advanced"}
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 border rounded-md text-sm"
                 onClick={() => setPreviewMode((prev) => !prev)}
               >
                 {previewMode ? "Hide Preview" : "Preview Content"}
@@ -378,13 +396,6 @@ const BlogPost = () => {
                 placeholder="description"
                 rows={2}
               />
-              <textarea
-                className="rounded-md p-2 min-h-56 bg-white/80"
-                value={formState.content}
-                onChange={(event) => updateField("content", event.target.value)}
-                placeholder="markdown content"
-                rows={10}
-              />
               {showSections && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
@@ -398,43 +409,15 @@ const BlogPost = () => {
                         <div key={section.id} className="grid gap-2 py-3 border-b border-gray-200/70 last:border-b-0">
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-xs text-gray-500">Subtitle {index + 1}</span>
-                            <div className="flex items-center gap-2">
-                              <select
-                                className="rounded-md p-1 text-xs bg-white/80"
-                                value={section.level}
-                                onChange={(event) =>
-                                  updateSection(index, "level", Number(event.target.value) as 1 | 2 | 3)
-                                }
-                              >
-                                <option value={1}>Level 1</option>
-                                <option value={2}>Level 2</option>
-                                <option value={3}>Level 3</option>
-                              </select>
-                              <button
-                                type="button"
-                                className="px-2 py-1 text-xs rounded-md text-red-600 bg-red-50"
-                                onClick={() => removeSection(index)}
-                              >
-                                Remove
-                              </button>
-                            </div>
+                            <span className="text-xs px-2 py-1 rounded bg-gray-100">Level {section.level}</span>
                           </div>
-                          <p className="text-xs text-gray-500">Type subtitle name and content for this section.</p>
-                          <input
-                            className="rounded-md p-2 bg-white/80"
-                            value={section.title}
-                            onChange={(event) => updateSection(index, "title", event.target.value)}
-                            placeholder="Enter subtitle name"
-                            ref={(element) => {
-                              sectionTitleInputRefs.current[section.id] = element
-                            }}
-                          />
+                          <p className="text-xs text-gray-500">Existing section (read-only during add).</p>
+                          <p className="rounded-md p-2 bg-white/60">{section.title}</p>
                           <textarea
                             id={`edit-section-content-${section.id}`}
                             className="rounded-md p-2 bg-white/80 overflow-hidden resize-none"
                             value={section.content ?? ""}
-                            onChange={(event) => updateSection(index, "content", event.target.value)}
-                            onInput={(event) => autoResizeTextarea(event.currentTarget)}
+                            readOnly
                             placeholder="section content"
                             rows={3}
                           />
@@ -442,28 +425,90 @@ const BlogPost = () => {
                       ))}
                     </div>
                   )}
+                  {showNewSectionForm && (
+                    <div className="grid gap-2 py-3 border-b border-gray-200/70">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs text-gray-500">New Section</span>
+                        <div className="flex items-center gap-2">
+                          <select
+                            className="rounded-md p-1 text-xs bg-white/80"
+                            value={newSectionDraft.level}
+                            onChange={(event) =>
+                              updateNewSection("level", Number(event.target.value) as 1 | 2 | 3)
+                            }
+                          >
+                            <option value={1}>Level 1</option>
+                            <option value={2}>Level 2</option>
+                            <option value={3}>Level 3</option>
+                          </select>
+                          <button
+                            type="button"
+                            className="px-2 py-1 text-xs rounded-md text-red-600 bg-red-50"
+                            onClick={() => setShowNewSectionForm(false)}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                      <input
+                        ref={newSectionTitleRef}
+                        className="rounded-md p-2 bg-white/80"
+                        value={newSectionDraft.title}
+                        onChange={(event) => updateNewSection("title", event.target.value)}
+                        placeholder="Enter subtitle name"
+                      />
+                      <textarea
+                        className="rounded-md p-2 bg-white/80 overflow-hidden resize-none"
+                        value={newSectionDraft.content ?? ""}
+                        onChange={(event) => updateNewSection("content", event.target.value)}
+                        onInput={(event) => autoResizeTextarea(event.currentTarget)}
+                        placeholder="section content"
+                        rows={3}
+                      />
+                      <div>
+                        <button
+                          type="button"
+                          className="px-3 py-2 rounded-md text-sm bg-black text-white"
+                          onClick={appendNewSection}
+                        >
+                          Add This Section
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.external_url}
-                onChange={(event) => updateField("external_url", event.target.value)}
-                placeholder="external url (optional)"
-              />
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.tags}
-                onChange={(event) => updateField("tags", event.target.value)}
-                placeholder="tags (comma-separated)"
-              />
-              <select
-                className="rounded-md p-2 bg-white/80"
-                value={formState.status}
-                onChange={(event) => updateField("status", event.target.value as Blog["status"])}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
+              {showAdvanced && (
+                <div className="grid gap-3">
+                  <textarea
+                    className="rounded-md p-2 min-h-40 bg-white/80"
+                    value={formState.content}
+                    onChange={(event) => updateField("content", event.target.value)}
+                    placeholder="markdown content fallback (optional)"
+                    rows={6}
+                  />
+                  <input
+                    className="rounded-md p-2 bg-white/80"
+                    value={formState.external_url}
+                    onChange={(event) => updateField("external_url", event.target.value)}
+                    placeholder="external url (optional)"
+                  />
+                  <input
+                    className="rounded-md p-2 bg-white/80"
+                    value={formState.tags}
+                    onChange={(event) => updateField("tags", event.target.value)}
+                    placeholder="tags (comma-separated)"
+                  />
+                  <select
+                    className="rounded-md p-2 bg-white/80"
+                    value={formState.status}
+                    onChange={(event) => updateField("status", event.target.value as Blog["status"])}
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+              )}
             </form>
             {previewMode && (
               <article className="prose max-w-none">

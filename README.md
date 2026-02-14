@@ -152,3 +152,59 @@ type Blog = {
   "updated_at": "2026-02-14T00:00:00Z"
 }
 ```
+
+## Current Blog UI Behavior
+
+### `/blogs/new`
+
+1. Minimal by default: `title` and `description`.
+2. `slug` is auto-generated from `title` unless set in `Advanced`.
+3. `Sections` panel supports adding top-level section objects with `+ Add Section`.
+4. New sections default to `level: 2`.
+5. Section content textareas auto-expand while typing.
+6. Optional fields (`subheader`, `content`, `tags`, `status`, `external_url`) are in `Advanced`.
+
+### `/blogs/:slug` edit mode
+
+1. Parent/blog fields are editable (`title`, `subheader`, `description`).
+2. Existing sections are shown read-only in edit mode.
+3. `+ Add Section` opens a separate "New Section" input area.
+4. New section is appended only when `Add This Section` is clicked.
+
+## Frontend API Contract
+
+### Create
+
+- Endpoint: `POST /api/blogs/`
+- Sent fields:
+  - `slug`
+  - `title`
+  - `subheader?`
+  - `description`
+  - `status`
+  - `content?`
+  - `external_url?`
+  - `tags?`
+  - `sections?`
+
+### Update
+
+- Endpoint: `PUT /api/blogs/{slug}`
+- Sent fields:
+  - `slug`
+  - `title`
+  - `subheader?`
+  - `description`
+  - `content?`
+  - `external_url?`
+  - `status`
+  - `tags?`
+  - `sections`
+
+## Backend DTO Recommendation
+
+Use separate schemas:
+
+1. `BlogCreateRequestDTO`: request payload for `POST` (no `id/created_at/updated_at`).
+2. `BlogUpdateRequestDTO`: request payload for `PUT` (partial or full fields).
+3. `BlogResponseDTO`: response payload (includes `id`, `created_at`, `updated_at`).
