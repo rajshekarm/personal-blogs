@@ -115,12 +115,7 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
         {revealComplete && (
           <form onSubmit={handleSubmit} className="mt-6">
             <label htmlFor="decoded-byte" className="block text-sm text-[#c5d8e2]">
-              Decode any one byte above and enter the matching letter from
-              <span className="font-semibold text-[#8af5c0]">
-                {" "}
-                Rajashekar Mudigonda
-              </span>
-              .
+              Pick any binary block above, decode it to a letter, and enter that letter.
             </label>
             <div className="mt-3 flex flex-col sm:flex-row gap-3">
               <input
