@@ -87,14 +87,13 @@ const About = () => {
             </h1>
 
              <p className="text-base text-gray-700 leading-relaxed mb-4">
-                I worked as a Software Engineer, where I built and optimized high-performance trading systems capable of processing massive order volumes with ultra-low latency. My core strengths include distributed systems, streaming pipelines, and API design.
+                I am a Software Engineer who builds reliable, high-performance systems. I have worked on low-latency trading platforms that process massive order volumes, and my core strengths include distributed systems, streaming pipelines, and API design.
               </p>
 
               <p className="text-base text-gray-700 leading-relaxed mb-10">
-                I recently completed my Master’s degree in Computer Science from Illinois Institute of Technology, Chicago. 
+                I recently completed my Master's degree in Computer Science from Illinois Institute of Technology, Chicago.
                 <br></br>
-                I enjoy exploring complex technical problems and break them down into simple, reliable solutions. I value continuous learning and thrive on problem-solving, whether that's diving into Parallel Computing (GPU Programming) or  Nueral Networks.
-                
+                I enjoy tackling complex technical problems and turning them into simple, dependable solutions. I value continuous learning and thrive on challenges, from Parallel Computing (GPU Programming) to Neural Networks.
               </p>
 
 
@@ -131,10 +130,10 @@ const About = () => {
                 My Journey
             </h3>
             <p className="text-xl text-gray-800 leading-loose font-light">
-                Over the past few years, I’ve had the chance to work on cloud infrastructure, secure data systems, and full-stack platforms mainly using <span className="font-semibold">C#</span>, <span className="font-semibold">.NET</span>, <span className="font-semibold">React</span>, <span className="font-semibold">Azure</span>, <span className="font-semibold">AWS</span> and occasionally <span className="font-semibold">Python</span> or <span className="font-semibold">FastAPI</span> depending on the project.
+                Over the past few years, I have worked on cloud infrastructure, secure data systems, and full-stack platforms using <span className="font-semibold">C#</span>, <span className="font-semibold">.NET</span>, <span className="font-semibold">React</span>, <span className="font-semibold">Azure</span>, <span className="font-semibold">AWS</span>, and occasionally <span className="font-semibold">Python</span> and <span className="font-semibold">FastAPI</span>.
             </p>
             <p className="text-xl text-gray-800 leading-loose font-light mt-6">
-                I’ve worked across different environments: a high-paced startup culture at <span className="font-semibold">Fashion AI</span>, and enterprise-scale systems at <span className="font-semibold">SS&C Eze</span>.
+                I have worked across different environments, from the fast-paced startup culture at <span className="font-semibold">Fashion AI</span> to enterprise-scale systems at <span className="font-semibold">SS&C Eze</span>.
             </p>
         </div>
       </section>
@@ -146,3 +145,4 @@ const About = () => {
 
 
 export default About
+
