@@ -23,6 +23,7 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
   const [revealedCount, setRevealedCount] = useState(0)
   const [input, setInput] = useState("")
   const [error, setError] = useState("")
+  const [waitingDots, setWaitingDots] = useState(".")
 
   const revealComplete = revealedCount >= binaryBytes.length
 
@@ -42,6 +43,19 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
 
     return () => window.clearTimeout(timer)
   }, [binaryBytes.length, onUnlock, revealComplete, revealedCount])
+
+  useEffect(() => {
+    if (!revealComplete) {
+      setWaitingDots(".")
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setWaitingDots((prev) => (prev.length >= 3 ? "." : `${prev}.`))
+    }, 450)
+
+    return () => window.clearInterval(timer)
+  }, [revealComplete])
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -88,6 +102,11 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
             {!revealComplete && (
               <span className="inline-block self-center animate-pulse text-[#7ec8ec]">
                 loading...
+              </span>
+            )}
+            {revealComplete && (
+              <span className="inline-block self-center text-[#7ec8ec]">
+                waiting{waitingDots}
               </span>
             )}
           </div>
