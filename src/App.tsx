@@ -6,6 +6,7 @@ import Projects from "./pages/Projects"
 import Contact from "./pages/Contact"
 import Blogs from "./pages/Blogs"
 import BlogPost from "./pages/BlogPost"
+import NewBlog from "./pages/NewBlog"
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs/new" element={<NewBlog />} />
         <Route path="/blogs/:slug" element={<BlogPost />} />
       </Routes>
     </BrowserRouter>
