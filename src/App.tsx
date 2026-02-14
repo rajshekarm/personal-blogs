@@ -1,5 +1,7 @@
+import { useState } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
+import PreLandingGate from "./components/PreLandingGate"
 import About from "./pages/About"
 import Resume from "./pages/Resume"
 import Projects from "./pages/Projects"
@@ -9,6 +11,12 @@ import BlogPost from "./pages/BlogPost"
 import NewBlog from "./pages/NewBlog"
 
 const App = () => {
+  const [unlocked, setUnlocked] = useState(false)
+
+  if (!unlocked) {
+    return <PreLandingGate onUnlock={() => setUnlocked(true)} />
+  }
+
   return (
     <BrowserRouter>
       <Navbar />
