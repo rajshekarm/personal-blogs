@@ -71,3 +71,84 @@ export default defineConfig([
   },
 ])
 ```
+
+## Blog Data Structure
+
+The frontend supports blog content in two ways:
+
+1. `sections` (preferred, hierarchical)
+2. `content` markdown fallback (used when `sections` is empty)
+
+### Blog shape
+
+```ts
+type BlogSection = {
+  id: string
+  title: string
+  level: 1 | 2 | 3
+  content?: string
+  children?: BlogSection[]
+}
+
+type Blog = {
+  id: string
+  slug: string
+  title: string
+  subheader?: string
+  description: string
+  content?: string
+  external_url?: string
+  status: "draft" | "published"
+  tags?: string[]
+  sections?: BlogSection[]
+  created_at: string
+  updated_at: string
+}
+```
+
+### Section hierarchy
+
+1. `level: 1` -> parent section
+2. `level: 2` -> subsection of level 1
+3. `level: 3` -> child section of level 2
+
+### Example JSON
+
+```json
+{
+  "id": "b1",
+  "slug": "sample-blog",
+  "title": "Sample Blog",
+  "subheader": "How section levels work",
+  "description": "Demo of level 1, 2, 3",
+  "status": "published",
+  "tags": ["demo"],
+  "sections": [
+    {
+      "id": "s1",
+      "title": "System Overview",
+      "level": 1,
+      "content": "High-level architecture and goals.",
+      "children": [
+        {
+          "id": "s1-1",
+          "title": "API Layer",
+          "level": 2,
+          "content": "Handles routing, validation, and auth.",
+          "children": [
+            {
+              "id": "s1-1-1",
+              "title": "Rate Limiting",
+              "level": 3,
+              "content": "Protects APIs from abuse.",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "created_at": "2026-02-14T00:00:00Z",
+  "updated_at": "2026-02-14T00:00:00Z"
+}
+```
