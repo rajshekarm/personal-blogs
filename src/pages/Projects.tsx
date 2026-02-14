@@ -24,7 +24,7 @@ const Projects = () => {
   )
 
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-[#e4e8ec] py-20 font-sans">
+    <main className="min-h-[calc(100vh-64px)] bg-[#e4e8ec] px-4 py-10 font-sans sm:px-6 sm:py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold">Projects</h1>
@@ -52,7 +52,7 @@ const Projects = () => {
       </div>
 
       {/* Project Cards */}
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="mx-auto max-w-5xl space-y-6 md:space-y-8">
         {visibleProjects.map((project) => (
           <div
             key={project.id}
@@ -61,7 +61,7 @@ const Projects = () => {
             <div className="flex flex-col md:flex-row">
               
               {/* LEFT: Content */}
-              <div className="flex-1 p-8">
+              <div className="flex-1 p-5 sm:p-8">
                 <div className="flex items-start justify-between mb-2">
                   <h2 className="text-[#3576c0] font-semibold text-lg pr-4">
                     {project.title}
@@ -95,7 +95,7 @@ const Projects = () => {
               </div>
 
               {/* RIGHT: Media */}
-              <div className="md:w-[320px] h-[220px] md:h-auto bg-gray-50 p-4">
+              <div className="h-[220px] bg-gray-50 p-4 md:h-auto md:w-[320px]">
                 <MediaPreview media={project.media} />
               </div>
 

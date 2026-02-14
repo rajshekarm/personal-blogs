@@ -1,6 +1,6 @@
-const Resume = () => {
+ï»¿const Resume = () => {
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-[#e4e8ec] py-20 font-sans">
+    <main className="min-h-[calc(100vh-64px)] bg-[#e4e8ec] px-4 py-10 font-sans sm:px-6 sm:py-16">
       {/* Resume Header */}
 
           <div className="flex justify-center mb-16">
@@ -30,9 +30,9 @@ const Resume = () => {
 
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-3 md:gap-10">
         {/* Left: Education */}
-        <div className="md:col-span-1 bg-white shadow-md p-8">
+        <div className="bg-white p-5 shadow-md sm:p-8 md:col-span-1">
           <h2 className="text-xl font-semibold mb-6">Education</h2>
 
           <div className="space-y-8 text-sm">
@@ -41,10 +41,10 @@ const Resume = () => {
                 Illinois Institute of Technology
               </h3>
               <p className="text-gray-600">
-                Master’s in Computer Science
+                Masterâ€™s in Computer Science
               </p>
               <p className="text-gray-500">
-                Aug 2023 – May 2025 · Chicago, USA
+                Aug 2023 â€“ May 2025 Â· Chicago, USA
               </p>
             </div>
 
@@ -56,23 +56,23 @@ const Resume = () => {
                 B.Tech in Electronics & Communication Engineering
               </p>
               <p className="text-gray-500">
-                Aug 2014 – May 2018 · India
+                Aug 2014 â€“ May 2018 Â· India
               </p>
             </div>
           </div>
         </div>
 
         {/* Right: Experience */}
-        <div className="md:col-span-2 bg-white shadow-md p-10 space-y-12">
+        <div className="space-y-10 bg-white p-5 shadow-md sm:p-8 md:col-span-2 md:space-y-12">
           <h2 className="text-xl font-semibold">Experience</h2>
 
           {/* Experience 1 */}
           <div>
             <p className="text-blue-600 font-semibold">
-              Sep 2025 – Present
+              Sep 2025 â€“ Present
             </p>
             <h3 className="font-semibold">
-              Full Stack Engineer · Fashion AI
+              Software Engineer Â· Fashion AI
             </h3>
             <p className="text-gray-500 text-sm mb-3">
               Chicago, IL
@@ -102,10 +102,10 @@ const Resume = () => {
           {/* Experience 2 */}
           <div>
             <p className="text-blue-600 font-semibold">
-              Aug 2020 – Jul 2023
+              Aug 2020 â€“ Jul 2023
             </p>
             <h3 className="font-semibold">
-              Software Engineer II · SS&C Eze
+              Software Engineer II Â· SS&C Eze
             </h3>
             <p className="text-gray-500 text-sm mb-3">
               Hyderabad, India
@@ -118,7 +118,7 @@ const Resume = () => {
                 30%.
               </li>
               <li>
-                Scaled systems to handle 3× traffic growth with no infra
+                Scaled systems to handle 3Ã— traffic growth with no infra
                 increase; reduced cloud costs by 35%.
               </li>
               <li>
@@ -135,10 +135,10 @@ const Resume = () => {
           {/* Experience 3 */}
           <div>
             <p className="text-blue-600 font-semibold">
-              Jun 2018 – Jul 2020
+              Jun 2018 â€“ Jul 2020
             </p>
             <h3 className="font-semibold">
-              Associate Software Engineer · SS&C Eze
+              Associate Software Engineer Â· SS&C Eze
             </h3>
             <p className="text-gray-500 text-sm mb-3">
               Hyderabad, India
@@ -166,3 +166,4 @@ const Resume = () => {
 }
 
 export default Resume
+
