@@ -55,6 +55,12 @@ const Navbar = () => {
           <NavLink to="/games" className={linkClass}>
             Games
           </NavLink>
+          <NavLink to="/artion" className={linkClass}>
+            Artion
+          </NavLink>
+          <NavLink to="/artionNextGen" className={linkClass}>
+            artionNextGen
+          </NavLink>
         </div>
       </div>
 
@@ -79,6 +85,9 @@ const Navbar = () => {
             <NavLink to="/games" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
               Games
             </NavLink>
+          
+
+            MultiLeadTransformerLab
           </div>
         </div>
       )}
