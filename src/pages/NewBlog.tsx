@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
 import type { Blog, BlogSection } from "../types/blog"
 
-const API_BASE = "http://localhost:8000/api"
+const CREATE_BLOG_URL = "http://localhost:8080/api/blogs"
 
 type BlogFormState = {
   slug: string
@@ -94,7 +94,7 @@ const NewBlog = () => {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/blogs/`, {
+      const res = await fetch(`${CREATE_BLOG_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

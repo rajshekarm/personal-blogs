@@ -1,9 +1,9 @@
 import type { Blog } from "../types/blog"
 
-const API_BASE = "http://localhost:8000/api"
+const API_BASE = "http://localhost:8080/api"
 
 export async function fetchBlogs(): Promise<Blog[]> {
-  const res = await fetch(`${API_BASE}/blogs/`)
+  const res = await fetch(`${API_BASE}/blogs`)
   if (!res.ok) {
     throw new Error("Failed to fetch blogs")
   }
