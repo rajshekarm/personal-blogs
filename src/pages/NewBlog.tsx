@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
+import { API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
 
-const CREATE_BLOG_URL = "http://localhost:8080/api/blogs"
+const CREATE_BLOG_URL = `${API_BASE}/blogs`
 
 type BlogFormState = {
   slug: string

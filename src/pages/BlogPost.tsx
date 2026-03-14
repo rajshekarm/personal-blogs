@@ -1,10 +1,8 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useRef, useState } from "react"
 import ReactMarkdown from "react-markdown"
-import { fetchBlog } from "../api/blog"
+import { fetchBlog, API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
-
-const API_BASE = "http://localhost:8000/api"
 
 type BlogEditFormState = {
   title: string

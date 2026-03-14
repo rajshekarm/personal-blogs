@@ -1,6 +1,6 @@
 import type { Blog } from "../types/blog"
 
-const API_BASE = "http://localhost:8080/api"
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api"
 
 export async function fetchBlogs(): Promise<Blog[]> {
   const res = await fetch(`${API_BASE}/blogs`)
