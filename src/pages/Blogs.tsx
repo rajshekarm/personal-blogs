@@ -107,12 +107,13 @@ const Blogs = () => {
                 Notes, Systems, Experiments
               </p>
               <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-[#18222b] sm:text-5xl">
-                Writing about backend systems, AI builds, and what I learn while shipping.
+                Writing about backend systems, AI builds, physics, electronics, and what I learn while shipping.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-[#475865] sm:text-lg">
                 This is the editorial side of the portfolio: project breakdowns,
                 technical notes, and in-progress thinking around distributed systems,
-                product engineering, and experiments worth sharing.
+                product engineering, physics, electronics, and the kind of
+                software systems work that supports hardware and semiconductor companies.
               </p>
               <div className="flex flex-wrap gap-3">
                 <button
@@ -151,7 +152,7 @@ const Blogs = () => {
                 <div>
                   <p className="text-sm text-[#7b6a58]">Current focus</p>
                   <p className="mt-2 text-xl font-semibold text-[#18222b]">
-                    Backend + AI systems
+                    Backend, AI, and hardware software systems
                   </p>
                 </div>
               </div>
