@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { Link, useParams } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
 import { fetchBlog, API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
@@ -14,6 +14,59 @@ type BlogEditFormState = {
   status: Blog["status"]
   tags: string
 }
+
+type SectionLink = {
+  id: string
+  title: string
+  level: BlogSection["level"]
+}
+
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value))
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+
+const getSectionAnchor = (section: BlogSection) =>
+  `${slugify(section.title || "section")}-${section.id}`
+
+const flattenSections = (sections: BlogSection[]): SectionLink[] =>
+  sections.flatMap((section) => [
+    {
+      id: getSectionAnchor(section),
+      title: section.title,
+      level: section.level,
+    },
+    ...flattenSections(section.children ?? []),
+  ])
+
+const extractWordCount = (blog: Blog) => {
+  const sectionText = (blog.sections ?? [])
+    .flatMap(function walk(section): string[] {
+      return [section.title, section.content ?? "", ...(section.children ?? []).flatMap(walk)]
+    })
+    .join(" ")
+
+  const content = [blog.title, blog.subheader ?? "", blog.description, blog.content ?? "", sectionText]
+    .join(" ")
+    .trim()
+
+  if (!content) {
+    return 0
+  }
+
+  return content.split(/\s+/).length
+}
+
+const readingProseClass =
+  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -46,7 +99,14 @@ const BlogPost = () => {
   const newSectionTitleRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    if (!slug) return
+    if (!slug) {
+      setLoading(false)
+      setBlog(null)
+      return
+    }
+
+    setLoading(true)
+    setError(null)
 
     fetchBlog(slug)
       .then((data) => {
@@ -62,8 +122,19 @@ const BlogPost = () => {
           tags: data.tags?.join(", ") ?? "",
         })
       })
+      .catch((err) => {
+        console.error("Failed to fetch blog", err)
+        setBlog(null)
+        setError("Failed to load this blog post.")
+      })
       .finally(() => setLoading(false))
   }, [slug])
+
+  useEffect(() => {
+    if (blog?.external_url && !editing) {
+      window.location.assign(blog.external_url)
+    }
+  }, [blog, editing])
 
   const updateField = <K extends keyof BlogEditFormState>(
     key: K,
@@ -200,10 +271,10 @@ const BlogPost = () => {
       children: [],
     }
 
-    setFormState((prev) => {
-      const next = [...prev.sections, sectionToAdd]
-      return { ...prev, sections: next }
-    })
+    setFormState((prev) => ({
+      ...prev,
+      sections: [...prev.sections, sectionToAdd],
+    }))
     setNewSectionDraft({
       id: "",
       title: "",
@@ -233,50 +304,46 @@ const BlogPost = () => {
     })
   }, [formState.sections, editing])
 
-  if (loading) {
-    return <div className="p-20">Loading...</div>
-  }
-
-  if (!blog) {
-    return <div className="p-20">Blog not found</div>
-  }
-
-  if (blog.external_url && !editing) {
-    window.location.href = blog.external_url
-    return null
-  }
-
-  const displayTitle = editing ? formState.title || blog.title : blog.title
-  const displaySubheader = editing ? formState.subheader || blog.subheader : blog.subheader
-  const displayStatus = editing ? formState.status : blog.status
+  const displayTitle = editing ? formState.title || blog?.title : blog?.title
+  const displaySubheader = editing ? formState.subheader || blog?.subheader : blog?.subheader
+  const displayStatus = editing ? formState.status : blog?.status
   const displayTags = editing
     ? formState.tags
         .split(",")
         .map((tag) => tag.trim())
         .filter(Boolean)
-    : (blog.tags ?? [])
-  const updatedOn = new Date(blog.updated_at).toLocaleDateString()
-  const hasSections = Boolean(blog.sections && blog.sections.length > 0)
+    : (blog?.tags ?? [])
+  const hasSections = Boolean(blog?.sections && blog.sections.length > 0)
+  const sectionLinks = useMemo(
+    () => flattenSections(blog?.sections ?? []),
+    [blog?.sections]
+  )
+  const wordCount = useMemo(() => (blog ? extractWordCount(blog) : 0), [blog])
+  const readTime = Math.max(1, Math.round(wordCount / 220))
 
   const renderSections = (sections: BlogSection[]) => {
     return sections.map((section) => {
       const headingClass =
         section.level === 1
-          ? "text-3xl font-semibold mt-10"
+          ? "text-3xl font-semibold tracking-tight text-[#19252f]"
           : section.level === 2
-            ? "text-2xl font-semibold mt-8"
-            : "text-xl font-semibold mt-6"
+            ? "text-2xl font-semibold tracking-tight text-[#19252f]"
+            : "text-xl font-semibold tracking-tight text-[#19252f]"
 
       return (
-        <section key={section.id} className="space-y-3">
+        <section
+          key={section.id}
+          id={getSectionAnchor(section)}
+          className="space-y-4 rounded-[28px] border border-[#ece3d7] bg-white/90 p-6 shadow-[0_14px_40px_rgba(56,39,17,0.05)]"
+        >
           <h2 className={headingClass}>{section.title}</h2>
           {section.content && (
-            <div className="prose prose-lg max-w-none leading-relaxed">
+            <div className={readingProseClass}>
               <ReactMarkdown>{section.content}</ReactMarkdown>
             </div>
           )}
           {section.children && section.children.length > 0 && (
-            <div className="pl-4 border-l border-gray-200">
+            <div className="space-y-4 border-l border-[#e6d8c7] pl-4">
               {renderSections(section.children)}
             </div>
           )}
@@ -285,250 +352,370 @@ const BlogPost = () => {
     })
   }
 
+  if (loading) {
+    return (
+      <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-5xl space-y-6">
+          <div className="h-48 animate-pulse rounded-[32px] bg-white/80 shadow-[0_18px_50px_rgba(62,45,25,0.06)]" />
+          <div className="h-80 animate-pulse rounded-[32px] bg-white/80 shadow-[0_18px_50px_rgba(62,45,25,0.06)]" />
+        </div>
+      </main>
+    )
+  }
+
+  if (error && !blog) {
+    return (
+      <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-3xl rounded-[32px] border border-red-200 bg-white px-6 py-12 text-center shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+          <p className="text-lg font-medium text-[#19252f]">{error}</p>
+          <Link
+            to="/blogs"
+            className="mt-6 inline-flex rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#8b5e3c] transition hover:bg-[#f5ede3]"
+          >
+            Back to Blogs
+          </Link>
+        </div>
+      </main>
+    )
+  }
+
+  if (!blog) {
+    return (
+      <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-3xl rounded-[32px] border border-[#ddd1c0] bg-white px-6 py-12 text-center shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+          <p className="text-lg font-medium text-[#19252f]">Blog not found.</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (blog.external_url && !editing) {
+    return (
+      <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-3xl rounded-[32px] border border-[#ddd1c0] bg-white px-6 py-12 text-center shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+          <p className="text-lg font-medium text-[#19252f]">Redirecting to the external article...</p>
+        </div>
+      </main>
+    )
+  }
+
   return (
-    <div className="w-full max-w-none mx-auto px-4 sm:px-6 lg:px-10 py-10 sm:py-16 lg:py-20 space-y-6">
-      <header className="border rounded-xl bg-white p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-3">
-            <p className="text-xs uppercase tracking-wide text-gray-500">
-              {editing ? "Editing Blog" : "Blog Post"}
-            </p>
-            <h1 className="text-4xl font-bold leading-tight">{displayTitle}</h1>
-            {displaySubheader && (
-              <p className="text-lg text-gray-600 leading-relaxed">{displaySubheader}</p>
-            )}
-            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-              <span className="px-2 py-1 border rounded-full">status: {displayStatus}</span>
-              <span>updated: {updatedOn}</span>
+    <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] text-[#1b2b34]">
+      <section className="relative overflow-hidden border-b border-[#ddd1c0] bg-[radial-gradient(circle_at_top_right,#c88c5f24,transparent_26%),linear-gradient(135deg,#f7f1e8_0%,#efe2cf_46%,#e7ddd1_100%)]">
+        <div className="absolute inset-0 opacity-25 bg-[linear-gradient(to_right,#ffffff55_1px,transparent_1px),linear-gradient(to_bottom,#ffffff55_1px,transparent_1px)] bg-[size:28px_28px]" />
+        <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+          <div className="space-y-6 rounded-[32px] border border-[#ddd1c0] bg-white/80 p-6 shadow-[0_22px_70px_rgba(62,45,25,0.08)] backdrop-blur sm:p-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-4">
+                <Link
+                  to="/blogs"
+                  className="inline-flex rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#8b5e3c] transition hover:bg-[#f5ede3]"
+                >
+                  &lt;- Back to Blogs
+                </Link>
+                <div className="space-y-3">
+                  <p className="text-xs uppercase tracking-[0.3em] text-[#8b5e3c]">
+                    {editing ? "Editing Article" : "Reading View"}
+                  </p>
+                  <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-[#19252f] sm:text-5xl">
+                    {displayTitle}
+                  </h1>
+                  {displaySubheader && (
+                    <p className="max-w-3xl text-lg leading-8 text-[#4b5d69]">
+                      {displaySubheader}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {editing ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm text-[#44535d]"
+                    onClick={cancelEdit}
+                    disabled={saving}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    form="blog-edit-form"
+                    className="rounded-full bg-[#19252f] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                    disabled={saving}
+                  >
+                    {saving ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                  onClick={startEdit}
+                >
+                  Edit Post
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 text-sm text-[#556772]">
+              <span className="rounded-full border border-[#d8cab9] bg-[#fbf7f2] px-3 py-1 capitalize">
+                {displayStatus}
+              </span>
+              <span>Updated {formatDate(blog.updated_at)}</span>
+              <span>Created {formatDate(blog.created_at)}</span>
+              {!editing && <span>{readTime} min read</span>}
               {displayTags.map((tag) => (
-                <span key={tag} className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">
+                <span
+                  key={tag}
+                  className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#76614f]"
+                >
                   {tag}
                 </span>
               ))}
             </div>
-          </div>
 
-          {editing ? (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="px-4 py-2 border rounded-md text-sm"
-                onClick={cancelEdit}
-                disabled={saving}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="blog-edit-form"
-                className="px-4 py-2 rounded-md bg-black text-white text-sm disabled:opacity-60"
-                disabled={saving}
-              >
-                {saving ? "Saving..." : "Save"}
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              className="px-4 py-2 border rounded-md text-sm"
-              onClick={startEdit}
-            >
-              Edit
-            </button>
-          )}
+            {error && (
+              <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+          </div>
         </div>
-      </header>
+      </section>
 
       {editing ? (
-        <section className="space-y-4">
-          <div className="flex justify-end">
-            <div className="flex items-center gap-2">
+        <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+          <div className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
+            <div className="flex flex-wrap justify-end gap-2">
               <button
                 type="button"
-                className="px-4 py-2 border rounded-md text-sm"
+                className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm text-[#44535d]"
                 onClick={handleAddSection}
               >
                 + Add Section
               </button>
               <button
                 type="button"
-                className="px-4 py-2 border rounded-md text-sm"
+                className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm text-[#44535d]"
                 onClick={() => setShowSections((prev) => !prev)}
               >
-                {showSections ? "Hide Sections" : "Sections"}
+                {showSections ? "Hide Sections" : "Show Sections"}
               </button>
               <button
                 type="button"
-                className="px-4 py-2 border rounded-md text-sm"
+                className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm text-[#44535d]"
                 onClick={() => setShowAdvanced((prev) => !prev)}
               >
                 {showAdvanced ? "Hide Advanced" : "Advanced"}
               </button>
               <button
                 type="button"
-                className="px-4 py-2 border rounded-md text-sm"
+                className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm text-[#44535d]"
                 onClick={() => setPreviewMode((prev) => !prev)}
               >
                 {previewMode ? "Hide Preview" : "Preview Content"}
               </button>
             </div>
-          </div>
-          <div className={`grid gap-4 ${previewMode ? "lg:grid-cols-2" : ""}`}>
-            <form id="blog-edit-form" className="grid gap-4" onSubmit={handleSave}>
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.title}
-                onChange={(event) => updateField("title", event.target.value)}
-                placeholder="title"
-              />
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.subheader}
-                onChange={(event) => updateField("subheader", event.target.value)}
-                placeholder="subheader (optional)"
-              />
-              <textarea
-                className="rounded-md p-2 bg-white/80"
-                value={formState.description}
-                onChange={(event) => updateField("description", event.target.value)}
-                placeholder="description"
-                rows={2}
-              />
-              {showSections && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <label className="text-sm text-gray-600">sections</label>
-                  </div>
-                  {formState.sections.length === 0 ? (
-                    <p className="text-sm text-gray-500">No sections added yet.</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {formState.sections.map((section, index) => (
-                        <div key={section.id} className="grid gap-2 py-3 border-b border-gray-200/70 last:border-b-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs text-gray-500">Subtitle {index + 1}</span>
-                            <span className="text-xs px-2 py-1 rounded bg-gray-100">Level {section.level}</span>
-                          </div>
-                          <p className="text-xs text-gray-500">Existing section (read-only during add).</p>
-                          <p className="rounded-md p-2 bg-white/60">{section.title}</p>
-                          <textarea
-                            id={`edit-section-content-${section.id}`}
-                            className="rounded-md p-2 bg-white/80 overflow-hidden resize-none"
-                            value={section.content ?? ""}
-                            readOnly
-                            placeholder="section content"
-                            rows={3}
-                          />
-                        </div>
-                      ))}
+
+            <div className={`mt-6 grid gap-5 ${previewMode ? "xl:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]" : ""}`}>
+              <form id="blog-edit-form" className="grid gap-4" onSubmit={handleSave}>
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.title}
+                  onChange={(event) => updateField("title", event.target.value)}
+                  placeholder="title"
+                />
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.subheader}
+                  onChange={(event) => updateField("subheader", event.target.value)}
+                  placeholder="subheader (optional)"
+                />
+                <textarea
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.description}
+                  onChange={(event) => updateField("description", event.target.value)}
+                  placeholder="description"
+                  rows={3}
+                />
+                {showSections && (
+                  <div className="rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="text-xs uppercase tracking-[0.26em] text-[#8b5e3c]">
+                        Sections
+                      </label>
                     </div>
-                  )}
-                  {showNewSectionForm && (
-                    <div className="grid gap-2 py-3 border-b border-gray-200/70">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs text-gray-500">New Section</span>
-                        <div className="flex items-center gap-2">
-                          <select
-                            className="rounded-md p-1 text-xs bg-white/80"
-                            value={newSectionDraft.level}
-                            onChange={(event) =>
-                              updateNewSection("level", Number(event.target.value) as 1 | 2 | 3)
-                            }
-                          >
-                            <option value={1}>Level 1</option>
-                            <option value={2}>Level 2</option>
-                            <option value={3}>Level 3</option>
-                          </select>
+                    {formState.sections.length === 0 ? (
+                      <p className="mt-3 text-sm text-[#6a7880]">No sections added yet.</p>
+                    ) : (
+                      <div className="mt-4 space-y-3">
+                        {formState.sections.map((section, index) => (
+                          <div key={section.id} className="grid gap-2 rounded-2xl border border-[#ece3d7] bg-white p-4">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs uppercase tracking-[0.2em] text-[#8b5e3c]">
+                                Subtitle {index + 1}
+                              </span>
+                              <span className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs text-[#76614f]">
+                                Level {section.level}
+                              </span>
+                            </div>
+                            <p className="text-sm font-medium text-[#19252f]">{section.title}</p>
+                            <textarea
+                              id={`edit-section-content-${section.id}`}
+                              className="rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3] px-4 py-3 text-sm text-[#465862]"
+                              value={section.content ?? ""}
+                              readOnly
+                              placeholder="section content"
+                              rows={3}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {showNewSectionForm && (
+                      <div className="mt-4 grid gap-3 rounded-2xl border border-[#e5d8c8] bg-white p-4">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs uppercase tracking-[0.2em] text-[#8b5e3c]">
+                            New Section
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <select
+                              className="rounded-full border border-[#d8cab9] bg-[#fbf8f3] px-3 py-2 text-xs"
+                              value={newSectionDraft.level}
+                              onChange={(event) =>
+                                updateNewSection("level", Number(event.target.value) as 1 | 2 | 3)
+                              }
+                            >
+                              <option value={1}>Level 1</option>
+                              <option value={2}>Level 2</option>
+                              <option value={3}>Level 3</option>
+                            </select>
+                            <button
+                              type="button"
+                              className="rounded-full bg-red-50 px-3 py-2 text-xs text-red-600"
+                              onClick={() => setShowNewSectionForm(false)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                        <input
+                          ref={newSectionTitleRef}
+                          className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                          value={newSectionDraft.title}
+                          onChange={(event) => updateNewSection("title", event.target.value)}
+                          placeholder="Enter subtitle name"
+                        />
+                        <textarea
+                          className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                          value={newSectionDraft.content ?? ""}
+                          onChange={(event) => updateNewSection("content", event.target.value)}
+                          onInput={(event) => autoResizeTextarea(event.currentTarget)}
+                          placeholder="section content"
+                          rows={3}
+                        />
+                        <div>
                           <button
                             type="button"
-                            className="px-2 py-1 text-xs rounded-md text-red-600 bg-red-50"
-                            onClick={() => setShowNewSectionForm(false)}
+                            className="rounded-full bg-[#19252f] px-4 py-2 text-sm font-medium text-white"
+                            onClick={appendNewSection}
                           >
-                            Cancel
+                            Add This Section
                           </button>
                         </div>
                       </div>
-                      <input
-                        ref={newSectionTitleRef}
-                        className="rounded-md p-2 bg-white/80"
-                        value={newSectionDraft.title}
-                        onChange={(event) => updateNewSection("title", event.target.value)}
-                        placeholder="Enter subtitle name"
-                      />
-                      <textarea
-                        className="rounded-md p-2 bg-white/80 overflow-hidden resize-none"
-                        value={newSectionDraft.content ?? ""}
-                        onChange={(event) => updateNewSection("content", event.target.value)}
-                        onInput={(event) => autoResizeTextarea(event.currentTarget)}
-                        placeholder="section content"
-                        rows={3}
-                      />
-                      <div>
-                        <button
-                          type="button"
-                          className="px-3 py-2 rounded-md text-sm bg-black text-white"
-                          onClick={appendNewSection}
-                        >
-                          Add This Section
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
+                {showAdvanced && (
+                  <div className="grid gap-3 rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-4">
+                    <textarea
+                      className="min-h-44 rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.content}
+                      onChange={(event) => updateField("content", event.target.value)}
+                      placeholder="markdown content fallback (optional)"
+                      rows={6}
+                    />
+                    <input
+                      className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.external_url}
+                      onChange={(event) => updateField("external_url", event.target.value)}
+                      placeholder="external url (optional)"
+                    />
+                    <input
+                      className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.tags}
+                      onChange={(event) => updateField("tags", event.target.value)}
+                      placeholder="tags (comma-separated)"
+                    />
+                    <select
+                      className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.status}
+                      onChange={(event) => updateField("status", event.target.value as Blog["status"])}
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </div>
+                )}
+              </form>
+
+              {previewMode && (
+                <article className="rounded-[28px] border border-[#ece3d7] bg-white p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+                  <div className={readingProseClass}>
+                    <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
+                  </div>
+                </article>
               )}
-              {showAdvanced && (
-                <div className="grid gap-3">
-                  <textarea
-                    className="rounded-md p-2 min-h-40 bg-white/80"
-                    value={formState.content}
-                    onChange={(event) => updateField("content", event.target.value)}
-                    placeholder="markdown content fallback (optional)"
-                    rows={6}
-                  />
-                  <input
-                    className="rounded-md p-2 bg-white/80"
-                    value={formState.external_url}
-                    onChange={(event) => updateField("external_url", event.target.value)}
-                    placeholder="external url (optional)"
-                  />
-                  <input
-                    className="rounded-md p-2 bg-white/80"
-                    value={formState.tags}
-                    onChange={(event) => updateField("tags", event.target.value)}
-                    placeholder="tags (comma-separated)"
-                  />
-                  <select
-                    className="rounded-md p-2 bg-white/80"
-                    value={formState.status}
-                    onChange={(event) => updateField("status", event.target.value as Blog["status"])}
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                  </select>
-                </div>
-              )}
-            </form>
-            {previewMode && (
-              <article className="prose max-w-none">
-                <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
-              </article>
-            )}
+            </div>
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
         </section>
       ) : (
-        <section className="w-full space-y-6">
-          <p className="text-lg text-gray-700 leading-relaxed">{blog.description}</p>
-          {hasSections ? (
-            <div className="space-y-4">{renderSections(blog.sections ?? [])}</div>
-          ) : (
-            <article className="prose prose-lg max-w-none leading-relaxed">
-              <ReactMarkdown>{blog.content ?? ""}</ReactMarkdown>
+        <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+          <div className={`grid gap-8 ${hasSections ? "xl:grid-cols-[minmax(0,1fr)_280px]" : ""}`}>
+            <article className="space-y-6">
+              <div className="rounded-[32px] border border-[#e8ddd0] bg-white/90 p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-8">
+                <p className="text-lg leading-8 text-[#344855]">{blog.description}</p>
+              </div>
+
+              {hasSections ? (
+                <div className="space-y-4">{renderSections(blog.sections ?? [])}</div>
+              ) : (
+                <div className="rounded-[32px] border border-[#e8ddd0] bg-white/90 p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-8">
+                  <article className={readingProseClass}>
+                    <ReactMarkdown>{blog.content ?? ""}</ReactMarkdown>
+                  </article>
+                </div>
+              )}
             </article>
-          )}
+
+            {hasSections && sectionLinks.length > 0 && (
+              <aside className="xl:sticky xl:top-24 xl:h-fit">
+                <div className="rounded-[28px] border border-[#e8ddd0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+                  <p className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">
+                    On This Page
+                  </p>
+                  <nav className="mt-4 space-y-2">
+                    {sectionLinks.map((section) => (
+                      <a
+                        key={section.id}
+                        href={`#${section.id}`}
+                        className={`block rounded-2xl px-3 py-2 text-sm text-[#44535d] transition hover:bg-[#f5ede3] hover:text-[#8b5e3c] ${
+                          section.level === 3 ? "ml-4" : section.level === 2 ? "ml-2" : ""
+                        }`}
+                      >
+                        {section.title}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              </aside>
+            )}
+          </div>
         </section>
       )}
-    </div>
+    </main>
   )
 }
 
