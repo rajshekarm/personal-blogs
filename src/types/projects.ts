@@ -12,6 +12,11 @@ export interface Project {
   bullets: string[]
   tech: string[]
   github?: string
+  link?: {
+    href: string
+    label: string
+    external?: boolean
+  }
   media?: {
     type: "image" | "video"
     src: string

@@ -5,27 +5,41 @@ const NAME = "Rajashekar Mudigonda"
 const STORAGE_KEY = "site_unlocked_v1"
 const REVEAL_INTERVAL_MS = 130
 
-const toBinaryBytes = (text: string) =>
-  Array.from(new TextEncoder().encode(text)).map((byte) =>
-    byte.toString(2).padStart(8, "0"),
-  )
+const toBinaryByte = (text: string) =>
+  Array.from(new TextEncoder().encode(text))
+    .map((byte) => byte.toString(2).padStart(8, "0"))
+    .join(" ")
+
+const createNameStream = (text: string) =>
+  Array.from(text).map((char, index) => ({
+    byte: toBinaryByte(char),
+    char,
+    id: `${char}-${index}`,
+    isSpace: char === " ",
+  }))
+
+const persistUnlock = () => {
+  sessionStorage.setItem(STORAGE_KEY, "true")
+}
 
 type PreLandingGateProps = {
   onUnlock: () => void
 }
 
 const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
-  const binaryBytes = useMemo(() => toBinaryBytes(NAME), [])
-  const acceptedLetters = useMemo(
-    () => new Set(NAME.toLowerCase().split("").filter((char) => char !== " ")),
-    [],
+  const nameStream = useMemo(() => createNameStream(NAME), [])
+  const challengeBytes = useMemo(
+    () => nameStream.filter((entry) => !entry.isSpace),
+    [nameStream],
   )
   const [revealedCount, setRevealedCount] = useState(0)
   const [input, setInput] = useState("")
   const [error, setError] = useState("")
   const [waitingDots, setWaitingDots] = useState(".")
+  const [challengeIndex, setChallengeIndex] = useState(0)
 
-  const revealComplete = revealedCount >= binaryBytes.length
+  const revealComplete = revealedCount >= nameStream.length
+  const activeChallenge = challengeBytes[challengeIndex % challengeBytes.length]
 
   useEffect(() => {
     if (sessionStorage.getItem(STORAGE_KEY) === "true") {
@@ -38,11 +52,11 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
     }
 
     const timer = window.setTimeout(() => {
-      setRevealedCount((prev) => Math.min(prev + 1, binaryBytes.length))
+      setRevealedCount((prev) => Math.min(prev + 1, nameStream.length))
     }, REVEAL_INTERVAL_MS)
 
     return () => window.clearTimeout(timer)
-  }, [binaryBytes.length, onUnlock, revealComplete, revealedCount])
+  }, [nameStream.length, onUnlock, revealComplete, revealedCount])
 
   useEffect(() => {
     if (!revealComplete) {
@@ -60,17 +74,28 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!input.trim()) {
-      setError("Enter one decoded letter to continue.")
+      setError("Enter the decoded letter for the highlighted byte.")
       return
     }
 
-    if (acceptedLetters.has(input.trim().charAt(0).toLowerCase())) {
-      sessionStorage.setItem(STORAGE_KEY, "true")
+    if (input.trim().charAt(0).toLowerCase() === activeChallenge.char.toLowerCase()) {
+      persistUnlock()
       onUnlock()
       return
     }
 
-    setError("That letter is not from the decoded name bytes. Try again.")
+    setError("That letter does not match the highlighted byte. Try another one.")
+  }
+
+  const handleEnterPortfolio = () => {
+    persistUnlock()
+    onUnlock()
+  }
+
+  const handleNextChallenge = () => {
+    setChallengeIndex((prev) => (prev + 1) % challengeBytes.length)
+    setInput("")
+    setError("")
   }
 
   return (
@@ -83,20 +108,23 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
           Decode To Enter
         </h1>
         <p className="mt-3 text-sm text-[#a7bbc8]">
-          Loading identity stream. Decode one byte correctly to unlock this
-          portfolio.
+          My name is rendered in binary because I like building things from the
+          machine up. You can jump straight into the portfolio or decode a byte
+          for fun.
         </p>
 
         <div className="mt-6 rounded-lg border border-[#1f4458] bg-[#07151d] p-4">
           <div className="flex flex-wrap gap-2 font-mono text-sm">
-            {binaryBytes.slice(0, revealedCount).map((byte, idx) => (
+            {nameStream.slice(0, revealedCount).map((entry) => (
               <span
-                key={`${byte}-${idx}`}
+                key={entry.id}
                 className={
-                  "rounded-md border border-[#255266] bg-[#0d212c] px-2 py-1 text-[#d8e9f2]"
+                  activeChallenge?.id === entry.id && revealComplete
+                    ? "rounded-md border border-[#7ec8ec] bg-[#123444] px-2 py-1 text-[#f2fbff]"
+                    : "rounded-md border border-[#255266] bg-[#0d212c] px-2 py-1 text-[#d8e9f2]"
                 }
               >
-                {byte}
+                {entry.byte}
               </span>
             ))}
             {!revealComplete && (
@@ -112,11 +140,38 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
           </div>
         </div>
 
-        {revealComplete && (
-          <form onSubmit={handleSubmit} className="mt-6">
-            <label htmlFor="decoded-byte" className="block text-sm text-[#c5d8e2]">
-              Pick any binary block above, decode it to a letter, and enter that letter.
-            </label>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            onClick={handleEnterPortfolio}
+            className="rounded-md bg-[#1c9d73] px-5 py-3 text-sm font-medium text-[#04130e] hover:bg-[#29bc8c] transition-colors"
+          >
+            Enter Portfolio
+          </button>
+          <p className="self-center text-sm text-[#8aa6b7]">
+            The binary warm-up below is optional.
+          </p>
+        </div>
+
+        {revealComplete && activeChallenge && (
+          <form onSubmit={handleSubmit} className="mt-6 rounded-xl border border-[#1f4458] bg-[#091720] p-4">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-[#7ec8ec]">
+                  Optional Warm-Up
+                </p>
+                <label htmlFor="decoded-byte" className="mt-2 block text-sm text-[#c5d8e2]">
+                  Decode the highlighted byte and enter the matching letter.
+                </label>
+              </div>
+              <button
+                type="button"
+                onClick={handleNextChallenge}
+                className="rounded-md border border-[#2e627b] px-4 py-2 text-sm text-[#cfe5ef] hover:border-[#7ec8ec] hover:text-white transition-colors"
+              >
+                Show Another Byte
+              </button>
+            </div>
             <div className="mt-3 flex flex-col sm:flex-row gap-3">
               <input
                 id="decoded-byte"
@@ -134,13 +189,13 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
               />
               <button
                 type="submit"
-                className="rounded-md bg-[#1c9d73] px-5 py-2 text-sm font-medium text-[#04130e] hover:bg-[#29bc8c] transition-colors"
+                className="rounded-md bg-[#124f78] px-5 py-2 text-sm font-medium text-[#e9f7ff] hover:bg-[#18689d] transition-colors"
               >
-                Enter Site
+                Unlock via Decode
               </button>
             </div>
             <p className="mt-3 text-xs text-[#8aa6b7]">
-              Hint: Any one letter from the name is accepted.
+              A small nod to low-level thinking. Completely optional.
             </p>
             {error && <p className="mt-3 text-sm text-[#ff9b9b]">{error}</p>}
           </form>

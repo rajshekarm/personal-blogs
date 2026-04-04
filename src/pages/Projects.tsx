@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { PROJECTS } from "../data/projects"
 import type { ProjectCategory } from "../types/projects"
 import { GitHubIcon } from "../components/GitHubIcon"
@@ -92,6 +93,26 @@ const Projects = () => {
                     </span>
                   ))}
                 </div>
+
+                {project.link && (
+                  project.link.external ? (
+                    <a
+                      href={project.link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-5 inline-flex rounded-full border border-[#3576c0] px-4 py-2 text-sm font-medium text-[#3576c0] transition hover:bg-[#3576c0] hover:text-white"
+                    >
+                      {project.link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={project.link.href}
+                      className="mt-5 inline-flex rounded-full border border-[#3576c0] px-4 py-2 text-sm font-medium text-[#3576c0] transition hover:bg-[#3576c0] hover:text-white"
+                    >
+                      {project.link.label}
+                    </Link>
+                  )
+                )}
               </div>
 
               {/* RIGHT: Media */}

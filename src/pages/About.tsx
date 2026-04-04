@@ -67,18 +67,27 @@ const About = () => {
             </h1>
 
             <p className="mb-4 text-base leading-relaxed text-gray-700">
-              I am a Software Engineer who builds reliable, high-performance systems. I have
-              worked on low-latency trading platforms that process massive order volumes, and my
-              core strengths include distributed systems, streaming pipelines, and API design.
+              I am a Software Engineer passionate about designing, developing, and
+              deploying scalable, data-driven applications that solve complex
+              problems. My work centers on backend engineering, distributed
+              systems, database systems, cloud services, and event-driven
+              architectures.
             </p>
 
             <p className="mb-8 text-base leading-relaxed text-gray-700 md:mb-10">
-              I recently completed my Master's degree in Computer Science from Illinois Institute
-              of Technology, Chicago.
-              <br />
-              I enjoy tackling complex technical problems and turning them into simple, dependable
-              solutions. I value continuous learning and thrive on challenges, from Parallel
-              Computing (GPU Programming) to Neural Networks.
+              I have hands-on experience building automation and integration
+              solutions using Kafka, AWS Lambda, SQS, Python, React, and
+              machine learning tooling. Across roles at SS&amp;C Eze,
+              Prognovex, and more recently Fashion AI, I have worked on
+              scalable systems, data workflows, and products that improved
+              operational efficiency and decision-making.
+            </p>
+
+            <p className="mb-8 text-base leading-relaxed text-gray-700 md:mb-10">
+              I am looking for backend engineering roles where I can keep
+              growing in scalable system architecture, cloud platforms, and
+              distributed systems while collaborating with strong teams on
+              meaningful technical problems.
             </p>
 
             <div className="flex flex-wrap gap-3 md:gap-4">

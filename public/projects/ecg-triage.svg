@@ -1,0 +1,33 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" rx="36" fill="#07111B"/>
+  <rect x="36" y="36" width="728" height="528" rx="28" fill="url(#panel)"/>
+  <path d="M64 486H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M64 426H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M64 366H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M64 306H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M64 246H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M64 186H736" stroke="#17384A" stroke-width="2"/>
+  <path d="M124 124V500" stroke="#17384A" stroke-width="2"/>
+  <path d="M244 124V500" stroke="#17384A" stroke-width="2"/>
+  <path d="M364 124V500" stroke="#17384A" stroke-width="2"/>
+  <path d="M484 124V500" stroke="#17384A" stroke-width="2"/>
+  <path d="M604 124V500" stroke="#17384A" stroke-width="2"/>
+  <path d="M124 328L186 328L214 274L238 386L258 206L290 328L364 328L390 292L410 352L430 328L514 328L536 248L558 412L588 328L640 328" stroke="#31D5E7" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="88" y="76" width="240" height="72" rx="18" fill="#0D1F2D"/>
+  <text x="116" y="106" fill="#6EE7F6" font-family="monospace" font-size="22" letter-spacing="3">ECG TRIAGE</text>
+  <text x="116" y="132" fill="#A8C9D7" font-family="monospace" font-size="18">AI ASSISTED CARDIAC ROUTING</text>
+  <rect x="558" y="76" width="152" height="72" rx="18" fill="#0D1F2D"/>
+  <text x="588" y="118" fill="#F8FAFC" font-family="monospace" font-size="36">72 BPM</text>
+  <rect x="88" y="460" width="180" height="58" rx="16" fill="#0D1F2D"/>
+  <text x="112" y="495" fill="#F8FAFC" font-family="monospace" font-size="24">1,000+ CLINICS</text>
+  <rect x="304" y="460" width="164" height="58" rx="16" fill="#0D1F2D"/>
+  <text x="330" y="495" fill="#F8FAFC" font-family="monospace" font-size="24">OFFLINE AI</text>
+  <rect x="504" y="460" width="208" height="58" rx="16" fill="#0D1F2D"/>
+  <text x="528" y="495" fill="#F8FAFC" font-family="monospace" font-size="24">KAFKA + REDIS</text>
+  <defs>
+    <linearGradient id="panel" x1="400" y1="36" x2="400" y2="564" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1926"/>
+      <stop offset="1" stop-color="#09131D"/>
+    </linearGradient>
+  </defs>
+</svg>

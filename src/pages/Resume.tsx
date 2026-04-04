@@ -102,32 +102,29 @@
           {/* Experience 2 */}
           <div>
             <p className="text-blue-600 font-semibold">
-              Aug 2020 – Jul 2023
+              Jan 2020 – Aug 2023
             </p>
             <h3 className="font-semibold">
-              Software Engineer II · JP Morgan 
+              Software Engineer AI/ML · Prognovex
             </h3>
-            <p className="text-gray-500 text-sm mb-3">
-              Hyderabad, India
-            </p>
 
             <ul className="list-disc pl-5 text-sm text-gray-700 space-y-2">
               <li>
-                Modernized legacy .NET Framework monolith into .NET 6
-                microservices running on Docker/Linux, reducing infra costs by
-                30%.
+                Led development of an AI-assisted ECG triage platform deployed
+                across 1,000+ rural clinics, addressing delays in cardiac
+                diagnosis in low-resource, low-bandwidth networks and reducing
+                diagnosis time from 4 to 6 hours to under 15 minutes.
               </li>
               <li>
-                Scaled systems to handle 3× traffic growth with no infra
-                increase; reduced cloud costs by 35%.
+                Deployed quantized TensorFlow Lite CNN models on Android
+                tablets for offline STEMI detection, enabling real-time
+                prioritization of critical cases.
               </li>
               <li>
-                Built API gateway with L1/L2 caching (in-memory + Redis),
-                improving response times by ~200ms.
-              </li>
-              <li>
-                Designed metadata-driven rules engine for FINRA CAT compliance,
-                reducing client onboarding time from 6 weeks to 10 days.
+                Developed a geo-based Uber-style cardiologist dispatch system
+                with Java, Kafka, and Redis, enabling real-time matching of ECG
+                cases with available specialists across a distributed network of
+                clinics.
               </li>
             </ul>
           </div>

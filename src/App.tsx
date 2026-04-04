@@ -13,9 +13,16 @@ import Games from "./pages/games/Games"
 import Artion from "./pages/Artion"
 import NameToBinary from "./pages/games/NameToBinary"
 import MultiLeadTransformerLab from "./pages/MultiLeadTransformerLab"
+import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 
 const App = () => {
-  const [unlocked, setUnlocked] = useState(false)
+  const [unlocked, setUnlocked] = useState(() => {
+    if (typeof window === "undefined") {
+      return false
+    }
+
+    return window.sessionStorage.getItem("site_unlocked_v1") === "true"
+  })
 
   if (!unlocked) {
     return <PreLandingGate onUnlock={() => setUnlocked(true)} />
@@ -33,6 +40,7 @@ const App = () => {
         <Route path="/blogs/new" element={<NewBlog />} />
         <Route path="/blogs/:slug" element={<BlogPost />} />
         <Route path="/artion" element={<Artion/>}/>
+        <Route path="/projects/ecg-triage-intelligence" element={<ECGTriageIntelligence />} />
         <Route path="/games" element={<Games />} />
         <Route path="/artionNextGen" element={<MultiLeadTransformerLab />} />
 

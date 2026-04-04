@@ -19,6 +19,27 @@ export const PROJECTS: Project[] = [
   },
   },
   {
+    id: "ecg-triage",
+    title: "ECG Triage Intelligence Platform",
+    category: "healthcare",
+    summary:
+      "AI-assisted cardiac triage system designed for rural clinics, combining offline ECG inference with event-driven specialist dispatch.",
+    bullets: [
+      "Built a clinic-scale ECG workflow for 1,000+ rural sites, cutting diagnosis time from hours to under 15 minutes",
+      "Deployed quantized TensorFlow Lite CNN models on Android tablets for offline STEMI detection in low-bandwidth environments",
+      "Designed Kafka and Redis powered dispatch flows to route critical ECG cases to available cardiologists in real time",
+    ],
+    tech: ["Python", "TensorFlow Lite", "Android", "Kafka", "Redis", "Java"],
+    link: {
+      href: "/projects/ecg-triage-intelligence",
+      label: "Open Experience",
+    },
+    media: {
+      type: "image",
+      src: "/projects/ecg-triage.svg",
+    },
+  },
+  {
     id: "realtime-chat",
     title: "Real-time Chat Application",
     category: "financial",
