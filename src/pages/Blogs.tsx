@@ -3,12 +3,24 @@ import { Link } from "react-router-dom"
 import { fetchBlogs } from "../api/blog"
 import type { Blog } from "../types/blog"
 
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", {
+const formatDate = (value?: string) => {
+  const date = value ? new Date(value) : null
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return "Recently added"
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(value))
+  }).format(date)
+}
+
+const getSortableDate = (blog: Blog) => {
+  const timestamp = Date.parse(blog.updated_at || blog.created_at || "")
+  return Number.isNaN(timestamp) ? 0 : timestamp
+}
 
 const statusStyles: Record<Blog["status"], string> = {
   published: "border-emerald-200 bg-emerald-50 text-emerald-700",
@@ -84,13 +96,13 @@ const Blogs = () => {
         (blog.tags ?? []).join(" ").toLowerCase().includes(search)
       )
     })
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+    .sort((a, b) => getSortableDate(b) - getSortableDate(a))
 
   const publishedCount = blogs.filter((blog) => blog.status === "published").length
   const draftCount = blogs.filter((blog) => blog.status === "draft").length
   const latestBlog = blogs
     .slice()
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0]
+    .sort((a, b) => getSortableDate(b) - getSortableDate(a))[0]
   const featuredBlog = visibleBlogs.find((blog) => blog.status === "published") ?? visibleBlogs[0] ?? null
   const supportingBlogs = featuredBlog
     ? visibleBlogs.filter((blog) => blog.slug !== featuredBlog.slug)

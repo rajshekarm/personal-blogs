@@ -21,12 +21,19 @@ type SectionLink = {
   level: BlogSection["level"]
 }
 
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("en-US", {
+const formatDate = (value?: string) => {
+  const date = value ? new Date(value) : null
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return "Date unavailable"
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(value))
+  }).format(date)
+}
 
 const slugify = (value: string) =>
   value
