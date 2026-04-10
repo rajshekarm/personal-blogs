@@ -493,14 +493,14 @@ const NewBlog = () => {
                           </div>
                         </div>
 
-                        <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.8fr)]">
+                        <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.75fr)_minmax(280px,0.75fr)]">
                           <div className="grid gap-4">
                             <div className="space-y-2">
                               <label className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
                                 Section Title
                               </label>
                               <input
-                                className="rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                className="w-full rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
                                 value={section.title}
                                 onChange={(event) => updateSection(index, "title", event.target.value)}
                                 placeholder="Name the idea this section explores"
@@ -518,7 +518,7 @@ const NewBlog = () => {
                                 <span className="text-xs text-[#7a6c61]">Markdown supported</span>
                               </div>
                               <textarea
-                                className="min-h-44 resize-none rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                className="min-h-44 w-full resize-none overflow-hidden rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
                                 value={section.content ?? ""}
                                 onChange={(event) => updateSection(index, "content", event.target.value)}
                                 onInput={(event) => autoResizeTextarea(event.currentTarget)}
@@ -531,7 +531,7 @@ const NewBlog = () => {
                             </div>
                           </div>
 
-                          <aside className="grid gap-4 rounded-[24px] border border-[#e8ddd0] bg-white/80 p-4">
+                          <aside className="grid gap-4 rounded-[24px] border border-[#e8ddd0] bg-white/80 p-4 self-start">
                             <div className="space-y-2">
                               <p className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
                                 Visual
@@ -585,7 +585,7 @@ const NewBlog = () => {
                                 Alt Text
                               </label>
                               <input
-                                className="rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                className="w-full rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
                                 value={section.image_alt ?? ""}
                                 onChange={(event) => updateSection(index, "image_alt", event.target.value)}
                                 placeholder="Describe the image for accessibility"
