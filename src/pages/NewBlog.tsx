@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
 import { API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
+import { readSectionImageFile, SECTION_IMAGE_SIZE_LABEL } from "../utils/sectionImage"
 
 const CREATE_BLOG_URL = `${API_BASE}/blogs`
 
@@ -30,6 +31,29 @@ const EMPTY_FORM: BlogFormState = {
   sections: [],
 }
 
+const readingProseClass =
+  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+
+const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
+  sections.map((section) => ({
+    ...section,
+    title: section.title.trim(),
+    content: section.content?.trim() ?? "",
+    image_url: section.image_url?.trim() || undefined,
+    image_alt: section.image_alt?.trim() || undefined,
+    children: normalizeSectionsForSave(section.children ?? []),
+  }))
+
+const countWords = (value: string) => {
+  const trimmed = value.trim()
+
+  if (!trimmed) {
+    return 0
+  }
+
+  return trimmed.split(/\s+/).length
+}
+
 const NewBlog = () => {
   const navigate = useNavigate()
   const [formState, setFormState] = useState<BlogFormState>(EMPTY_FORM)
@@ -41,6 +65,7 @@ const NewBlog = () => {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [pendingFocusSectionId, setPendingFocusSectionId] = useState<string | null>(null)
   const sectionTitleInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const sectionContentRefs = useRef<Record<string, HTMLTextAreaElement | null>>({})
 
   const updateField = <K extends keyof BlogFormState>(
     key: K,
@@ -91,7 +116,10 @@ const NewBlog = () => {
       content: formState.content.trim() || undefined,
       external_url: formState.external_url.trim() || undefined,
       tags: tags.length > 0 ? tags : undefined,
-      sections: formState.sections.length > 0 ? formState.sections : undefined,
+      sections:
+        formState.sections.length > 0
+          ? normalizeSectionsForSave(formState.sections)
+          : undefined,
     }
 
     try {
@@ -129,6 +157,8 @@ const NewBlog = () => {
         title: "",
         level: 2,
         content: "",
+        image_url: "",
+        image_alt: "",
         children: [],
       },
     ]
@@ -152,6 +182,16 @@ const NewBlog = () => {
     }
   }, [formState.sections, pendingFocusSectionId])
 
+  useEffect(() => {
+    formState.sections.forEach((section) => {
+      const textarea = sectionContentRefs.current[section.id]
+      if (textarea) {
+        textarea.style.height = "auto"
+        textarea.style.height = `${textarea.scrollHeight}px`
+      }
+    })
+  }, [formState.sections])
+
   const updateSection = <K extends keyof BlogSection>(
     index: number,
     key: K,
@@ -171,199 +211,480 @@ const NewBlog = () => {
     })
   }
 
+  const moveSection = (index: number, direction: -1 | 1) => {
+    setFormState((prev) => {
+      const targetIndex = index + direction
+
+      if (targetIndex < 0 || targetIndex >= prev.sections.length) {
+        return prev
+      }
+
+      const next = [...prev.sections]
+      const [section] = next.splice(index, 1)
+      next.splice(targetIndex, 0, section)
+      return { ...prev, sections: next }
+    })
+  }
+
+  const handleSectionImageSelect = async (
+    index: number,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    try {
+      setError(null)
+      const imageUrl = await readSectionImageFile(file)
+      setFormState((prev) => {
+        const next = [...prev.sections]
+        next[index] = {
+          ...next[index],
+          image_url: imageUrl,
+          image_alt: next[index].image_alt || next[index].title,
+        }
+        return { ...prev, sections: next }
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load the selected image.")
+    } finally {
+      event.target.value = ""
+    }
+  }
+
   const autoResizeTextarea = (element: HTMLTextAreaElement) => {
     element.style.height = "auto"
     element.style.height = `${element.scrollHeight}px`
   }
 
+  const renderSectionPreview = (sections: BlogSection[]) =>
+    sections.map((section) => {
+      const headingClass =
+        section.level === 1
+          ? "text-3xl font-semibold tracking-tight text-[#19252f]"
+          : section.level === 2
+            ? "text-2xl font-semibold tracking-tight text-[#19252f]"
+            : "text-xl font-semibold tracking-tight text-[#19252f]"
+
+      return (
+        <section
+          key={section.id}
+          className="space-y-4 rounded-[28px] border border-[#ece3d7] bg-white/90 p-6 shadow-[0_14px_40px_rgba(56,39,17,0.05)]"
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#76614f]">
+              Level {section.level}
+            </span>
+          </div>
+          <h2 className={headingClass}>{section.title || "Untitled section"}</h2>
+          {section.image_url && (
+            <figure className="overflow-hidden rounded-[24px] border border-[#e5d8c8] bg-[#f8f2ea]">
+              <img
+                src={section.image_url}
+                alt={section.image_alt || section.title || "Section image"}
+                className="h-auto w-full object-cover"
+              />
+            </figure>
+          )}
+          {section.content ? (
+            <div className={readingProseClass}>
+              <ReactMarkdown>{section.content}</ReactMarkdown>
+            </div>
+          ) : (
+            <p className="text-sm italic text-[#7a6c61]">Start writing to preview this section.</p>
+          )}
+        </section>
+      )
+    })
+
+  const totalSectionWords = formState.sections.reduce(
+    (total, section) => total + countWords(section.content ?? ""),
+    0
+  )
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-      <div className="flex items-center justify-between mb-6 gap-4">
-        <h1 className="text-3xl font-bold">New Blog</h1>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="px-4 py-2 border rounded-md text-sm"
-            onClick={() => setPreviewMode((prev) => !prev)}
-          >
-            {previewMode ? "Hide Preview" : "Preview Content"}
-          </button>
-          <button
-            type="button"
-            className="px-4 py-2 border rounded-md text-sm"
-            onClick={() => navigate("/blogs")}
-          >
-            Back to Blogs
-          </button>
-        </div>
-      </div>
-
-      <div className={`grid gap-6 ${previewMode ? "xl:grid-cols-2" : ""}`}>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <input
-            className="rounded-md p-2 bg-white/80"
-            value={formState.title}
-            onChange={(event) => updateField("title", event.target.value)}
-            placeholder="title"
-          />
-          <textarea
-            className="rounded-md p-2 bg-white/80"
-            value={formState.description}
-            onChange={(event) => updateField("description", event.target.value)}
-            placeholder="description"
-            rows={2}
-          />
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="px-3 py-1 rounded-md text-sm bg-white/80"
-              onClick={() => setShowSections((prev) => !prev)}
-            >
-              {showSections ? "Hide Sections" : "Sections"}
-            </button>
-            <button
-              type="button"
-              className="px-3 py-1 rounded-md text-sm bg-white/80"
-              onClick={() => setShowAdvanced((prev) => !prev)}
-            >
-              {showAdvanced ? "Hide Advanced" : "Advanced"}
-            </button>
+    <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] text-[#1b2b34]">
+      <section className="relative overflow-hidden border-b border-[#ddd1c0] bg-[radial-gradient(circle_at_top_right,#c88c5f24,transparent_26%),linear-gradient(135deg,#f7f1e8_0%,#efe2cf_46%,#e7ddd1_100%)]">
+        <div className="absolute inset-0 opacity-25 bg-[linear-gradient(to_right,#ffffff55_1px,transparent_1px),linear-gradient(to_bottom,#ffffff55_1px,transparent_1px)] bg-[size:28px_28px]" />
+        <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-[0.32em] text-[#8b5e3c]">
+                Drafting Desk
+              </p>
+              <h1 className="text-4xl font-semibold tracking-tight text-[#19252f] sm:text-5xl">
+                Build the story section by section.
+              </h1>
+              <p className="max-w-3xl text-base leading-7 text-[#4b5d69] sm:text-lg">
+                Write in focused blocks, attach visuals where they help, and use preview mode to
+                see the post as readers will experience it.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full border border-[#d8cab9] bg-white/75 px-4 py-2 text-sm text-[#5d6d77]">
+                {formState.sections.length} section{formState.sections.length === 1 ? "" : "s"}
+              </span>
+              <span className="rounded-full border border-[#d8cab9] bg-white/75 px-4 py-2 text-sm text-[#5d6d77]">
+                {totalSectionWords} words
+              </span>
+            </div>
           </div>
 
-          {showSections && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <label className="text-sm text-gray-600">sections</label>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="rounded-full border border-[#d8cab9] bg-white/80 px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+              onClick={() => setPreviewMode((prev) => !prev)}
+            >
+              {previewMode ? "Hide Preview" : "Preview Layout"}
+            </button>
+            <button
+              type="button"
+              className="rounded-full border border-[#d8cab9] bg-white/80 px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+              onClick={() => navigate("/blogs")}
+            >
+              Back to Blogs
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+        <div className={`grid gap-6 ${previewMode ? "xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)]" : ""}`}>
+          <form className="grid gap-5" onSubmit={handleSubmit}>
+            <div className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Title</label>
+                  <input
+                    className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                    value={formState.title}
+                    onChange={(event) => updateField("title", event.target.value)}
+                    placeholder="What is this post about?"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Description</label>
+                  <textarea
+                    className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                    value={formState.description}
+                    onChange={(event) => updateField("description", event.target.value)}
+                    placeholder="Set the context for the reader before they dive into the sections."
+                    rows={3}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
-                  className="px-3 py-1 rounded-md text-sm bg-white/80"
-                  onClick={handleAddSection}
+                  className="rounded-full border border-[#d8cab9] bg-[#fbf8f3] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-white"
+                  onClick={() => setShowSections((prev) => !prev)}
                 >
-                  + Add Section
+                  {showSections ? "Hide Sections" : "Show Sections"}
+                </button>
+                <button
+                  type="button"
+                  className="rounded-full border border-[#d8cab9] bg-[#fbf8f3] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-white"
+                  onClick={() => setShowAdvanced((prev) => !prev)}
+                >
+                  {showAdvanced ? "Hide Advanced" : "Advanced"}
                 </button>
               </div>
-              {formState.sections.length === 0 ? (
-                <p className="text-sm text-gray-500">No sections added yet.</p>
-              ) : (
-                <div className="space-y-3">
-                  {formState.sections.map((section, index) => (
-                    <div key={section.id} className="grid gap-2 py-3 border-b border-gray-200/70 last:border-b-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs text-gray-500">Subtitle {index + 1}</span>
-                        <div className="flex items-center gap-2">
-                          <select
-                            className="rounded-md p-1 text-xs bg-white/80"
-                            value={section.level}
-                            onChange={(event) =>
-                              updateSection(index, "level", Number(event.target.value) as 1 | 2 | 3)
-                            }
-                          >
-                            <option value={1}>Level 1</option>
-                            <option value={2}>Level 2</option>
-                            <option value={3}>Level 3</option>
-                          </select>
-                          <button
-                            type="button"
-                            className="px-2 py-1 text-xs rounded-md text-red-600 bg-red-50"
-                            onClick={() => removeSection(index)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500">Type subtitle name and content for this section.</p>
-                      <input
-                        className="rounded-md p-2 bg-white/80"
-                        value={section.title}
-                        onChange={(event) => updateSection(index, "title", event.target.value)}
-                        placeholder="Enter subtitle name"
-                        ref={(element) => {
-                          sectionTitleInputRefs.current[section.id] = element
-                        }}
-                      />
-                      <textarea
-                        className="rounded-md p-2 bg-white/80 overflow-hidden resize-none"
-                        value={section.content ?? ""}
-                        onChange={(event) => updateSection(index, "content", event.target.value)}
-                        onInput={(event) => autoResizeTextarea(event.currentTarget)}
-                        placeholder="section content"
-                        rows={3}
-                      />
-                    </div>
-                  ))}
+            </div>
+
+            {showSections && (
+              <div className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                  <div className="space-y-2">
+                    <p className="text-xs uppercase tracking-[0.3em] text-[#8b5e3c]">Sections</p>
+                    <h2 className="text-2xl font-semibold tracking-tight text-[#19252f]">
+                      Shape the article in focused blocks.
+                    </h2>
+                    <p className="max-w-2xl text-sm leading-6 text-[#5f6f79]">
+                      Give each section a clear headline, write the body in markdown, and attach an image only when it adds context.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="rounded-full bg-[#19252f] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#101921]"
+                    onClick={handleAddSection}
+                  >
+                    + Add Section
+                  </button>
                 </div>
-              )}
-            </div>
+
+                {formState.sections.length === 0 ? (
+                  <div className="mt-5 rounded-[28px] border border-dashed border-[#d8cab9] bg-[#fbf8f3] p-6 text-center">
+                    <p className="text-lg font-medium text-[#19252f]">No sections yet.</p>
+                    <p className="mt-2 text-sm leading-6 text-[#61717b]">
+                      Start with one strong section, then layer in more detail as the story takes shape.
+                    </p>
+                    <button
+                      type="button"
+                      className="mt-4 rounded-full border border-[#d8cab9] bg-white px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      onClick={handleAddSection}
+                    >
+                      Create your first section
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-5 space-y-5">
+                    {formState.sections.map((section, index) => (
+                      <article
+                        key={section.id}
+                        className="rounded-[28px] border border-[#e5d8c8] bg-[#fcfaf7] p-4 shadow-[0_10px_30px_rgba(62,45,25,0.04)] sm:p-5"
+                      >
+                        <div className="flex flex-col gap-3 border-b border-[#ece3d7] pb-4 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="space-y-2">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#76614f]">
+                                Section {index + 1}
+                              </span>
+                              <span className="rounded-full border border-[#dfd2c2] bg-white px-3 py-1 text-xs text-[#5f6f79]">
+                                {countWords(section.content ?? "")} words
+                              </span>
+                            </div>
+                            <p className="text-sm leading-6 text-[#5f6f79]">
+                              Lead with the key idea in the title, then use the body to unpack the detail.
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            <select
+                              className="rounded-full border border-[#d8cab9] bg-white px-3 py-2 text-xs text-[#44535d]"
+                              value={section.level}
+                              onChange={(event) =>
+                                updateSection(index, "level", Number(event.target.value) as 1 | 2 | 3)
+                              }
+                            >
+                              <option value={1}>Level 1</option>
+                              <option value={2}>Level 2</option>
+                              <option value={3}>Level 3</option>
+                            </select>
+                            <button
+                              type="button"
+                              className="rounded-full border border-[#d8cab9] bg-white px-3 py-2 text-xs text-[#44535d] disabled:opacity-40"
+                              onClick={() => moveSection(index, -1)}
+                              disabled={index === 0}
+                            >
+                              Move Up
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-full border border-[#d8cab9] bg-white px-3 py-2 text-xs text-[#44535d] disabled:opacity-40"
+                              onClick={() => moveSection(index, 1)}
+                              disabled={index === formState.sections.length - 1}
+                            >
+                              Move Down
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-full bg-red-50 px-3 py-2 text-xs text-red-600"
+                              onClick={() => removeSection(index)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.8fr)]">
+                          <div className="grid gap-4">
+                            <div className="space-y-2">
+                              <label className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
+                                Section Title
+                              </label>
+                              <input
+                                className="rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                value={section.title}
+                                onChange={(event) => updateSection(index, "title", event.target.value)}
+                                placeholder="Name the idea this section explores"
+                                ref={(element) => {
+                                  sectionTitleInputRefs.current[section.id] = element
+                                }}
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between gap-3">
+                                <label className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
+                                  Section Body
+                                </label>
+                                <span className="text-xs text-[#7a6c61]">Markdown supported</span>
+                              </div>
+                              <textarea
+                                className="min-h-44 resize-none rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                value={section.content ?? ""}
+                                onChange={(event) => updateSection(index, "content", event.target.value)}
+                                onInput={(event) => autoResizeTextarea(event.currentTarget)}
+                                placeholder={"Write the main content for this section.\n\nTip: use short paragraphs, bullets, or markdown headings where helpful."}
+                                rows={6}
+                                ref={(element) => {
+                                  sectionContentRefs.current[section.id] = element
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <aside className="grid gap-4 rounded-[24px] border border-[#e8ddd0] bg-white/80 p-4">
+                            <div className="space-y-2">
+                              <p className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
+                                Visual
+                              </p>
+                              <p className="text-sm leading-6 text-[#60707a]">
+                                Add an image when it helps explain the section, not just to fill space.
+                              </p>
+                            </div>
+
+                            <label className="grid gap-2 rounded-2xl border border-dashed border-[#d8cab9] bg-[#fbf8f3] p-4 text-sm text-[#5d6d77]">
+                              <span className="font-medium text-[#42535d]">Attach image from your computer</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="text-sm"
+                                onChange={(event) => void handleSectionImageSelect(index, event)}
+                              />
+                              <span className="text-xs text-[#7a6c61]">
+                                Accepts image files up to {SECTION_IMAGE_SIZE_LABEL}.
+                              </span>
+                            </label>
+
+                            {section.image_url ? (
+                              <div className="grid gap-3">
+                                <div className="overflow-hidden rounded-[20px] border border-[#e5d8c8] bg-[#fbf8f3]">
+                                  <img
+                                    src={section.image_url}
+                                    alt={section.image_alt || section.title || "Section image preview"}
+                                    className="max-h-56 w-full object-cover"
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  className="w-fit rounded-full bg-red-50 px-3 py-2 text-xs text-red-600"
+                                  onClick={() => {
+                                    updateSection(index, "image_url", "")
+                                    updateSection(index, "image_alt", "")
+                                  }}
+                                >
+                                  Remove image
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="rounded-2xl border border-dashed border-[#e5d8c8] bg-[#fbf8f3] px-4 py-5 text-sm text-[#7a6c61]">
+                                No image attached yet.
+                              </div>
+                            )}
+
+                            <div className="space-y-2">
+                              <label className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
+                                Alt Text
+                              </label>
+                              <input
+                                className="rounded-2xl border border-[#d8cab9] bg-white px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c]"
+                                value={section.image_alt ?? ""}
+                                onChange={(event) => updateSection(index, "image_alt", event.target.value)}
+                                placeholder="Describe the image for accessibility"
+                              />
+                            </div>
+                          </aside>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {showAdvanced && (
+              <div className="grid gap-3 rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.slug}
+                  onChange={(event) => updateField("slug", event.target.value)}
+                  placeholder="custom slug (optional)"
+                />
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.subheader}
+                  onChange={(event) => updateField("subheader", event.target.value)}
+                  placeholder="subheader (optional)"
+                />
+                <textarea
+                  className="min-h-40 rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.content}
+                  onChange={(event) => updateField("content", event.target.value)}
+                  placeholder="markdown content (optional fallback)"
+                  rows={6}
+                />
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.external_url}
+                  onChange={(event) => updateField("external_url", event.target.value)}
+                  placeholder="external url (optional)"
+                />
+                <input
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.tags}
+                  onChange={(event) => updateField("tags", event.target.value)}
+                  placeholder="tags (comma-separated)"
+                />
+                <select
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.status}
+                  onChange={(event) => updateField("status", event.target.value as Blog["status"])}
+                >
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-fit rounded-full bg-[#19252f] px-5 py-3 text-sm font-medium text-white disabled:opacity-60"
+              disabled={saving}
+            >
+              {saving ? "Creating..." : "Create Blog"}
+            </button>
+          </form>
+
+          {previewMode && (
+            <section className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#8b5e3c]">Reader Preview</p>
+              <div className="mt-5 space-y-6">
+                <div className="rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-6">
+                  <h2 className="text-3xl font-semibold tracking-tight text-[#19252f]">
+                    {formState.title || "Preview title"}
+                  </h2>
+                  {formState.subheader && (
+                    <p className="mt-3 text-lg leading-8 text-[#4b5d69]">{formState.subheader}</p>
+                  )}
+                  <p className="mt-4 text-base leading-8 text-[#344855]">
+                    {formState.description || "Your description will appear here."}
+                  </p>
+                </div>
+
+                {formState.sections.length > 0 ? (
+                  <div className="space-y-4">{renderSectionPreview(formState.sections)}</div>
+                ) : (
+                  <article className={`rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-6 ${readingProseClass}`}>
+                    <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
+                  </article>
+                )}
+              </div>
+            </section>
           )}
+        </div>
 
-          {showAdvanced && (
-            <div className="grid gap-3 py-2">
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.slug}
-                onChange={(event) => updateField("slug", event.target.value)}
-                placeholder="custom slug (optional)"
-              />
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.subheader}
-                onChange={(event) => updateField("subheader", event.target.value)}
-                placeholder="subheader (optional)"
-              />
-              <textarea
-                className="rounded-md p-2 min-h-40 bg-white/80"
-                value={formState.content}
-                onChange={(event) => updateField("content", event.target.value)}
-                placeholder="markdown content (optional fallback)"
-                rows={6}
-              />
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.external_url}
-                onChange={(event) => updateField("external_url", event.target.value)}
-                placeholder="external url (optional)"
-              />
-              <input
-                className="rounded-md p-2 bg-white/80"
-                value={formState.tags}
-                onChange={(event) => updateField("tags", event.target.value)}
-                placeholder="tags (comma-separated)"
-              />
-              <select
-                className="rounded-md p-2 bg-white/80"
-                value={formState.status}
-                onChange={(event) => updateField("status", event.target.value as Blog["status"])}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="w-fit px-5 py-2 rounded-md bg-black text-white disabled:opacity-60"
-            disabled={saving}
-          >
-            {saving ? "Creating..." : "Create Blog"}
-          </button>
-        </form>
-
-        {previewMode && (
-          <section className="p-6 rounded-lg bg-white/70">
-            <h2 className="text-xl font-semibold mb-3">{formState.title || "Preview"}</h2>
-            {formState.subheader && <p className="text-gray-600 mb-4">{formState.subheader}</p>}
-            <article className="prose max-w-none">
-              <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
-            </article>
-          </section>
-        )}
+        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+        {success && <p className="mt-4 text-sm text-green-700">{success}</p>}
       </div>
-
-      {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
-      {success && <p className="text-sm text-green-700 mt-4">{success}</p>}
-    </div>
+    </main>
   )
 }
 

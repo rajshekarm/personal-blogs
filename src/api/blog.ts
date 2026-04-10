@@ -12,6 +12,8 @@ const normalizeSection = (section: Partial<BlogSection>): BlogSection => ({
       ? section.level
       : 2,
   content: section.content ?? "",
+  image_url: section.image_url ?? undefined,
+  image_alt: section.image_alt ?? undefined,
   children: Array.isArray(section.children)
     ? section.children.map(normalizeSection)
     : [],

@@ -87,6 +87,8 @@ type BlogSection = {
   title: string
   level: 1 | 2 | 3
   content?: string
+  image_url?: string
+  image_alt?: string
   children?: BlogSection[]
 }
 
@@ -162,14 +164,16 @@ type Blog = {
 3. `Sections` panel supports adding top-level section objects with `+ Add Section`.
 4. New sections default to `level: 2`.
 5. Section content textareas auto-expand while typing.
-6. Optional fields (`subheader`, `content`, `tags`, `status`, `external_url`) are in `Advanced`.
+6. Each section can optionally attach an image from the local computer and store alt text.
+7. Optional fields (`subheader`, `content`, `tags`, `status`, `external_url`) are in `Advanced`.
 
 ### `/blogs/:slug` edit mode
 
 1. Parent/blog fields are editable (`title`, `subheader`, `description`).
 2. Existing sections are shown read-only in edit mode.
 3. `+ Add Section` opens a separate "New Section" input area.
-4. New section is appended only when `Add This Section` is clicked.
+4. New section can optionally include an uploaded image and alt text.
+5. New section is appended only when `Add This Section` is clicked.
 
 ## Frontend API Contract
 

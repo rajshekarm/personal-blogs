@@ -3,6 +3,8 @@ export type BlogSection = {
   title: string
   level: 1 | 2 | 3
   content?: string
+  image_url?: string
+  image_alt?: string
   children?: BlogSection[]
 }
 

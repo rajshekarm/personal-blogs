@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react"
 import { Link, useParams } from "react-router-dom"
 import ReactMarkdown from "react-markdown"
 import { fetchBlog, API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
+import { readSectionImageFile, SECTION_IMAGE_SIZE_LABEL } from "../utils/sectionImage"
 
 type BlogEditFormState = {
   title: string
@@ -75,6 +76,16 @@ const extractWordCount = (blog: Blog) => {
 const readingProseClass =
   "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
 
+const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
+  sections.map((section) => ({
+    ...section,
+    title: section.title.trim(),
+    content: section.content?.trim() ?? "",
+    image_url: section.image_url?.trim() || undefined,
+    image_alt: section.image_alt?.trim() || undefined,
+    children: normalizeSectionsForSave(section.children ?? []),
+  }))
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
   const [blog, setBlog] = useState<Blog | null>(null)
@@ -101,6 +112,8 @@ const BlogPost = () => {
     title: "",
     level: 2,
     content: "",
+    image_url: "",
+    image_alt: "",
     children: [],
   })
   const newSectionTitleRef = useRef<HTMLInputElement | null>(null)
@@ -179,6 +192,8 @@ const BlogPost = () => {
       title: "",
       level: 2,
       content: "",
+      image_url: "",
+      image_alt: "",
       children: [],
     })
   }
@@ -211,7 +226,7 @@ const BlogPost = () => {
       external_url: formState.external_url.trim() || undefined,
       status: formState.status,
       tags: tags.length > 0 ? tags : undefined,
-      sections: formState.sections,
+      sections: normalizeSectionsForSave(formState.sections),
     }
 
     try {
@@ -275,6 +290,8 @@ const BlogPost = () => {
       title: newSectionDraft.title.trim(),
       level: newSectionDraft.level,
       content: newSectionDraft.content?.trim() ?? "",
+      image_url: newSectionDraft.image_url?.trim() || undefined,
+      image_alt: newSectionDraft.image_alt?.trim() || undefined,
       children: [],
     }
 
@@ -287,10 +304,34 @@ const BlogPost = () => {
       title: "",
       level: 2,
       content: "",
+      image_url: "",
+      image_alt: "",
       children: [],
     })
     setShowNewSectionForm(false)
     setError(null)
+  }
+
+  const handleNewSectionImageSelect = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    try {
+      setError(null)
+      const imageUrl = await readSectionImageFile(file)
+      setNewSectionDraft((prev) => ({
+        ...prev,
+        image_url: imageUrl,
+        image_alt: prev.image_alt || prev.title,
+      }))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load the selected image.")
+    } finally {
+      event.target.value = ""
+    }
   }
 
   const autoResizeTextarea = (element: HTMLTextAreaElement) => {
@@ -344,6 +385,16 @@ const BlogPost = () => {
           className="space-y-4 rounded-[28px] border border-[#ece3d7] bg-white/90 p-6 shadow-[0_14px_40px_rgba(56,39,17,0.05)]"
         >
           <h2 className={headingClass}>{section.title}</h2>
+          {section.image_url && (
+            <figure className="overflow-hidden rounded-[24px] border border-[#e5d8c8] bg-[#f8f2ea]">
+              <img
+                src={section.image_url}
+                alt={section.image_alt || section.title}
+                className="h-auto w-full object-cover"
+                loading="lazy"
+              />
+            </figure>
+          )}
           {section.content && (
             <div className={readingProseClass}>
               <ReactMarkdown>{section.content}</ReactMarkdown>
@@ -576,6 +627,16 @@ const BlogPost = () => {
                               placeholder="section content"
                               rows={3}
                             />
+                            {section.image_url && (
+                              <div className="overflow-hidden rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3]">
+                                <img
+                                  src={section.image_url}
+                                  alt={section.image_alt || section.title}
+                                  className="h-auto max-h-64 w-full object-cover"
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -621,6 +682,43 @@ const BlogPost = () => {
                           onInput={(event) => autoResizeTextarea(event.currentTarget)}
                           placeholder="section content"
                           rows={3}
+                        />
+                        <label className="grid gap-2 rounded-2xl border border-dashed border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-sm text-[#5a6770]">
+                          <span>Attach image from your computer</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="text-sm"
+                            onChange={(event) => void handleNewSectionImageSelect(event)}
+                          />
+                          <span className="text-xs text-[#7c6c5d]">
+                            Accepts image files up to {SECTION_IMAGE_SIZE_LABEL}.
+                          </span>
+                        </label>
+                        {newSectionDraft.image_url && (
+                          <div className="grid gap-2 rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3] p-3">
+                            <img
+                              src={newSectionDraft.image_url}
+                              alt={newSectionDraft.image_alt || newSectionDraft.title || "Section image preview"}
+                              className="h-auto max-h-64 w-full rounded-2xl object-cover"
+                            />
+                            <button
+                              type="button"
+                              className="w-fit rounded-full bg-red-50 px-3 py-2 text-xs text-red-600"
+                              onClick={() => {
+                                updateNewSection("image_url", "")
+                                updateNewSection("image_alt", "")
+                              }}
+                            >
+                              Remove image
+                            </button>
+                          </div>
+                        )}
+                        <input
+                          className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                          value={newSectionDraft.image_alt ?? ""}
+                          onChange={(event) => updateNewSection("image_alt", event.target.value)}
+                          placeholder="image alt text (optional)"
                         />
                         <div>
                           <button
