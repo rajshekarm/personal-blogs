@@ -27,6 +27,12 @@ const normalizeBlog = (blog: RawBlog): Blog => ({
   description: blog.description ?? "",
   content: blog.content ?? undefined,
   external_url: blog.external_url ?? undefined,
+  blog_type:
+    blog.blog_type === "Hardware" ||
+    blog.blog_type === "Physics" ||
+    blog.blog_type === "Software Engineering"
+      ? blog.blog_type
+      : "AI",
   status: blog.status === "draft" ? "draft" : "published",
   tags: Array.isArray(blog.tags) ? blog.tags.filter(Boolean) : [],
   sections: Array.isArray(blog.sections)

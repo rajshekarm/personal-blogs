@@ -12,6 +12,7 @@ type BlogEditFormState = {
   content: string
   sections: BlogSection[]
   external_url: string
+  blog_type: Blog["blog_type"]
   status: Blog["status"]
   tags: string
 }
@@ -104,6 +105,7 @@ const BlogPost = () => {
     content: "",
     sections: [],
     external_url: "",
+    blog_type: "AI",
     status: "draft",
     tags: "",
   })
@@ -138,6 +140,7 @@ const BlogPost = () => {
           content: data.content ?? "",
           sections: data.sections ?? [],
           external_url: data.external_url ?? "",
+          blog_type: data.blog_type,
           status: data.status,
           tags: data.tags?.join(", ") ?? "",
         })
@@ -184,6 +187,7 @@ const BlogPost = () => {
       content: blog.content ?? "",
       sections: blog.sections ?? [],
       external_url: blog.external_url ?? "",
+      blog_type: blog.blog_type,
       status: blog.status,
       tags: blog.tags?.join(", ") ?? "",
     })
@@ -224,6 +228,7 @@ const BlogPost = () => {
       description: formState.description.trim(),
       content: formState.content.trim() || undefined,
       external_url: formState.external_url.trim() || undefined,
+      blog_type: formState.blog_type,
       status: formState.status,
       tags: tags.length > 0 ? tags : undefined,
       sections: normalizeSectionsForSave(formState.sections),
@@ -251,6 +256,7 @@ const BlogPost = () => {
         content: updated.content ?? "",
         sections: updated.sections ?? [],
         external_url: updated.external_url ?? "",
+        blog_type: updated.blog_type,
         status: updated.status,
         tags: updated.tags?.join(", ") ?? "",
       })
@@ -520,6 +526,9 @@ const BlogPost = () => {
               <span className="rounded-full border border-[#d8cab9] bg-[#fbf7f2] px-3 py-1 capitalize">
                 {displayStatus}
               </span>
+              <span className="rounded-full border border-[#d8cab9] bg-[#fbf7f2] px-3 py-1">
+                {editing ? formState.blog_type : blog.blog_type}
+              </span>
               <span>Updated {formatDate(blog.updated_at)}</span>
               <span>Created {formatDate(blog.created_at)}</span>
               {!editing && <span>{readTime} min read</span>}
@@ -584,6 +593,16 @@ const BlogPost = () => {
                   onChange={(event) => updateField("title", event.target.value)}
                   placeholder="title"
                 />
+                <select
+                  className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  value={formState.blog_type}
+                  onChange={(event) => updateField("blog_type", event.target.value as Blog["blog_type"])}
+                >
+                  <option value="AI">AI</option>
+                  <option value="Hardware">Hardware</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Software Engineering">Software Engineering</option>
+                </select>
                 <input
                   className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
                   value={formState.subheader}

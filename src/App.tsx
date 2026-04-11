@@ -24,15 +24,20 @@ const App = () => {
     return window.sessionStorage.getItem("site_unlocked_v1") === "true"
   })
 
-  if (!unlocked) {
-    return <PreLandingGate onUnlock={() => setUnlocked(true)} />
-  }
-
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<About />} />
+        <Route
+          path="/"
+          element={
+            unlocked ? (
+              <About />
+            ) : (
+              <PreLandingGate onUnlock={() => setUnlocked(true)} />
+            )
+          }
+        />
         <Route path="/resume" element={<Resume />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />

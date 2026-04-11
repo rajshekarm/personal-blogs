@@ -14,6 +14,7 @@ type BlogFormState = {
   description: string
   content: string
   external_url: string
+  blog_type: Blog["blog_type"]
   status: Blog["status"]
   tags: string
   sections: BlogSection[]
@@ -26,6 +27,7 @@ const EMPTY_FORM: BlogFormState = {
   description: "",
   content: "",
   external_url: "",
+  blog_type: "AI",
   status: "draft",
   tags: "",
   sections: [],
@@ -112,6 +114,7 @@ const NewBlog = () => {
       title: formState.title.trim(),
       subheader: formState.subheader.trim() || undefined,
       description: formState.description.trim(),
+      blog_type: formState.blog_type,
       status: formState.status,
       content: formState.content.trim() || undefined,
       external_url: formState.external_url.trim() || undefined,
@@ -357,14 +360,29 @@ const NewBlog = () => {
           <form className="grid gap-5" onSubmit={handleSubmit}>
             <div className="rounded-[32px] border border-[#ddd1c0] bg-white/90 p-5 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-6">
               <div className="grid gap-4">
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Title</label>
-                  <input
-                    className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
-                    value={formState.title}
-                    onChange={(event) => updateField("title", event.target.value)}
-                    placeholder="What is this post about?"
-                  />
+                <div className="grid gap-4 md:grid-cols-[minmax(0,1.3fr)_220px]">
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Title</label>
+                    <input
+                      className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.title}
+                      onChange={(event) => updateField("title", event.target.value)}
+                      placeholder="What is this post about?"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Blog Type</label>
+                    <select
+                      className="w-full rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                      value={formState.blog_type}
+                      onChange={(event) => updateField("blog_type", event.target.value as Blog["blog_type"])}
+                    >
+                      <option value="AI">AI</option>
+                      <option value="Hardware">Hardware</option>
+                      <option value="Physics">Physics</option>
+                      <option value="Software Engineering">Software Engineering</option>
+                    </select>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">Description</label>
