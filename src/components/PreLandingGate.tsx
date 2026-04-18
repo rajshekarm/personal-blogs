@@ -172,53 +172,51 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
           </p>
         </div>
 
-        {revealComplete && activeChallenge && (
-          <form onSubmit={handleSubmit} className="mt-6 rounded-xl border border-[#1f4458] bg-[#091720] p-4">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-[#7ec8ec]">
-                  Optional Warm-Up
-                </p>
-                <label htmlFor="decoded-byte" className="mt-2 block text-sm text-[#c5d8e2]">
-                  Decode the highlighted byte and enter the matching letter.
-                </label>
-              </div>
-              <button
-                type="button"
-                onClick={handleNextChallenge}
-                className="rounded-md border border-[#2e627b] px-4 py-2 text-sm text-[#cfe5ef] hover:border-[#7ec8ec] hover:text-white transition-colors"
-              >
-                Show Another Byte
-              </button>
+        <form onSubmit={handleSubmit} className="mt-6 rounded-xl border border-[#1f4458] bg-[#091720] p-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#7ec8ec]">
+                Optional Warm-Up
+              </p>
+              <label htmlFor="decoded-byte" className="mt-2 block text-sm text-[#c5d8e2]">
+                Decode the highlighted byte and enter the matching letter.
+              </label>
             </div>
-            <div className="mt-3 flex flex-col sm:flex-row gap-3">
-              <input
-                id="decoded-byte"
-                type="text"
-                value={input}
-                maxLength={1}
-                onChange={(event) => {
-                  setInput(event.target.value)
-                  if (error) {
-                    setError("")
-                  }
-                }}
-                className="w-full sm:w-36 rounded-md border border-[#2e627b] bg-[#0b1b24] px-3 py-2 text-lg uppercase tracking-[0.25em] outline-none focus:border-[#7ec8ec]"
-                placeholder="?"
-              />
-              <button
-                type="submit"
-                className="rounded-md bg-[#124f78] px-5 py-2 text-sm font-medium text-[#e9f7ff] hover:bg-[#18689d] transition-colors"
-              >
-                Unlock via Decode
-              </button>
-            </div>
-            <p className="mt-3 text-xs text-[#8aa6b7]">
-              A small nod to low-level thinking. Completely optional.
-            </p>
-            {error && <p className="mt-3 text-sm text-[#ff9b9b]">{error}</p>}
-          </form>
-        )}
+            <button
+              type="button"
+              onClick={handleNextChallenge}
+              className="rounded-md border border-[#2e627b] px-4 py-2 text-sm text-[#cfe5ef] hover:border-[#7ec8ec] hover:text-white transition-colors"
+            >
+              Show Another Byte
+            </button>
+          </div>
+          <div className="mt-3 flex flex-col sm:flex-row gap-3">
+            <input
+              id="decoded-byte"
+              type="text"
+              value={input}
+              maxLength={1}
+              onChange={(event) => {
+                setInput(event.target.value)
+                if (error) {
+                  setError("")
+                }
+              }}
+              className="w-full sm:w-36 rounded-md border border-[#2e627b] bg-[#0b1b24] px-3 py-2 text-lg uppercase tracking-[0.25em] outline-none focus:border-[#7ec8ec]"
+              placeholder="?"
+            />
+            <button
+              type="submit"
+              className="rounded-md bg-[#124f78] px-5 py-2 text-sm font-medium text-[#e9f7ff] hover:bg-[#18689d] transition-colors"
+            >
+              Unlock via Decode
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-[#8aa6b7]">
+            A small nod to low-level thinking. Completely optional.
+          </p>
+          {error && <p className="mt-3 text-sm text-[#ff9b9b]">{error}</p>}
+        </form>
       </section>
     </main>
   )
