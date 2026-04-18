@@ -140,15 +140,34 @@ const PreLandingGate = ({ onUnlock }: PreLandingGateProps) => {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={handleEnterPortfolio}
-            className="rounded-md bg-[#1c9d73] px-5 py-3 text-sm font-medium text-[#04130e] hover:bg-[#29bc8c] transition-colors"
-          >
-            Enter Portfolio
-          </button>
-          <p className="self-center text-sm text-[#8aa6b7]">
+        <div className="mt-8 rounded-2xl border border-[#255266] bg-[#081821] p-4 sm:p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-md">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#7ec8ec]">
+                Next Step
+              </p>
+              <p className="mt-2 text-sm text-[#c8dbe6]">
+                If you want to skip the warm-up, this is the path into the
+                portfolio.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleEnterPortfolio}
+              className="group relative isolate inline-flex min-h-14 items-center justify-center gap-3 overflow-hidden rounded-full border border-[#95f0ce]/60 bg-gradient-to-r from-[#19d98e] via-[#2df0b3] to-[#86f7db] px-6 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-[#02110b] shadow-[0_0_0_1px_rgba(149,240,206,0.25),0_18px_45px_rgba(24,210,141,0.34)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgba(149,240,206,0.4),0_22px_60px_rgba(24,210,141,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b9f8e1] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081821] motion-safe:animate-[pulse_2.6s_ease-in-out_infinite]"
+              aria-label="Enter portfolio and skip the optional binary warm-up"
+            >
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+              />
+              <span className="relative">Enter Portfolio</span>
+              <span className="relative text-base font-bold" aria-hidden="true">
+                {">"}
+              </span>
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-[#8aa6b7]">
             The binary warm-up below is optional.
           </p>
         </div>
