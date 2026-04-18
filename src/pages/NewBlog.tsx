@@ -36,6 +36,8 @@ const EMPTY_FORM: BlogFormState = {
 const readingProseClass =
   "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
 
+const preserveLineBreaks = (value: string) => value.replace(/\r\n/g, "\n").replace(/\n/g, "  \n")
+
 const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
   sections.map((section) => ({
     ...section,
@@ -294,7 +296,7 @@ const NewBlog = () => {
           )}
           {section.content ? (
             <div className={readingProseClass}>
-              <ReactMarkdown>{section.content}</ReactMarkdown>
+              <ReactMarkdown>{preserveLineBreaks(section.content)}</ReactMarkdown>
             </div>
           ) : (
             <p className="text-sm italic text-[#7a6c61]">Start writing to preview this section.</p>
@@ -690,8 +692,8 @@ const NewBlog = () => {
                 {formState.sections.length > 0 ? (
                   <div className="space-y-4">{renderSectionPreview(formState.sections)}</div>
                 ) : (
-                  <article className={`rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-6 ${readingProseClass}`}>
-                    <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
+                <article className={`rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-6 ${readingProseClass}`}>
+                    <ReactMarkdown>{preserveLineBreaks(formState.content || "_No content yet_")}</ReactMarkdown>
                   </article>
                 )}
               </div>

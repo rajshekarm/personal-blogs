@@ -77,6 +77,8 @@ const extractWordCount = (blog: Blog) => {
 const readingProseClass =
   "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
 
+const preserveLineBreaks = (value: string) => value.replace(/\r\n/g, "\n").replace(/\n/g, "  \n")
+
 const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
   sections.map((section) => ({
     ...section,
@@ -403,7 +405,7 @@ const BlogPost = () => {
           )}
           {section.content && (
             <div className={readingProseClass}>
-              <ReactMarkdown>{section.content}</ReactMarkdown>
+              <ReactMarkdown>{preserveLineBreaks(section.content)}</ReactMarkdown>
             </div>
           )}
           {section.children && section.children.length > 0 && (
@@ -807,8 +809,8 @@ const BlogPost = () => {
                 <div className="space-y-4">{renderSections(blog.sections ?? [])}</div>
               ) : (
                 <div className="rounded-[32px] border border-[#e8ddd0] bg-white/90 p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-8">
-                  <article className={readingProseClass}>
-                    <ReactMarkdown>{blog.content ?? ""}</ReactMarkdown>
+                <article className={readingProseClass}>
+                    <ReactMarkdown>{preserveLineBreaks(blog.content ?? "")}</ReactMarkdown>
                   </article>
                 </div>
               )}

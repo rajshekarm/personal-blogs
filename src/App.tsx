@@ -1,7 +1,5 @@
-import { useState } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
-import PreLandingGate from "./components/PreLandingGate"
 import About from "./pages/About"
 import Resume from "./pages/Resume"
 import Projects from "./pages/Projects"
@@ -16,28 +14,11 @@ import MultiLeadTransformerLab from "./pages/MultiLeadTransformerLab"
 import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 
 const App = () => {
-  const [unlocked, setUnlocked] = useState(() => {
-    if (typeof window === "undefined") {
-      return false
-    }
-
-    return window.sessionStorage.getItem("site_unlocked_v1") === "true"
-  })
-
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route
-          path="/"
-          element={
-            unlocked ? (
-              <About />
-            ) : (
-              <PreLandingGate onUnlock={() => setUnlocked(true)} />
-            )
-          }
-        />
+        <Route path="/" element={<About />} />
         <Route path="/resume" element={<Resume />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />
