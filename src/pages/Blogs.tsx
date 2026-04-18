@@ -82,6 +82,30 @@ const countSections = (sections: Blog["sections"] = []): number =>
 
 const getSectionCount = (blog: Blog) => countSections(blog.sections ?? [])
 
+const findPreviewImage = (sections: Blog["sections"] = []): { src: string; alt: string } | null => {
+  for (const section of sections) {
+    if (section.image_url) {
+      return {
+        src: section.image_url,
+        alt: section.image_alt ?? section.title,
+      }
+    }
+
+    const childImage = findPreviewImage(section.children ?? [])
+    if (childImage) {
+      return childImage
+    }
+  }
+
+  return null
+}
+
+const getPreviewImage = (blog: Blog) =>
+  findPreviewImage(blog.sections ?? []) ?? {
+    src: "/vite.svg",
+    alt: "Blog preview",
+  }
+
 const statusStyles: Record<Blog["status"], string> = {
   published: "border-emerald-200 bg-emerald-50 text-emerald-700",
   draft: "border-amber-200 bg-amber-50 text-amber-700",
@@ -203,33 +227,33 @@ const Blogs = () => {
   }, [activeTopic])
 
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-[#f6f1e8] text-[#1b2b34]">
-      <section className="mx-auto max-w-5xl px-4 py-2 sm:px-6 sm:py-3">
-        <div className="rounded-xl border border-[#ddd1c0] bg-white/80 p-2.5 shadow-[0_8px_20px_rgba(62,45,25,0.04)] backdrop-blur-sm">
+    <main className="min-h-[calc(100vh-64px)] bg-[#fbfbfc] text-[#13202b]">
+      <section className="mx-auto max-w-5xl px-4 py-5 sm:px-6 sm:py-8">
+        <div className="rounded-3xl border border-[#e5ebf0] bg-white p-4 shadow-[0_8px_24px_rgba(18,32,43,0.03)] backdrop-blur-sm sm:p-5">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div className="grid flex-1 gap-2 md:grid-cols-[minmax(0,1fr)_170px]">
               <label className="grid gap-2">
-                <span className="inline-flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.18em] text-[#8b5e3c]">
+                <span className="inline-flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.18em] text-[#64707a]">
                   <Search className="h-3 w-3" />
                   Search
                 </span>
                 <input
                   id="blog-search"
                   type="search"
-                  className="w-full rounded-lg border border-[#d8cab9] bg-[#fbf8f3] px-3 py-1.5 text-xs outline-none transition placeholder:text-[#8a8176] focus:border-[#8b5e3c] focus:bg-white"
+                  className="w-full rounded-lg border border-[#d6dfe6] bg-[#fbfcfd] px-3 py-1.5 text-xs outline-none transition placeholder:text-[#8b98a4] focus:border-[#7b8793] focus:bg-white"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Search titles, tags, or notes"
                 />
               </label>
               <label className="grid gap-2">
-                <span className="inline-flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.18em] text-[#8b5e3c]">
+                <span className="inline-flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.18em] text-[#64707a]">
                   <SlidersHorizontal className="h-3 w-3" />
                   Filter
                 </span>
                 <select
                   id="blog-status"
-                  className="w-full rounded-lg border border-[#d8cab9] bg-[#fbf8f3] px-3 py-1.5 text-xs outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                  className="w-full rounded-lg border border-[#d6dfe6] bg-[#fbfcfd] px-3 py-1.5 text-xs outline-none transition focus:border-[#7b8793] focus:bg-white"
                   value={statusFilter}
                   onChange={(event) => setStatusFilter(event.target.value as "all" | Blog["status"])}
                 >
@@ -239,12 +263,12 @@ const Blogs = () => {
                 </select>
               </label>
             </div>
-            <div className="flex flex-wrap items-center gap-2 text-[0.7rem] text-[#67757f]">
+            <div className="flex flex-wrap items-center gap-2 text-[0.7rem] text-[#687580]">
               <span>{visibleBlogs.length} result{visibleBlogs.length === 1 ? "" : "s"}</span>
               {query.trim() && (
                 <button
                   type="button"
-                  className="rounded-full border border-[#d8cab9] bg-[#fbf8f3] px-2 py-0.5 text-[0.65rem] font-medium text-[#6b5b4d] transition hover:bg-white"
+                  className="rounded-full border border-[#d6dfe6] bg-[#fbfcfd] px-2 py-0.5 text-[0.65rem] font-medium text-[#55616c] transition hover:bg-white"
                   onClick={() => setQuery("")}
                 >
                   Clear
@@ -252,7 +276,7 @@ const Blogs = () => {
               )}
               <button
                 type="button"
-                className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-[#18222b] px-3 py-1 text-[0.7rem] font-medium text-white transition hover:bg-[#0f171e]"
+                className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-[#13202b] px-3 py-1 text-[0.7rem] font-medium text-white transition hover:bg-[#1d2d3a]"
                 onClick={openCreateWindow}
               >
                 <BookOpenText className="h-3 w-3" />
@@ -272,9 +296,9 @@ const Blogs = () => {
       <section className="mx-auto max-w-5xl px-4 pb-12 sm:px-6 sm:pb-16">
         {loading ? (
           <div className="space-y-4">
-            <div className="h-32 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
-            <div className="h-28 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
-            <div className="h-28 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
+            <div className="h-40 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
+            <div className="h-40 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
+            <div className="h-40 animate-pulse rounded-[28px] bg-white/80 shadow-[0_14px_40px_rgba(62,45,25,0.05)]" />
           </div>
         ) : visibleBlogs.length === 0 ? (
           <div className="rounded-[28px] border border-dashed border-[#d6c5b2] bg-white/70 px-6 py-12 text-center shadow-[0_14px_40px_rgba(62,45,25,0.05)]">
@@ -285,7 +309,7 @@ const Blogs = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="flex flex-wrap gap-1.5 rounded-xl border border-[#e2d7c9] bg-white/75 p-1 shadow-[0_8px_20px_rgba(62,45,25,0.04)]">
+            <div className="flex flex-wrap gap-1.5 rounded-xl border border-[#e5ebf0] bg-white p-1 shadow-[0_8px_18px_rgba(18,32,43,0.03)]">
               {topicOrder.map((topic) => {
                 const count = groupedBlogs[topic].length
                 const isActive = activeTopic === topic
@@ -297,12 +321,12 @@ const Blogs = () => {
                     onClick={() => setActiveTopic(topic)}
                     className={`flex-1 rounded-lg px-2.5 py-2 text-left transition ${
                       isActive
-                        ? "bg-[#18222b] text-white shadow-[0_6px_14px_rgba(24,34,43,0.16)]"
-                        : "bg-transparent text-[#4f606b] hover:bg-[#f7f1e8]"
+                        ? "bg-[#13202b] text-white shadow-[0_6px_14px_rgba(18,32,43,0.16)]"
+                        : "bg-transparent text-[#57636f] hover:bg-[#f5f7f9]"
                     }`}
                   >
                     <span className="block text-[0.72rem] font-semibold sm:text-sm">{topicDefinitions[topic].title}</span>
-                    <span className={`mt-0.5 block text-[0.62rem] ${isActive ? "text-slate-300" : "text-[#7a8791]"}`}>
+                    <span className={`mt-0.5 block text-[0.62rem] ${isActive ? "text-slate-300" : "text-[#83909b]"}`}>
                       {count} post{count === 1 ? "" : "s"}
                     </span>
                   </button>
@@ -311,10 +335,10 @@ const Blogs = () => {
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold tracking-tight text-[#18222b] sm:text-base">
+              <h2 className="text-sm font-semibold tracking-tight text-[#13202b] sm:text-base">
                 {topicDefinitions[activeTopic].title}
               </h2>
-              <span className="rounded-full border border-[#d8cab9] bg-white/70 px-2 py-0.5 text-[0.65rem] text-[#5c6b75]">
+              <span className="rounded-full border border-[#d6dfe6] bg-white/75 px-2 py-0.5 text-[0.65rem] text-[#5f6d78]">
                 {activeBlogs.length} post{activeBlogs.length === 1 ? "" : "s"}
               </span>
             </div>
@@ -330,8 +354,8 @@ const Blogs = () => {
                     onClick={() => setActiveKeyword(keyword)}
                     className={`rounded-full border px-2 py-0.5 text-[0.65rem] transition ${
                       isActive
-                        ? "border-[#18222b] bg-[#18222b] text-white"
-                        : "border-[#d8cab9] bg-white/80 text-[#5c6b75] hover:bg-[#f7f1e8]"
+                        ? "border-[#13202b] bg-[#13202b] text-white"
+                        : "border-[#d9e0e7] bg-white text-[#5f6d78] hover:bg-[#f5f7f9]"
                     }`}
                   >
                     {keyword}
@@ -340,9 +364,9 @@ const Blogs = () => {
               })}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {activeBlogs.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-[#d6c5b2] bg-white/70 px-4 py-8 text-center shadow-[0_8px_20px_rgba(62,45,25,0.04)]">
+                <div className="rounded-2xl border border-dashed border-[#d6c5b2] bg-white/70 px-4 py-8 text-center shadow-[0_8px_20px_rgba(62,45,25,0.04)]">
                   <p className="text-sm font-medium text-[#18222b]">No posts in this group yet.</p>
                   <p className="mt-1.5 text-xs text-[#6a7880]">
                     Try another tab or adjust the search and filter controls.
@@ -353,63 +377,66 @@ const Blogs = () => {
                   <Link
                     key={blog.slug}
                     to={`/blogs/${blog.slug}`}
-                    className={`group block rounded-[20px] border bg-white/90 p-3.5 shadow-[0_8px_20px_rgba(62,45,25,0.05)] transition hover:-translate-y-0.5 hover:bg-white ${
-                      index === 0 ? "border-[#cdb99f]" : "border-[#e2d7c9] hover:border-[#cdb99f]"
+                    className={`group block rounded-[24px] border bg-white p-4 shadow-[0_12px_26px_rgba(18,32,43,0.03)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_rgba(18,32,43,0.04)] ${
+                      index === 0 ? "border-[#d5dde4]" : "border-[#e5ebf0] hover:border-[#ccd6df]"
                     }`}
                   >
-                    <div className="flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em] text-[#8b5e3c]">
-                      {index === 0 && (
-                        <span className="rounded-full border border-[#d8cab9] bg-[#fbf7f2] px-1.5 py-0.5">
-                          Lead
-                        </span>
-                      )}
-                      <span className="inline-flex items-center gap-1.5">
-                        <CalendarDays className="h-2.5 w-2.5" />
-                        {formatDate(blog.updated_at)}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock3 className="h-2.5 w-2.5" />
-                        {getReadTime(blog)} min read
-                      </span>
-                      <span
-                        className={`rounded-full border px-1.5 py-0.5 normal-case tracking-normal ${statusStyles[blog.status]}`}
-                      >
-                        {blog.status}
-                      </span>
-                    </div>
+                    <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_170px] md:items-center">
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2 text-[0.65rem] uppercase tracking-[0.22em] text-[#66727c]">
+                          <span className="rounded-full bg-[#f5f7f9] px-2 py-1 text-[#5f6d78]">
+                            {blog.blog_type}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <CalendarDays className="h-3 w-3" />
+                            {formatDate(blog.updated_at)}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <Clock3 className="h-3 w-3" />
+                            {getReadTime(blog)} min read
+                          </span>
+                        </div>
 
-                    <div className="mt-2 space-y-2">
-                      <h3
-                        className={`font-semibold tracking-tight text-[#18222b] transition group-hover:text-[#8b5e3c] ${
-                          index === 0 ? "text-lg sm:text-xl" : "text-sm sm:text-base"
-                        }`}
-                      >
-                        {blog.title}
-                      </h3>
-                      {blog.subheader && (
-                        <p className="max-w-3xl text-[0.72rem] leading-5 text-[#4f606b] sm:text-xs">
-                          {blog.subheader}
+                        <h3 className="max-w-2xl text-[1.45rem] font-semibold leading-tight tracking-tight text-[#13202b] transition group-hover:text-[#1f3342] sm:text-[1.75rem]">
+                          {blog.title}
+                        </h3>
+
+                        <p className="max-w-3xl text-sm leading-6 text-[#5f6d78] sm:text-[0.95rem]">
+                          {blog.subheader ? `${blog.subheader} ` : ""}
+                          {blog.description}
                         </p>
-                      )}
-                      <p className="max-w-3xl text-[0.72rem] leading-5 text-[#5f707a] sm:text-xs">{blog.description}</p>
-                    </div>
 
-                    <div className="mt-2.5 flex flex-wrap gap-1.5">
-                      {(blog.tags ?? []).slice(0, 5).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-[#f3ede4] px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.12em] text-[#76614f]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(blog.tags ?? []).slice(0, 4).map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full bg-[#f5f7f9] px-2.5 py-1 text-[0.62rem] uppercase tracking-[0.12em] text-[#5f6d78]"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
 
-                    <div className="mt-2.5 flex items-center justify-between border-t border-[#efe5d8] pt-2.5 text-[0.68rem] font-medium text-[#8b5e3c]">
-                      <span>
-                        {getSectionCount(blog)} section{getSectionCount(blog) === 1 ? "" : "s"}
-                      </span>
-                      <span className="transition group-hover:translate-x-1">Read article -&gt;</span>
+                        <div className="flex items-center gap-3 pt-1 text-[0.7rem] font-medium text-[#66727c]">
+                          <span>
+                            {getSectionCount(blog)} section{getSectionCount(blog) === 1 ? "" : "s"}
+                          </span>
+                          <span className={`rounded-full border px-2 py-0.5 normal-case tracking-normal ${statusStyles[blog.status]}`}>
+                            {blog.status}
+                          </span>
+                          <span className="transition group-hover:translate-x-1">Read article -&gt;</span>
+                        </div>
+                      </div>
+
+                      <div className="relative overflow-hidden rounded-[18px] border border-[#e5ebf0] bg-[#f7f9fb]">
+                        <img
+                          src={getPreviewImage(blog).src}
+                          alt={getPreviewImage(blog).alt}
+                          className="h-44 w-full object-cover transition duration-500 group-hover:scale-[1.03] md:h-36"
+                          loading="lazy"
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white/14 via-transparent to-transparent" />
+                      </div>
                     </div>
                   </Link>
                 ))
