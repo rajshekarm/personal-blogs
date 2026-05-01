@@ -602,7 +602,7 @@ const BlogPost = () => {
                 >
                   <option value="AI">AI</option>
                   <option value="Hardware">Hardware</option>
-                  <option value="Physics">Physics</option>
+                  <option value="Science and Health Tech">Science and Health Tech</option>
                   <option value="Software Engineering">Software Engineering</option>
                 </select>
                 <input

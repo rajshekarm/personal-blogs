@@ -14,7 +14,7 @@ type BlogFormState = {
   description: string
   content: string
   external_url: string
-  blog_type: Blog["blog_type"]
+  blog_type: Blog["blog_type"] | ""
   status: Blog["status"]
   tags: string
   sections: BlogSection[]
@@ -27,7 +27,7 @@ const EMPTY_FORM: BlogFormState = {
   description: "",
   content: "",
   external_url: "",
-  blog_type: "AI",
+  blog_type: "",
   status: "draft",
   tags: "",
   sections: [],
@@ -92,6 +92,11 @@ const NewBlog = () => {
 
     if (!formState.title.trim() || !formState.description.trim()) {
       setError("Title and description are required.")
+      return
+    }
+
+    if (!formState.blog_type) {
+      setError("Please choose a blog type.")
       return
     }
 
@@ -377,11 +382,12 @@ const NewBlog = () => {
                     <select
                       className="w-full rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-[#1b2b34] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
                       value={formState.blog_type}
-                      onChange={(event) => updateField("blog_type", event.target.value as Blog["blog_type"])}
+                      onChange={(event) => updateField("blog_type", event.target.value as BlogFormState["blog_type"])}
                     >
+                      <option value="">Select blog type</option>
                       <option value="AI">AI</option>
                       <option value="Hardware">Hardware</option>
-                      <option value="Physics">Physics</option>
+                      <option value="Science and Health Tech">Science and Health Tech</option>
                       <option value="Software Engineering">Software Engineering</option>
                     </select>
                   </div>

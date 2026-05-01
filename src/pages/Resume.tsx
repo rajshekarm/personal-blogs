@@ -67,7 +67,7 @@
           <h2 className="text-xl font-semibold">Experience</h2>
 
           {/* Experience 1 */}
-          <div>
+          {/* <div>
             <p className="text-blue-600 font-semibold">
               Sep 2025 – Present
             </p>
@@ -97,7 +97,7 @@
                 and token refresh workflows.
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Experience 2 */}
           <div>

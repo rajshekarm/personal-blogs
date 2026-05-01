@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { fetchBlogs } from "../api/blog"
 import type { Blog } from "../types/blog"
 
-const topicOrder = ["AI", "Software Engineering", "Hardware", "Physics"] as const
+const topicOrder = ["AI", "Software Engineering", "Hardware", "Science and Health Tech"] as const
 
 type Topic = (typeof topicOrder)[number]
 
@@ -19,10 +19,10 @@ const topicDefinitions: Record<Topic, { title: string; summary: string; keywords
     summary: "Projects that touch sensors, devices, and the physical world.",
     keywords: ["All", "PCB", "embedded", "sensor", "signal processing", "electronics", "ECG"],
   },
-  Physics: {
-    title: "Physics",
-    summary: "Notes on mechanics, waves, and ideas from the physical world.",
-    keywords: ["All", "quantum", "waves", "mechanics", "energy", "field theory"],
+  "Science and Health Tech": {
+    title: "Science and Health Tech",
+    summary: "Notes on healthcare systems, biomedical ideas, and applied science.",
+    keywords: ["All", "healthcare", "ECG", "clinical", "biomedical", "science", "signal processing"],
   },
   "Software Engineering": {
     title: "Software Engineering",
@@ -202,7 +202,7 @@ const Blogs = () => {
     const groups: Record<Topic, Blog[]> = {
       AI: [],
       Hardware: [],
-      Physics: [],
+      "Science and Health Tech": [],
       "Software Engineering": [],
     }
 
@@ -320,16 +320,16 @@ const Blogs = () => {
                     key={topic}
                     type="button"
                     onClick={() => setActiveTopic(topic)}
-                    className={`flex-1 rounded-xl px-3 py-2 text-left transition ${
+                    className={`group flex-1 rounded-xl px-3 py-2 text-left transition duration-300 ${
                       isActive
                         ? "bg-[#13202b] text-white shadow-[0_6px_14px_rgba(18,32,43,0.16)]"
-                        : "bg-transparent text-[#57636f] hover:bg-white"
+                        : "bg-transparent text-[#57636f] hover:border-[#cfd8e0] hover:bg-white hover:shadow-[0_6px_14px_rgba(18,32,43,0.05)]"
                     }`}
                   >
-                    <span className="block text-[0.72rem] font-semibold sm:text-sm">
+                    <span className="block text-[0.72rem] font-semibold transition group-hover:translate-x-0.5 sm:text-sm">
                       {topicDefinitions[topic].title}
                     </span>
-                    <span className={`mt-0.5 block text-[0.62rem] ${isActive ? "text-slate-300" : "text-[#83909b]"}`}>
+                    <span className={`mt-0.5 block text-[0.62rem] transition ${isActive ? "text-slate-300" : "text-[#83909b] group-hover:text-[#5f6d78]"}`}>
                       {count} post{count === 1 ? "" : "s"}
                     </span>
                   </button>
@@ -396,7 +396,7 @@ const Blogs = () => {
                   <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px] md:items-center">
                     <div className="space-y-3">
                       <div className="flex flex-wrap items-center gap-2 text-[0.65rem] uppercase tracking-[0.22em] text-[#66727c]">
-                        <span className="rounded-full bg-[#f5f7f9] px-2 py-1 text-[#5f6d78]">
+                        <span className="rounded-full border border-transparent bg-[#f5f7f9] px-2 py-1 text-[#5f6d78] transition duration-300 group-hover:border-[#13202b] group-hover:bg-[#13202b] group-hover:text-white group-hover:shadow-[0_6px_14px_rgba(18,32,43,0.12)]">
                           {blog.blog_type}
                         </span>
                         <span className="inline-flex items-center gap-1.5">

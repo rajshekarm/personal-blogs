@@ -2,7 +2,9 @@ import type { Blog, BlogSection } from "../types/blog"
 
 export const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api"
 
-type RawBlog = Partial<Blog>
+type RawBlog = Omit<Partial<Blog>, "blog_type"> & {
+  blog_type?: string
+}
 
 const normalizeSection = (section: Partial<BlogSection>): BlogSection => ({
   id: section.id ?? `section-${Math.random().toString(36).slice(2, 10)}`,
@@ -28,11 +30,13 @@ const normalizeBlog = (blog: RawBlog): Blog => ({
   content: blog.content ?? undefined,
   external_url: blog.external_url ?? undefined,
   blog_type:
-    blog.blog_type === "Hardware" ||
-    blog.blog_type === "Physics" ||
-    blog.blog_type === "Software Engineering"
-      ? blog.blog_type
-      : "AI",
+    blog.blog_type === "Physics"
+      ? "Science and Health Tech"
+      : blog.blog_type === "Hardware" ||
+          blog.blog_type === "Science and Health Tech" ||
+          blog.blog_type === "Software Engineering"
+        ? blog.blog_type
+        : "AI",
   status: blog.status === "draft" ? "draft" : "published",
   tags: Array.isArray(blog.tags) ? blog.tags.filter(Boolean) : [],
   sections: Array.isArray(blog.sections)

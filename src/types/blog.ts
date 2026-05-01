@@ -18,7 +18,7 @@ export type Blog = {
   content?: string
   external_url?: string
 
-  blog_type: "AI" | "Hardware" | "Physics" | "Software Engineering"
+  blog_type: "AI" | "Hardware" | "Science and Health Tech" | "Software Engineering"
   status: "draft" | "published"
   tags?: string[]
   sections?: BlogSection[]
