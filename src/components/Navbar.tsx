@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 import { useState } from "react"
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -15,6 +15,11 @@ const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { pathname } = useLocation()
+
+  if (pathname === "/") {
+    return null
+  }
 
   return (
     <nav className="bg-[#25537e]">

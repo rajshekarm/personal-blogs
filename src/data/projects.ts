@@ -14,9 +14,9 @@ export const PROJECTS: Project[] = [
     tech: ["Django", "PostgreSQL", "REST APIs"],
     github: "https://github.com/rajshekarm/nutriapi",
     media: {
-    type: "image",
-    src: "/projects/nutriapi.png",
-  },
+      type: "image",
+      src: "/projects/nutriapi.png",
+    },
   },
   {
     id: "ecg-triage",
@@ -40,6 +40,32 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: "medical-image-analysis",
+    title: "Medical Image Analysis under Real-World Data Variability",
+    category: "healthcare",
+    summary:
+      "Research project studying how noise, resolution, and class imbalance affect tumor detection on MRI datasets.",
+    bullets: [
+      "Investigated the impact of data variability on tumor detection by training CNN and U-Net models using PyTorch on MRI datasets",
+      "Designed controlled experiments by introducing Gaussian noise, downsampling, and class imbalance, then evaluated F1-score and ROC-AUC",
+      "Improved robustness using augmentation techniques such as rotation, flipping, and intensity scaling along with dropout and batch normalization",
+    ],
+    tech: ["PyTorch", "CNN", "U-Net", "MRI", "F1-score", "ROC-AUC"],
+  },
+  {
+    id: "gpu-medical-image-processing",
+    title: "GPU-Accelerated Medical Image Processing Engine",
+    category: "healthcare",
+    summary:
+      "CUDA-based acceleration project for improving the speed of common medical image processing operations.",
+    bullets: [
+      "Analyzed limitations of CPU-based medical image processing and redesigned key operations using CUDA-based parallel kernels",
+      "Implemented Sobel edge detection and Gaussian blur with custom CUDA kernels to accelerate pixel-wise computations",
+      "Profiled kernel execution using NVIDIA Nsight, identified bottlenecks, and improved kernel efficiency",
+    ],
+    tech: ["CUDA", "C++", "NVIDIA Nsight", "Sobel", "Gaussian Blur"],
+  },
+  {
     id: "realtime-chat",
     title: "Real-time Chat Application",
     category: "financial",
@@ -52,9 +78,9 @@ export const PROJECTS: Project[] = [
     tech: [".NET", "SignalR", "Redis", "Azure"],
     github: "https://github.com/rajshekarm/realtime-chat",
     media: {
-    type: "image",
-    src: "/projects/nutriapi.png",
-  },
+      type: "image",
+      src: "/projects/nutriapi.png",
+    },
   },
   {
     id: "llm-cache",
@@ -69,34 +95,26 @@ export const PROJECTS: Project[] = [
     tech: ["Python", "Redis", "Embeddings", "LLMs"],
     github: "https://github.com/rajshekarm/llm-cache",
     media: {
-    type: "image",
-    src: "/projects/nutriapi.png",
+      type: "image",
+      src: "/projects/nutriapi.png",
+    },
   },
-  },
-
   {
-  id: "jarvis",
-  title: "J.A.R.V.I.S Hand & Vision Controlled Operating System",
-  category: "fun",
-  summary: "Experimental operating system interface controlled using hand gestures and computer vision.",
-  bullets: [
-    "Implemented real-time hand gesture recognition using computer vision techniques",
-    "Mapped gesture inputs to OS-level commands for touchless system interaction",
-    "Built vision-based control pipeline with low-latency input processing"
-  ],
-  tech: [
-    "Python",
-    "OpenCV",
-    "Computer Vision",
-    "Gesture Recognition"
-  ],
-  github: "https://github.com/rajshekarm/jarvis",
-  media: {
-    type: "image",
-    src: "/robot.png",
+    id: "jarvis",
+    title: "J.A.R.V.I.S Hand & Vision Controlled Operating System",
+    category: "fun",
+    summary:
+      "Experimental operating system interface controlled using hand gestures and computer vision.",
+    bullets: [
+      "Implemented real-time hand gesture recognition using computer vision techniques",
+      "Mapped gesture inputs to OS-level commands for touchless system interaction",
+      "Built vision-based control pipeline with low-latency input processing",
+    ],
+    tech: ["Python", "OpenCV", "Computer Vision", "Gesture Recognition"],
+    github: "https://github.com/rajshekarm/jarvis",
+    media: {
+      type: "image",
+      src: "/robot.png",
+    },
   },
-}
-,
-
-
 ]
