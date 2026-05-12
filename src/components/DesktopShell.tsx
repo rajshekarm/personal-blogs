@@ -23,7 +23,7 @@ import { useEffect, useMemo, useState } from "react"
 import { DesktopThemeProvider } from "./desktopTheme"
 
 const appItems = [
-  { to: "/", label: "About", icon: BadgeInfo },
+  { to: "/", label: "Home", icon: BadgeInfo },
   { to: "/resume", label: "Resume", icon: NotebookText },
   { to: "/projects", label: "Projects", icon: FolderKanban },
   { to: "/contact", label: "Contact", icon: MessageSquare },
@@ -128,7 +128,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                     ? "artionNextGen"
                     : pathname === "/projects/ecg-triage-intelligence"
                       ? "ECG Triage"
-                      : "App"
+      : "Home"
 
   const handleClose = () => navigate("/")
   const handleMinimize = () => navigate("/")

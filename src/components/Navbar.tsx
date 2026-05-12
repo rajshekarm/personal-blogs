@@ -43,7 +43,7 @@ const Navbar = () => {
 
         <div className="hidden items-center gap-2 md:flex">
           <NavLink to="/" className={linkClass}>
-            About
+            Home
           </NavLink>
           <NavLink to="/resume" className={linkClass}>
             Resume
@@ -73,7 +73,7 @@ const Navbar = () => {
         <div className="border-t border-[#3f6a92] px-4 py-3 md:hidden">
           <div className="grid gap-1">
             <NavLink to="/" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
-              About
+              Home
             </NavLink>
             <NavLink to="/resume" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
               Resume

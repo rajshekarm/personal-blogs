@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 import { ArrowUpRight, LayoutGrid, X } from "lucide-react"
 import { PROJECTS } from "../data/projects"
 import { MediaPreview } from "../components/MediaPreview"
-import { useDesktopTheme } from "../components/desktopTheme"
 import type { ProjectCategory } from "../types/projects"
 
 const CATEGORY_LABELS: Record<ProjectCategory, string> = {
@@ -116,7 +115,7 @@ const getCardDimensions = (projectId: string, arenaWidth: number, featured: bool
 }
 
 const Projects = () => {
-  const { isDark } = useDesktopTheme()
+  const isDark = true
   const arenaRef = useRef<HTMLDivElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const [arenaWidth, setArenaWidth] = useState(0)
