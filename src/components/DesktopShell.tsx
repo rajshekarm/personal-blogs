@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import {
   AppWindow,
   BadgeInfo,
@@ -10,7 +10,10 @@ import {
   MessageSquare,
   Moon,
   NotebookText,
+  Minus,
+  Square,
   TerminalSquare,
+  X,
   Wifi,
   Workflow,
   SunMedium,
@@ -45,13 +48,14 @@ const techRibbonItems = [
 
 const DesktopShell = ({ children }: { children: ReactNode }) => {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
-      return "light"
+      return "dark"
     }
 
     const storedTheme = window.localStorage.getItem("desktop-theme")
-    return storedTheme === "dark" ? "dark" : "light"
+    return storedTheme === "light" ? "light" : "dark"
   })
 
   const currentTime = new Date().toLocaleTimeString([], {
@@ -126,74 +130,72 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                       ? "ECG Triage"
                       : "App"
 
+  const handleClose = () => navigate("/")
+  const handleMinimize = () => navigate("/")
+  const handleZoom = () => window.scrollTo({ top: 0, behavior: "smooth" })
+
   return (
     <DesktopThemeProvider value={{ theme, isDark }}>
       <main className={`${shellClass} min-h-screen overflow-hidden font-sans transition-colors duration-300`}>
-        <header className={`fixed inset-x-0 top-0 z-50 border-b px-3 py-2.5 backdrop-blur-xl sm:px-4 ${headerClass}`}>
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            {pathname !== "/" && (
-              <div className="hidden items-center gap-2 md:flex">
-                <Link
-                  to="/"
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition hover:-translate-y-0.5 ${
-                    isDark ? "border-white/10 bg-white/6 text-white/65 hover:bg-rose-500/90" : "border-white/80 bg-white/70 text-slate-500 hover:bg-rose-500 hover:text-white"
-                  }`}
-                  aria-label="Close to home"
-                  title="Close to home"
-                >
-                  <span className="h-2.5 w-2.5 rounded-full bg-current" />
-                </Link>
-                <Link
-                  to="/"
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition hover:-translate-y-0.5 ${
-                    isDark ? "border-white/10 bg-white/6 text-white/65 hover:bg-amber-400/90" : "border-white/80 bg-white/70 text-slate-500 hover:bg-amber-400 hover:text-white"
-                  }`}
-                  aria-label="Minimize to home"
-                  title="Minimize to home"
-                >
-                  <span className="h-2.5 w-2.5 rounded-full bg-current" />
-                </Link>
-                <Link
-                  to="/"
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border transition hover:-translate-y-0.5 ${
-                    isDark ? "border-white/10 bg-white/6 text-white/65 hover:bg-emerald-500/90" : "border-white/80 bg-white/70 text-slate-500 hover:bg-emerald-500 hover:text-white"
-                  }`}
-                  aria-label="Send to home"
-                  title="Send to home"
-                >
-                  <span className="h-2.5 w-2.5 rounded-full bg-current" />
-                </Link>
-                <span className={`ml-2 rounded-full px-3 py-1 text-xs font-medium backdrop-blur ${chipClass}`}>
+        <header
+          className={`fixed inset-x-0 top-0 z-50 border-b px-3 py-2.5 backdrop-blur-xl sm:px-4 ${headerClass}`}
+        >
+          <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                aria-label="Close window"
+                title="Close window"
+              >
+                <X className="h-2.5 w-2.5 opacity-0 text-rose-950 transition group-hover:opacity-100" />
+              </button>
+              <button
+                type="button"
+                onClick={handleMinimize}
+                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-400 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                aria-label="Minimize window"
+                title="Minimize window"
+              >
+                <Minus className="h-2.5 w-2.5 opacity-0 text-amber-950 transition group-hover:opacity-100" />
+              </button>
+              <button
+                type="button"
+                onClick={handleZoom}
+                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                aria-label="Zoom window"
+                title="Zoom window"
+              >
+                <Square className="h-2.5 w-2.5 opacity-0 text-emerald-950 transition group-hover:opacity-100" />
+              </button>
+            </div>
+
+            <div className="flex justify-center">
+              <div className={`rounded-full px-4 py-1.5 text-center backdrop-blur ${chipClass}`}>
+                <p className={`text-sm font-semibold leading-none ${isDark ? "text-slate-100" : "text-slate-900"}`}>
                   {windowTitle}
-                </span>
+                </p>
+                <p className={`text-[10px] uppercase tracking-[0.24em] ${isDark ? "text-slate-300" : "text-slate-500"}`}>
+                  Rajashekar OS
+                </p>
               </div>
-            )}
+            </div>
 
-            <div className="hidden flex-col sm:flex">
-              <p className={`text-sm font-semibold leading-none ${isDark ? "text-slate-100" : "text-slate-900"}`}>
-                Rajashekar OS
-              </p>
-              <p className={`text-[11px] ${isDark ? "text-slate-300" : "text-slate-500"}`}>
-                portfolio desktop
-              </p>
+            <div className={`flex items-center gap-2.5 ${isDark ? "text-slate-200" : "text-slate-600"}`}>
+              <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
+                <Wifi className="h-3.5 w-3.5" />
+                Wi-Fi
+              </div>
+              <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
+                <BatteryMedium className="h-3.5 w-3.5" />
+                86%
+              </div>
+              <div className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${chipClass}`}>
+                <Clock3 className="h-3.5 w-3.5" />
+                {currentTime}
+              </div>
             </div>
-          </div>
-
-          <div className={`flex items-center gap-2.5 ${isDark ? "text-slate-200" : "text-slate-600"}`}>
-            <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
-              <Wifi className="h-3.5 w-3.5" />
-              Wi-Fi
-            </div>
-            <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
-              <BatteryMedium className="h-3.5 w-3.5" />
-              86%
-            </div>
-            <div className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${chipClass}`}>
-              <Clock3 className="h-3.5 w-3.5" />
-              {currentTime}
-            </div>
-          </div>
           </div>
         </header>
 

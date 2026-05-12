@@ -8,8 +8,8 @@ type MediaPreviewProps = {
 export const MediaPreview = ({ media }: MediaPreviewProps) => {
   if (!media) {
     return (
-      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
-        Project Preview
+      <div className="flex h-full min-h-[220px] items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center text-sm text-slate-500">
+        Project preview will appear here
       </div>
     )
   }
@@ -19,7 +19,7 @@ export const MediaPreview = ({ media }: MediaPreviewProps) => {
       <video
         src={media.src}
         controls
-        className="w-full h-full object-cover rounded-md"
+        className="h-full w-full rounded-2xl object-cover"
       />
     )
   }
@@ -28,7 +28,7 @@ export const MediaPreview = ({ media }: MediaPreviewProps) => {
     <img
       src={media.src}
       alt="Project preview"
-      className="w-full h-full object-cover rounded-md"
+      className="h-full w-full rounded-2xl object-cover"
     />
   )
 }

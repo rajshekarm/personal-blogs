@@ -2,23 +2,6 @@ import type { Project } from "../types/projects"
 
 export const PROJECTS: Project[] = [
   {
-    id: "nutriapi",
-    title: "NutriAPI: Nutrition & Recipe Engine",
-    category: "healthcare",
-    summary: "Backend system for managing recipes and nutritional data.",
-    bullets: [
-      "Designed normalized relational schema for recipes & ingredients",
-      "Built RESTful CRUD APIs using Django",
-      "Implemented ingredient-based filtering & nutrition analysis",
-    ],
-    tech: ["Django", "PostgreSQL", "REST APIs"],
-    github: "https://github.com/rajshekarm/nutriapi",
-    media: {
-      type: "image",
-      src: "/projects/nutriapi.png",
-    },
-  },
-  {
     id: "ecg-triage",
     title: "ECG Triage Intelligence Platform",
     category: "healthcare",
@@ -40,6 +23,41 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: "icu-event-processing",
+    title: "Real-Time ICU Event Processing & Deterioration Alerting Platform",
+    category: "healthcare",
+    featured: true,
+    summary:
+      "Distributed ICU monitoring platform for ingesting patient vitals, processing streaming events, and triggering low-latency deterioration alerts.",
+    bullets: [
+      "Built a Kafka ingestion pipeline for simulated patient vitals and continuous ICU event streams",
+      "Used Apache Flink windowing and rule-based processing to detect potential patient deterioration in real time",
+      "Exposed alerting and visualization services backed by PostgreSQL, Redis, and observability tooling",
+    ],
+    tech: ["Kafka", "Flink", "PostgreSQL", "Redis", "Streaming", "Observability"],
+    media: {
+      type: "image",
+      src: "/projects/icu-event-processing.png",
+    },
+  },
+  {
+    id: "kafkacare",
+    title: "KafkaCare: Real-Time Healthcare Claims Intelligence Platform",
+    category: "healthcare",
+    summary:
+      "Event-driven healthcare claims platform for eligibility checks, fraud detection, prior authorization, and live claim decisioning.",
+    bullets: [
+      "Built a Kafka-based claims workflow where intake, eligibility, policy, fraud, and audit services process events in parallel",
+      "Designed a claim aggregator that combines service outcomes into a final decision stream for the frontend dashboard",
+      "Added real-time operational visibility for topic activity, processing status, and dead-letter handling",
+    ],
+    tech: ["Apache Kafka", "Kafka Streams", "React", "TypeScript", "PostgreSQL", "Redis"],
+    media: {
+      type: "image",
+      src: "/projects/kafkacare.png",
+    },
+  },
+  {
     id: "medical-image-analysis",
     title: "Medical Image Analysis under Real-World Data Variability",
     category: "healthcare",
@@ -51,6 +69,10 @@ export const PROJECTS: Project[] = [
       "Improved robustness using augmentation techniques such as rotation, flipping, and intensity scaling along with dropout and batch normalization",
     ],
     tech: ["PyTorch", "CNN", "U-Net", "MRI", "F1-score", "ROC-AUC"],
+    media: {
+      type: "image",
+      src: "/projects/medical-image-analysis.png",
+    },
   },
   {
     id: "gpu-medical-image-processing",
@@ -64,6 +86,10 @@ export const PROJECTS: Project[] = [
       "Profiled kernel execution using NVIDIA Nsight, identified bottlenecks, and improved kernel efficiency",
     ],
     tech: ["CUDA", "C++", "NVIDIA Nsight", "Sobel", "Gaussian Blur"],
+    media: {
+      type: "image",
+      src: "/projects/gpu-medical-image-processing.png",
+    },
   },
   {
     id: "realtime-chat",

@@ -8,6 +8,7 @@ export interface Project {
   id: string
   title: string
   category: ProjectCategory
+  featured?: boolean
   summary: string
   bullets: string[]
   tech: string[]
