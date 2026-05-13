@@ -86,50 +86,16 @@ const About = () => {
     <section className="relative min-h-[calc(100vh-6rem)] px-4 pb-8 pt-6 md:px-6 md:pt-8">
       <div className="pointer-events-none absolute left-[-3rem] top-20 hidden h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl motion-safe:animate-pulse md:block" />
       <div className="pointer-events-none absolute right-[28%] top-28 hidden h-56 w-56 rounded-full bg-sky-300/10 blur-3xl motion-safe:animate-pulse md:block" />
+      <div
+        className={`pointer-events-none absolute inset-0 opacity-[0.16] ${
+          isDark
+            ? "bg-[radial-gradient(circle_at_top_left,_rgba(148,163,184,0.08),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(103,232,249,0.06),_transparent_28%)] [background-image:radial-gradient(rgba(148,163,184,0.10)_1px,transparent_1px)] [background-size:24px_24px]"
+            : "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.55),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(125,211,252,0.06),_transparent_28%)] [background-image:radial-gradient(rgba(148,163,184,0.08)_1px,transparent_1px)] [background-size:24px_24px]"
+        }`}
+      />
 
-      <div className="pointer-events-none absolute bottom-24 left-6 z-20 hidden flex-col gap-3 md:flex">
-        <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>
-          Desktop
-        </p>
-        <div className="grid w-[320px] grid-cols-2 gap-3">
-          {desktopProjectItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className={`pointer-events-auto group flex flex-col items-center gap-2 rounded-2xl border px-4 py-4 text-center shadow-lg backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-cyan-300/50 ${
-                item.featured
-                  ? `col-span-2 border-cyan-300/55 ${
-                      isDark
-                        ? "bg-slate-900/80 text-slate-100 hover:bg-slate-800/90"
-                        : "bg-white/78 text-slate-800 hover:bg-white/86"
-                    }`
-                  : `${shellCardClass} ${isDark ? "text-slate-100" : "text-slate-800"}`
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className={`flex shrink-0 items-center justify-center rounded-xl transition ${
-                    item.featured
-                      ? "h-14 w-14 bg-cyan-400/18 text-cyan-700 group-hover:bg-cyan-400/24"
-                      : "h-12 w-12 bg-cyan-400/15 text-cyan-700 group-hover:bg-cyan-400/20"
-                  }`}
-                >
-                  <FolderKanban className={item.featured ? "h-6 w-6" : "h-5 w-5"} />
-                </span>
-                <div className="text-left">
-                  <span className="block text-sm font-semibold leading-tight">{item.label}</span>
-                  <span className={`mt-1 block text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                    {item.note}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="relative z-0 grid min-h-[calc(100vh-10rem)] gap-6 md:grid-cols-[minmax(280px,400px)_minmax(320px,340px)_minmax(0,1fr)] md:items-center md:gap-8 lg:gap-10">
-        <div ref={terminalAreaRef} className="order-1 relative z-10 min-h-[820px]">
+      <div className="relative z-0 grid min-h-[calc(100vh-10rem)] gap-6 md:grid-cols-[minmax(280px,400px)_minmax(320px,340px)_minmax(0,1fr)] md:items-start md:gap-8 lg:gap-10">
+        <div ref={terminalAreaRef} className="order-1 relative z-10 min-h-[640px]">
           <div
             ref={terminalCardRef}
             className={`absolute left-0 top-0 w-full max-w-[400px] overflow-hidden rounded-[28px] border p-3 shadow-2xl backdrop-blur-sm ${shellCardClass} transition-transform`}
@@ -199,14 +165,14 @@ const About = () => {
                       <div className="mt-4 space-y-3 text-sm leading-6 text-white/82">
                         <p>
                           <span className="text-emerald-300">user@portfolio</span>:
-                          <span className="text-sky-200">~</span>$ ls apps
+                          <span className="text-sky-200">~</span>$ ls focus
                         </p>
-                        <p className="text-white/90">about resume projects contact blogs games</p>
+                        <p className="text-white/90">distributed systems healthcare software streaming platforms</p>
                         <p>
                           <span className="text-emerald-300">user@portfolio</span>:
-                          <span className="text-sky-200">~</span>$ open selected folder
+                          <span className="text-sky-200">~</span>$ cat current_focus.md
                         </p>
-                        <p className="text-white/70">Click a folder below to open the app view.</p>
+                        <p className="text-white/70">Building reliable backend systems, real-time workflows, and useful products.</p>
                       </div>
                     </div>
 
@@ -241,42 +207,22 @@ const About = () => {
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-[0.95fr_1.05fr]">
-                    <div className={`rounded-2xl border p-4 ${panelSurfaceClass}`}>
-                      <p className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${accentTextClass}/80`}>
-                        Quick stats
-                      </p>
-                      <div className="mt-4 grid gap-3">
-                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
-                          <p className="text-xs uppercase tracking-[0.25em] text-white/45">Focus</p>
-                          <p className="mt-1 text-sm font-semibold text-white">Backend + systems</p>
-                        </div>
-                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
-                          <p className="text-xs uppercase tracking-[0.25em] text-white/45">Stack</p>
-                          <p className="mt-1 text-sm font-semibold text-white">C#, .NET, React, AWS</p>
-                        </div>
-                        <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
-                          <p className="text-xs uppercase tracking-[0.25em] text-white/45">Goal</p>
-                          <p className="mt-1 text-sm font-semibold text-white">Build useful products</p>
-                        </div>
+                  <div className={`rounded-2xl border p-4 ${panelSurfaceClass}`}>
+                    <p className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${accentTextClass}/80`}>
+                      Quick focus
+                    </p>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+                        <p className="text-xs uppercase tracking-[0.25em] text-white/45">Focus</p>
+                        <p className="mt-1 text-sm font-semibold text-white">Backend + systems</p>
                       </div>
-                    </div>
-
-                    <div className={`rounded-2xl border p-4 ${panelSurfaceClass}`}>
-                      <p className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${accentTextClass}/80`}>
-                        Recent commands
-                      </p>
-                      <div className="mt-4 space-y-3 text-sm leading-6 text-white/80">
-                        <p>
-                          <span className="text-emerald-300">user@portfolio</span>$ cat resume.md
-                        </p>
-                        <p>
-                          <span className="text-emerald-300">user@portfolio</span>$ cd projects
-                        </p>
-                        <p>
-                          <span className="text-emerald-300">user@portfolio</span>$ open resume
-                        </p>
-                        <p className="text-white/70">A small command history keeps the panel readable.</p>
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+                        <p className="text-xs uppercase tracking-[0.25em] text-white/45">Stack</p>
+                        <p className="mt-1 text-sm font-semibold text-white">C#, .NET, React, AWS</p>
+                      </div>
+                      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+                        <p className="text-xs uppercase tracking-[0.25em] text-white/45">Goal</p>
+                        <p className="mt-1 text-sm font-semibold text-white">Build useful products</p>
                       </div>
                     </div>
                   </div>
@@ -365,7 +311,7 @@ const About = () => {
         </div>
 
         <div
-          className={`order-2 mx-auto w-full max-w-[320px] rounded-[18px] border p-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm md:-mt-10 ${
+          className={`order-2 mx-auto w-full max-w-[320px] rounded-[18px] border p-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm md:mt-6 ${
             isDark ? "border-slate-700/70 bg-slate-950/75 text-slate-100" : "border-white/60 bg-[#faf9f7]/95 text-slate-900"
           }`}
         >
@@ -423,7 +369,7 @@ const About = () => {
           </div>
         </div>
 
-        <div className="order-3 max-w-2xl md:ml-auto md:mr-4 lg:mr-10">
+        <div className="order-3 max-w-2xl md:ml-auto md:mr-4 md:pt-2 lg:mr-10">
           <div
             className={`overflow-hidden rounded-[24px] border p-8 shadow-[0_18px_50px_rgba(15,23,42,0.1)] backdrop-blur-md ${
               isDark ? "border-slate-700/70 bg-slate-950/70 text-slate-100" : "border-white/70 bg-white/78 text-slate-900"
@@ -515,7 +461,49 @@ const About = () => {
             </div>
           </div>
         </div>
+
       </div>
+
+      {!isTerminalOpen ? (
+        <div className="absolute bottom-8 left-6 z-20 hidden flex-col gap-3 xl:flex">
+          <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Desktop</p>
+          <div className="grid w-full max-w-[320px] grid-cols-2 gap-3">
+            {desktopProjectItems.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`group flex flex-col items-center gap-2 rounded-2xl border px-4 py-4 text-center shadow-lg backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-cyan-300/50 ${
+                  item.featured
+                    ? `col-span-2 border-cyan-300/55 ${
+                        isDark
+                          ? "bg-slate-900/80 text-slate-100 hover:bg-slate-800/90"
+                          : "bg-white/78 text-slate-800 hover:bg-white/86"
+                      }`
+                    : `${shellCardClass} ${isDark ? "text-slate-100" : "text-slate-800"}`
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`flex shrink-0 items-center justify-center rounded-xl transition ${
+                      item.featured
+                        ? "h-14 w-14 bg-cyan-400/18 text-cyan-700 group-hover:bg-cyan-400/24"
+                        : "h-12 w-12 bg-cyan-400/15 text-cyan-700 group-hover:bg-cyan-400/20"
+                    }`}
+                  >
+                    <FolderKanban className={item.featured ? "h-6 w-6" : "h-5 w-5"} />
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-sm font-semibold leading-tight">{item.label}</span>
+                    <span className={`mt-1 block text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                      {item.note}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }
