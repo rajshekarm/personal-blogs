@@ -115,6 +115,70 @@ const getCardDimensions = (projectId: string, arenaWidth: number, featured: bool
   }
 }
 
+const DNABackdrop = ({ isDark }: { isDark: boolean }) => {
+  const stroke = isDark ? "rgba(125,211,252,0.22)" : "rgba(37,99,235,0.14)"
+  const strokeSoft = isDark ? "rgba(244,114,182,0.16)" : "rgba(168,85,247,0.10)"
+  const node = isDark ? "rgba(226,232,240,0.28)" : "rgba(51,65,85,0.20)"
+
+  return (
+    <svg
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      viewBox="0 0 1600 1100"
+      preserveAspectRatio="none"
+    >
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M340 80 C480 180, 480 280, 340 380 C200 480, 200 580, 340 680 C480 780, 480 880, 340 980" stroke={stroke} strokeWidth="3" />
+        <path d="M420 80 C280 180, 280 280, 420 380 C560 480, 560 580, 420 680 C280 780, 280 880, 420 980" stroke={strokeSoft} strokeWidth="3" />
+        <path d="M1220 80 C1080 180, 1080 280, 1220 380 C1360 480, 1360 580, 1220 680 C1080 780, 1080 880, 1220 980" stroke={stroke} strokeWidth="3" />
+        <path d="M1300 80 C1440 180, 1440 280, 1300 380 C1160 480, 1160 580, 1300 680 C1440 780, 1440 880, 1300 980" stroke={strokeSoft} strokeWidth="3" />
+
+        {[
+          [330, 130, 420, 130],
+          [310, 220, 440, 220],
+          [310, 310, 440, 310],
+          [330, 400, 420, 400],
+          [330, 490, 420, 490],
+          [310, 580, 440, 580],
+          [310, 670, 440, 670],
+          [330, 760, 420, 760],
+          [330, 850, 420, 850],
+          [310, 940, 440, 940],
+          [1210, 130, 1300, 130],
+          [1190, 220, 1320, 220],
+          [1190, 310, 1320, 310],
+          [1210, 400, 1300, 400],
+          [1210, 490, 1300, 490],
+          [1190, 580, 1320, 580],
+          [1190, 670, 1320, 670],
+          [1210, 760, 1300, 760],
+          [1210, 850, 1300, 850],
+          [1190, 940, 1320, 940],
+        ].map(([x1, y1, x2, y2], index) => (
+          <g key={`${x1}-${y1}`}>
+            <path
+              d={`M${x1} ${y1} L${x2} ${y2}`}
+              stroke={index % 2 === 0 ? stroke : strokeSoft}
+              strokeWidth="2"
+            />
+            <circle cx={x1} cy={y1} r="10" fill={node} />
+            <circle cx={x2} cy={y2} r="10" fill={node} />
+          </g>
+        ))}
+
+        <path d="M560 210 C640 150, 700 150, 780 210 C860 270, 920 270, 1000 210" stroke={strokeSoft} strokeWidth="2" />
+        <path d="M560 760 C640 700, 700 700, 780 760 C860 820, 920 820, 1000 760" stroke={strokeSoft} strokeWidth="2" />
+        <circle cx="560" cy="210" r="9" fill={node} />
+        <circle cx="780" cy="210" r="9" fill={node} />
+        <circle cx="1000" cy="210" r="9" fill={node} />
+        <circle cx="560" cy="760" r="9" fill={node} />
+        <circle cx="780" cy="760" r="9" fill={node} />
+        <circle cx="1000" cy="760" r="9" fill={node} />
+      </g>
+    </svg>
+  )
+}
+
 const Projects = () => {
   const { isDark } = useDesktopTheme()
   const arenaRef = useRef<HTMLDivElement | null>(null)
@@ -299,6 +363,7 @@ const Projects = () => {
         >
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.10),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(244,114,182,0.08),_transparent_32%)]" />
           <div className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,rgba(148,163,184,0.14)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.14)_1px,transparent_1px)] [background-size:52px_52px]" />
+          <DNABackdrop isDark={isDark} />
           {arenaWidth > 0 && featuredProject && (
             <>
               <div
