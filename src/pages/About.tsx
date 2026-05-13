@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
-import { FolderKanban, FolderOpen, TerminalSquare } from "lucide-react"
+import { ArrowUpRight, FolderKanban, FolderOpen, TerminalSquare } from "lucide-react"
 import { useDesktopTheme } from "../components/desktopTheme"
 
 const desktopProjectItems = [
@@ -432,7 +432,7 @@ const About = () => {
             <div className="mb-5 flex items-center justify-between">
               <div>
                 <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                  About.md
+                  Home.md
                 </p>
                 <h1 className={`mt-2 text-4xl font-bold tracking-tight md:text-5xl ${isDark ? "text-slate-50" : "text-gray-900"}`}>
                   Hi, I'm Rajashekar.
@@ -447,49 +447,70 @@ const About = () => {
               </div>
             </div>
 
-            <div className={`space-y-5 text-base leading-relaxed ${isDark ? "text-slate-300" : "text-gray-700"}`}>
-              <p>
-                I am a Software Engineer passionate about designing, developing, and
-                deploying scalable, data-driven applications that solve complex
-                problems. My work centers on backend engineering, distributed
-                systems, database systems, cloud services, and event-driven
-                architectures.
-              </p>
+            <p className={`max-w-2xl text-base leading-relaxed ${isDark ? "text-slate-300" : "text-gray-700"}`}>
+              Backend engineer focused on healthcare software, distributed systems, and real-time products that need to be reliable as well as practical.
+            </p>
 
-              <p>
-                I have hands-on experience building automation and integration
-                solutions using Kafka, AWS Lambda, SQS, Python, React, and
-                machine learning tooling. Across roles at SS&amp;C Eze,
-                Prognovex, and more recently Fashion AI, I have worked on
-                scalable systems, data workflows, and products that improved
-                operational efficiency and decision-making.
-              </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className={`rounded-2xl border p-4 ${isDark ? "border-slate-700/70 bg-slate-900/55" : "border-slate-200/80 bg-white/85"}`}>
+                <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  Current focus
+                </p>
+                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
+                  Healthcare workflows, streaming pipelines, product polish
+                </p>
+              </div>
 
-              <p>
-                I am looking for backend engineering roles where I can keep
-                growing in scalable system architecture, cloud platforms, and
-                distributed systems while collaborating with strong teams on
-                meaningful technical problems.
-              </p>
+              <div className={`rounded-2xl border p-4 ${isDark ? "border-slate-700/70 bg-slate-900/55" : "border-slate-200/80 bg-white/85"}`}>
+                <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  Core stack
+                </p>
+                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
+                  Kafka, Flink, .NET, React, AWS
+                </p>
+              </div>
+
+              <div className={`rounded-2xl border p-4 ${isDark ? "border-slate-700/70 bg-slate-900/55" : "border-slate-200/80 bg-white/85"}`}>
+                <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  Open to
+                </p>
+                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
+                  Backend, platform, and data-heavy roles
+                </p>
+              </div>
+
+              <div className={`rounded-2xl border p-4 ${isDark ? "border-slate-700/70 bg-slate-900/55" : "border-slate-200/80 bg-white/85"}`}>
+                <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                  Next stop
+                </p>
+                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
+                  Browse projects or open the resume
+                </p>
+              </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3 md:gap-4">
+            <div className="mt-7 flex flex-wrap gap-3 md:gap-4">
               <Link
-                to="/resume"
-                className="rounded-full bg-[#3576c0] px-6 py-3 font-medium text-white transition hover:bg-[#042030]"
+                to="/projects"
+                className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition ${
+                  isDark
+                    ? "bg-cyan-300 text-slate-950 hover:bg-cyan-200"
+                    : "bg-[#3576c0] text-white hover:bg-[#042030]"
+                }`}
               >
-                Resume
+                Projects
+                <ArrowUpRight className="h-4 w-4" />
               </Link>
 
               <Link
-                to="/projects"
+                to="/resume"
                 className={`rounded-full border px-6 py-3 font-medium transition ${
                   isDark
                     ? "border-slate-600 bg-slate-900/45 text-slate-100 hover:bg-slate-800/80"
                     : "border-gray-800 text-gray-900 hover:bg-gray-100"
                 }`}
               >
-                Projects
+                Resume
               </Link>
             </div>
           </div>
