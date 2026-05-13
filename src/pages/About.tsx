@@ -84,8 +84,8 @@ const About = () => {
 
   return (
     <section className="relative min-h-[calc(100vh-6rem)] px-4 pb-8 pt-6 md:px-6 md:pt-8">
-      <div className="pointer-events-none absolute left-[-3rem] top-20 hidden h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl motion-safe:animate-pulse md:block" />
-      <div className="pointer-events-none absolute right-[28%] top-28 hidden h-56 w-56 rounded-full bg-sky-300/10 blur-3xl motion-safe:animate-pulse md:block" />
+      <div className="pointer-events-none absolute left-[-2rem] top-20 hidden h-64 w-64 rounded-full bg-cyan-200/12 blur-3xl motion-safe:animate-pulse md:block" />
+      <div className="pointer-events-none absolute right-[28%] top-28 hidden h-48 w-48 rounded-full bg-sky-200/8 blur-3xl motion-safe:animate-pulse md:block" />
       <div
         className={`pointer-events-none absolute inset-0 opacity-[0.16] ${
           isDark
@@ -94,7 +94,35 @@ const About = () => {
         }`}
       />
 
-      <div className="relative z-0 grid min-h-[calc(100vh-10rem)] gap-6 md:grid-cols-[minmax(280px,400px)_minmax(320px,340px)_minmax(0,1fr)] md:items-start md:gap-8 lg:gap-10">
+      <div className="pointer-events-none absolute inset-x-0 bottom-28 hidden justify-center md:flex">
+        <div
+          className={`w-full max-w-[760px] rounded-[28px] border px-5 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur-sm ${
+            isDark ? "border-slate-700/45 bg-slate-950/28" : "border-white/55 bg-white/28"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Workspace</p>
+              <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                Building healthcare software, streaming systems, and product-facing backend experiences.
+              </p>
+            </div>
+            <div className="hidden items-center gap-2 lg:flex">
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                ICU monitoring
+              </span>
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                KafkaCare
+              </span>
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                Real-time systems
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-0 mx-auto grid min-h-[calc(100vh-10rem)] max-w-[1480px] gap-6 md:grid-cols-[minmax(280px,390px)_minmax(320px,340px)_minmax(340px,1fr)] md:items-start md:gap-6 lg:gap-6">
         <div ref={terminalAreaRef} className="order-1 relative z-10 min-h-[640px]">
           <div
             ref={terminalCardRef}
@@ -465,7 +493,7 @@ const About = () => {
       </div>
 
       {!isTerminalOpen ? (
-        <div className="absolute bottom-8 left-6 z-20 hidden flex-col gap-3 xl:flex">
+        <div className="absolute bottom-8 left-6 z-20 hidden origin-bottom-left scale-95 flex-col gap-3 xl:flex">
           <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Desktop</p>
           <div className="grid w-full max-w-[320px] grid-cols-2 gap-3">
             {desktopProjectItems.map((item) => (
