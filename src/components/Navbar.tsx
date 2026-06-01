@@ -64,7 +64,7 @@ const Navbar = () => {
             Artion
           </NavLink>
           <NavLink to="/artionNextGen" className={linkClass}>
-            artionNextGen
+            ECG AI
           </NavLink>
         </div>
       </div>
@@ -94,7 +94,7 @@ const Navbar = () => {
               Artion
             </NavLink>
             <NavLink to="/artionNextGen" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
-              artionNextGen
+              ECG AI
             </NavLink>
           </div>
         </div>

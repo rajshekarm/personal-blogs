@@ -30,7 +30,7 @@ const appItems = [
   { to: "/blogs", label: "Blogs", icon: BookOpen },
   { to: "/games", label: "Games", icon: Gamepad2 },
   { to: "/artion", label: "Artion", icon: Workflow },
-  { to: "/artionNextGen", label: "artionNextGen", icon: AppWindow },
+  { to: "/artionNextGen", label: "ECG AI", icon: AppWindow },
 ]
 
 const techRibbonItems = [
@@ -125,9 +125,9 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                 : pathname === "/artion"
                   ? "Artion"
                   : pathname === "/artionNextGen"
-                    ? "artionNextGen"
+                    ? "ECG AI"
                     : pathname === "/projects/ecg-triage-intelligence"
-                      ? "ECG Triage"
+                      ? "ECG Intelligence"
       : "Home"
 
   const handleClose = () => navigate("/")

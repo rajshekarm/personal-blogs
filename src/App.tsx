@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom"
 import DesktopShell from "./components/DesktopShell"
 import About from "./pages/About"
 import Resume from "./pages/Resume"
@@ -10,7 +10,6 @@ import NewBlog from "./pages/NewBlog"
 import Games from "./pages/games/Games"
 import Artion from "./pages/Artion"
 import NameToBinary from "./pages/games/NameToBinary"
-import MultiLeadTransformerLab from "./pages/MultiLeadTransformerLab"
 import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 
 const App = () => {
@@ -28,7 +27,7 @@ const App = () => {
           <Route path="/artion" element={<Artion />} />
           <Route path="/projects/ecg-triage-intelligence" element={<ECGTriageIntelligence />} />
           <Route path="/games" element={<Games />} />
-          <Route path="/artionNextGen" element={<MultiLeadTransformerLab />} />
+          <Route path="/artionNextGen" element={<Navigate to="/projects/ecg-triage-intelligence" replace />} />
           <Route path="/games/name-to-binary" element={<NameToBinary />} />
         </Routes>
       </DesktopShell>
