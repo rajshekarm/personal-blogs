@@ -176,8 +176,12 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                 <p className={`text-sm font-semibold leading-none ${isDark ? "text-slate-100" : "text-slate-900"}`}>
                   {windowTitle}
                 </p>
-                <p className={`text-[10px] uppercase tracking-[0.24em] ${isDark ? "text-slate-300" : "text-slate-500"}`}>
-                  Rajashekar OS
+                <p
+                  className={`max-w-[13rem] text-[10px] uppercase leading-tight tracking-[0.22em] ${
+                    isDark ? "text-slate-300" : "text-slate-500"
+                  }`}
+                >
+                  Rajashekar Software Engineer Desktop
                 </p>
               </div>
             </div>
@@ -199,7 +203,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           </div>
         </header>
 
-        <div className={`fixed inset-x-0 top-[56px] z-30 hidden border-y px-4 py-1.5 backdrop-blur-md md:block ${ribbonClass}`}>
+        <div className={`fixed inset-x-0 top-[64px] z-30 hidden border-y px-4 py-2 backdrop-blur-md md:block ${ribbonClass}`}>
           <div className="relative overflow-hidden">
             <div className={`pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
             <div className={`pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
@@ -213,7 +217,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
 
-        <div className="pt-24 pb-24">{children}</div>
+        <div className="pt-28 pb-24">{children}</div>
 
         <button
           type="button"
@@ -236,8 +240,8 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-200">
                 <TerminalSquare className="h-5 w-5" />
               </div>
-              <div>
-                <p className="text-sm font-semibold leading-none">Rajashekar OS</p>
+              <div className="max-w-[12rem]">
+                <p className="text-sm font-semibold leading-tight">Rajashekar Software Engineer Desktop</p>
                 <p className="text-xs text-white/55">Click an app to open a page</p>
               </div>
             </div>

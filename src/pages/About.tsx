@@ -5,8 +5,8 @@ import { useDesktopTheme } from "../components/desktopTheme"
 
 const desktopProjectItems = [
   { to: "/projects", label: "Projects", note: "Main hub", featured: true },
-  { to: "/projects/ecg-triage-intelligence", label: "ECG Triage", note: "Health AI" },
-  { to: "/projects", label: "Medical AI", note: "Research" },
+  { to: "/projects/ecg-triage-intelligence", label: "ECG Triage", note: "Applied AI" },
+  { to: "/projects", label: "AI Systems", note: "Research" },
   { to: "/projects", label: "GPU Engine", note: "CUDA" },
 ]
 
@@ -104,15 +104,15 @@ const About = () => {
             <div>
               <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Workspace</p>
               <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
-                Building healthcare software, streaming systems, and product-facing backend experiences.
+                Building backend systems, AI-enabled products, and practical software for real users.
               </p>
             </div>
             <div className="hidden items-center gap-2 lg:flex">
               <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
-                ICU monitoring
+                Backend systems
               </span>
               <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
-                KafkaCare
+                Applied AI
               </span>
               <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
                 Real-time systems
@@ -195,12 +195,12 @@ const About = () => {
                           <span className="text-emerald-300">user@portfolio</span>:
                           <span className="text-sky-200">~</span>$ ls focus
                         </p>
-                        <p className="text-white/90">distributed systems healthcare software streaming platforms</p>
+                        <p className="text-white/90">distributed systems backend engineering deep learning agentic development</p>
                         <p>
                           <span className="text-emerald-300">user@portfolio</span>:
                           <span className="text-sky-200">~</span>$ cat current_focus.md
                         </p>
-                        <p className="text-white/70">Building reliable backend systems, real-time workflows, and useful products.</p>
+                        <p className="text-white/70">Building reliable backend systems, real-time workflows, and AI products that stay useful in production.</p>
                       </div>
                     </div>
 
@@ -221,7 +221,7 @@ const About = () => {
                           <div className="flex items-center justify-between gap-3">
                             <div>
                               <p className="text-xs uppercase tracking-[0.25em] text-white/45">AI Signal</p>
-                              <p className="mt-1 text-sm font-semibold text-white">Inference + routing</p>
+                              <p className="mt-1 text-sm font-semibold text-white">Deep learning + agents</p>
                             </div>
                             <span className="inline-flex items-center gap-1">
                               <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.7)]" />
@@ -229,7 +229,7 @@ const About = () => {
                               <span className="h-2 w-2 rounded-full bg-cyan-300/40 motion-safe:animate-pulse" />
                             </span>
                           </div>
-                          <p className="mt-2 text-[11px] text-white/60">Learning, searching, and optimizing in the background.</p>
+                          <p className="mt-2 text-[11px] text-white/60">Learning, building, and experimenting with intelligent systems.</p>
                         </div>
                       </div>
                     </div>
@@ -246,7 +246,7 @@ const About = () => {
                       </div>
                       <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
                         <p className="text-xs uppercase tracking-[0.25em] text-white/45">Stack</p>
-                        <p className="mt-1 text-sm font-semibold text-white">C#, .NET, React, AWS</p>
+                        <p className="mt-1 text-sm font-semibold text-white">C#, .NET, Python, React, AWS</p>
                       </div>
                       <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
                         <p className="text-xs uppercase tracking-[0.25em] text-white/45">Goal</p>
@@ -422,7 +422,7 @@ const About = () => {
             </div>
 
             <p className={`max-w-2xl text-base leading-relaxed ${isDark ? "text-slate-300" : "text-gray-700"}`}>
-              Backend engineer focused on healthcare software, distributed systems, and real-time products that need to be reliable as well as practical.
+              Backend engineer focused on distributed systems, AI-enabled products, and reliable software for teams that care about scale and quality.
             </p>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -431,7 +431,7 @@ const About = () => {
                   Current focus
                 </p>
                 <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
-                  Healthcare workflows, streaming pipelines, product polish
+                  Distributed systems, backend architecture, deep learning, agentic development
                 </p>
               </div>
 
@@ -439,9 +439,7 @@ const About = () => {
                 <p className={`text-[10px] font-semibold uppercase tracking-[0.28em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
                   Core stack
                 </p>
-                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
-                  Kafka, Flink, .NET, React, AWS
-                </p>
+                <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>Kafka, Flink, .NET, Python, React, AWS</p>
               </div>
 
               <div className={`rounded-2xl border p-4 ${isDark ? "border-slate-700/70 bg-slate-900/55" : "border-slate-200/80 bg-white/85"}`}>
@@ -449,7 +447,7 @@ const About = () => {
                   Open to
                 </p>
                 <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
-                  Backend, platform, and data-heavy roles
+                  Backend, platform, data, and AI-focused roles
                 </p>
               </div>
 

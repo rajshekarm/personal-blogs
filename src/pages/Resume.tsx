@@ -5,18 +5,6 @@ import { useState, type ReactNode } from "react"
 
 const timelineEntries = [
   {
-    year: "2026",
-    role: "Software Engineer, CareIntellect for Opera...",
-    org: "GE Healthcare",
-    period: "2025 - 2026",
-    side: "left" as const,
-    tone: "bg-[#0b86b6]",
-    textTone: "text-white",
-    accent: "from-cyan-400/20 to-transparent",
-    summary:
-      "Building healthcare software experiences with a focus on reliable workflows, clinical efficiency, and product polish.",
-  },
-  {
     year: "2025",
     role: "Teaching Assistant, Intro to Algorithms",
     org: "Illinois Institute of Technology",
@@ -81,7 +69,7 @@ const timelineEntries = [
 type TimelineEntry = (typeof timelineEntries)[number]
 
 const focusItems = [
-  "Healthcare software",
+  "Backend engineering",
   "Distributed systems",
   "Real-time workflows",
   "Reliable product polish",
