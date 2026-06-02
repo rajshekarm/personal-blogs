@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/share/blogs/:slug", "destination": "/api/share-blog?slug=:slug" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }

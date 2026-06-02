@@ -125,6 +125,7 @@ const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
+  const shareUrl = slug ? `https://rajashekarmudigonda.space/share/blogs/${slug}` : ""
   const [blog, setBlog] = useState<Blog | null>(null)
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
@@ -560,13 +561,27 @@ const BlogPost = () => {
                   </button>
                 </div>
               ) : (
-                <button
-                  type="button"
-                  className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
-                  onClick={startEdit}
-                >
-                  Edit Post
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                    onClick={() => {
+                      if (!shareUrl) {
+                        return
+                      }
+                      void navigator.clipboard.writeText(shareUrl)
+                    }}
+                  >
+                    Copy Share Link
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                    onClick={startEdit}
+                  >
+                    Edit Post
+                  </button>
+                </div>
               )}
             </div>
 
