@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react"
 import { Link, useParams } from "react-router-dom"
-import ReactMarkdown from "react-markdown"
+import ReactMarkdown, { type Components } from "react-markdown"
 import { fetchBlog, API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
 import { readSectionImageFile, SECTION_IMAGE_SIZE_LABEL } from "../utils/sectionImage"
@@ -75,7 +75,43 @@ const extractWordCount = (blog: Blog) => {
 }
 
 const readingProseClass =
-  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:leading-8 prose-li:marker:text-[#8b5e3c] prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+
+const markdownComponents: Components = {
+  ul: ({ children, ...props }) => (
+    <ul
+      {...props}
+      style={{
+        listStyleType: "disc",
+        paddingLeft: "1.5rem",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+      }}
+      className="space-y-2"
+    >
+      {children}
+    </ul>
+  ),
+  ol: ({ children, ...props }) => (
+    <ol
+      {...props}
+      style={{
+        listStyleType: "decimal",
+        paddingLeft: "1.5rem",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+      }}
+      className="space-y-2"
+    >
+      {children}
+    </ol>
+  ),
+  li: ({ children, ...props }) => (
+    <li {...props} className="leading-8">
+      {children}
+    </li>
+  ),
+}
 
 const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
   sections.map((section) => ({
@@ -285,6 +321,18 @@ const BlogPost = () => {
     setNewSectionDraft((prev) => ({ ...prev, [key]: value }))
   }
 
+  const updateSection = <K extends keyof BlogSection>(
+    index: number,
+    key: K,
+    value: BlogSection[K]
+  ) => {
+    setFormState((prev) => {
+      const next = [...prev.sections]
+      next[index] = { ...next[index], [key]: value }
+      return { ...prev, sections: next }
+    })
+  }
+
   const appendNewSection = () => {
     if (!newSectionDraft.title.trim()) {
       setError("New section subtitle is required.")
@@ -403,7 +451,7 @@ const BlogPost = () => {
           )}
           {section.content && (
             <div className={readingProseClass}>
-              <ReactMarkdown>{section.content}</ReactMarkdown>
+              <ReactMarkdown components={markdownComponents}>{section.content}</ReactMarkdown>
             </div>
           )}
           {section.children && section.children.length > 0 && (
@@ -628,24 +676,51 @@ const BlogPost = () => {
                     ) : (
                       <div className="mt-4 space-y-3">
                         {formState.sections.map((section, index) => (
-                          <div key={section.id} className="grid gap-2 rounded-2xl border border-[#ece3d7] bg-white p-4">
+                          <div
+                            key={section.id}
+                            className="grid gap-4 rounded-2xl border border-[#ece3d7] bg-white p-4"
+                          >
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-xs uppercase tracking-[0.2em] text-[#8b5e3c]">
                                 Subtitle {index + 1}
                               </span>
-                              <span className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs text-[#76614f]">
-                                Level {section.level}
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="rounded-full bg-[#f3ede4] px-3 py-1 text-xs text-[#76614f]">
+                                  Level {section.level}
+                                </span>
+                                <span className="text-xs text-[#7a6c61]">Markdown supported</span>
+                              </div>
                             </div>
-                            <p className="text-sm font-medium text-[#19252f]">{section.title}</p>
-                            <textarea
-                              id={`edit-section-content-${section.id}`}
-                              className="rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3] px-4 py-3 text-sm text-[#465862]"
-                              value={section.content ?? ""}
-                              readOnly
-                              placeholder="section content"
-                              rows={3}
+                            <input
+                              className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-sm text-[#19252f] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                              value={section.title}
+                              onChange={(event) => updateSection(index, "title", event.target.value)}
+                              placeholder="Section title"
                             />
+                            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+                              <div className="space-y-2">
+                                <textarea
+                                  id={`edit-section-content-${section.id}`}
+                                  className="min-h-40 w-full resize-none overflow-hidden rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3] px-4 py-3 text-sm text-[#465862] outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                                  value={section.content ?? ""}
+                                  onChange={(event) => updateSection(index, "content", event.target.value)}
+                                  onInput={(event) => autoResizeTextarea(event.currentTarget)}
+                                  placeholder="Write markdown here. Use headings, bullets, and code blocks."
+                                  rows={5}
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <p className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">
+                                  Live Preview
+                                </p>
+                                <div className={`rounded-2xl border border-[#e5d8c8] bg-white p-4 ${readingProseClass}`}>
+                                  <ReactMarkdown components={markdownComponents}>
+                                    {section.content || "_No content yet_"}
+                                  </ReactMarkdown>
+                                </div>
+                              </div>
+                            </div>
                             {section.image_url && (
                               <div className="overflow-hidden rounded-2xl border border-[#e5d8c8] bg-[#fbf8f3]">
                                 <img
@@ -695,13 +770,21 @@ const BlogPost = () => {
                           placeholder="Enter subtitle name"
                         />
                         <textarea
-                          className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
+                          className="min-h-32 rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
                           value={newSectionDraft.content ?? ""}
                           onChange={(event) => updateNewSection("content", event.target.value)}
                           onInput={(event) => autoResizeTextarea(event.currentTarget)}
-                          placeholder="section content"
-                          rows={3}
+                          placeholder="Write markdown here. Use headings, bullets, and code blocks."
+                          rows={5}
                         />
+                        <div className="rounded-2xl border border-[#e5d8c8] bg-white p-4">
+                          <p className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">Live Preview</p>
+                          <div className={`mt-3 ${readingProseClass}`}>
+                            <ReactMarkdown components={markdownComponents}>
+                              {newSectionDraft.content || "_No content yet_"}
+                            </ReactMarkdown>
+                          </div>
+                        </div>
                         <label className="grid gap-2 rounded-2xl border border-dashed border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 text-sm text-[#5a6770]">
                           <span>Attach image from your computer</span>
                           <input
@@ -761,6 +844,14 @@ const BlogPost = () => {
                       placeholder="markdown content fallback (optional)"
                       rows={6}
                     />
+                    <div className="rounded-2xl border border-[#e5d8c8] bg-white p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-[#8b5e3c]">Live Preview</p>
+                      <div className={`mt-3 ${readingProseClass}`}>
+                        <ReactMarkdown components={markdownComponents}>
+                          {formState.content || "_No content yet_"}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
                     <input
                       className="rounded-2xl border border-[#d8cab9] bg-[#fbf8f3] px-4 py-3 outline-none transition focus:border-[#8b5e3c] focus:bg-white"
                       value={formState.external_url}
@@ -788,7 +879,9 @@ const BlogPost = () => {
               {previewMode && (
                 <article className="rounded-[28px] border border-[#ece3d7] bg-white p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)]">
                   <div className={readingProseClass}>
-                    <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
+                    <ReactMarkdown components={markdownComponents}>
+                      {formState.content || "_No content yet_"}
+                    </ReactMarkdown>
                   </div>
                 </article>
               )}
@@ -808,7 +901,7 @@ const BlogPost = () => {
               ) : (
                 <div className="rounded-[32px] border border-[#e8ddd0] bg-white/90 p-6 shadow-[0_18px_50px_rgba(62,45,25,0.06)] sm:p-8">
                 <article className={readingProseClass}>
-                    <ReactMarkdown>{blog.content ?? ""}</ReactMarkdown>
+                    <ReactMarkdown components={markdownComponents}>{blog.content ?? ""}</ReactMarkdown>
                   </article>
                 </div>
               )}

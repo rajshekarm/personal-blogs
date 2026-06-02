@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
-import ReactMarkdown from "react-markdown"
+import ReactMarkdown, { type Components } from "react-markdown"
 import { API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
 import { readSectionImageFile, SECTION_IMAGE_SIZE_LABEL } from "../utils/sectionImage"
@@ -34,7 +34,43 @@ const EMPTY_FORM: BlogFormState = {
 }
 
 const readingProseClass =
-  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-li:leading-8 prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:leading-8 prose-li:marker:text-[#8b5e3c] prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+
+const markdownComponents: Components = {
+  ul: ({ children, ...props }) => (
+    <ul
+      {...props}
+      style={{
+        listStyleType: "disc",
+        paddingLeft: "1.5rem",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+      }}
+      className="space-y-2"
+    >
+      {children}
+    </ul>
+  ),
+  ol: ({ children, ...props }) => (
+    <ol
+      {...props}
+      style={{
+        listStyleType: "decimal",
+        paddingLeft: "1.5rem",
+        marginTop: "1rem",
+        marginBottom: "1rem",
+      }}
+      className="space-y-2"
+    >
+      {children}
+    </ol>
+  ),
+  li: ({ children, ...props }) => (
+    <li {...props} className="leading-8">
+      {children}
+    </li>
+  ),
+}
 
 const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
   sections.map((section) => ({
@@ -299,7 +335,7 @@ const NewBlog = () => {
           )}
           {section.content ? (
             <div className={readingProseClass}>
-              <ReactMarkdown>{section.content}</ReactMarkdown>
+              <ReactMarkdown components={markdownComponents}>{section.content}</ReactMarkdown>
             </div>
           ) : (
             <p className="text-sm italic text-[#7a6c61]">Start writing to preview this section.</p>
@@ -697,7 +733,9 @@ const NewBlog = () => {
                   <div className="space-y-4">{renderSectionPreview(formState.sections)}</div>
                 ) : (
                 <article className={`rounded-[28px] border border-[#ece3d7] bg-[#fcfaf7] p-6 ${readingProseClass}`}>
-                    <ReactMarkdown>{formState.content || "_No content yet_"}</ReactMarkdown>
+                    <ReactMarkdown components={markdownComponents}>
+                      {formState.content || "_No content yet_"}
+                    </ReactMarkdown>
                   </article>
                 )}
               </div>
