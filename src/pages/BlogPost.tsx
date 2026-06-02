@@ -131,7 +131,7 @@ type BlogEngagementState = {
 }
 
 const defaultEngagementState: BlogEngagementState = {
-  applauseCount: 0,
+  applauseCount: 12,
   applauded: false,
   saved: false,
 }
@@ -224,7 +224,7 @@ const BlogPost = () => {
 
       const parsed = JSON.parse(stored) as Partial<BlogEngagementState>
       setEngagement({
-        applauseCount: Number.isFinite(parsed.applauseCount) ? Number(parsed.applauseCount) : 0,
+        applauseCount: Number.isFinite(parsed.applauseCount) ? Number(parsed.applauseCount) : 12,
         applauded: Boolean(parsed.applauded),
         saved: Boolean(parsed.saved),
       })
