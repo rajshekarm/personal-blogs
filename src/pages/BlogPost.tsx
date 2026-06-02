@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react"
 import { Link, useParams } from "react-router-dom"
 import ReactMarkdown, { type Components } from "react-markdown"
+import { Bookmark, Copy, Heart, Link2, Share2 } from "lucide-react"
 import { fetchBlog, API_BASE } from "../api/blog"
 import type { Blog, BlogSection } from "../types/blog"
 import { readSectionImageFile, SECTION_IMAGE_SIZE_LABEL } from "../utils/sectionImage"
@@ -123,6 +124,18 @@ const normalizeSectionsForSave = (sections: BlogSection[]): BlogSection[] =>
     children: normalizeSectionsForSave(section.children ?? []),
   }))
 
+type BlogEngagementState = {
+  applauseCount: number
+  applauded: boolean
+  saved: boolean
+}
+
+const defaultEngagementState: BlogEngagementState = {
+  applauseCount: 0,
+  applauded: false,
+  saved: false,
+}
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
   const shareUrl = slug ? `https://rajashekarmudigonda.space/share/blogs/${slug}` : ""
@@ -155,7 +168,11 @@ const BlogPost = () => {
     image_alt: "",
     children: [],
   })
+  const [engagement, setEngagement] = useState<BlogEngagementState>(defaultEngagementState)
+  const [shareMessage, setShareMessage] = useState<string | null>(null)
   const newSectionTitleRef = useRef<HTMLInputElement | null>(null)
+
+  const engagementStorageKey = slug ? `blog-engagement:${slug}` : ""
 
   useEffect(() => {
     if (!slug) {
@@ -191,6 +208,41 @@ const BlogPost = () => {
   }, [slug])
 
   useEffect(() => {
+    if (!engagementStorageKey) {
+      setEngagement(defaultEngagementState)
+      setShareMessage(null)
+      return
+    }
+
+    try {
+      const stored = window.localStorage.getItem(engagementStorageKey)
+      if (!stored) {
+        setEngagement(defaultEngagementState)
+        setShareMessage(null)
+        return
+      }
+
+      const parsed = JSON.parse(stored) as Partial<BlogEngagementState>
+      setEngagement({
+        applauseCount: Number.isFinite(parsed.applauseCount) ? Number(parsed.applauseCount) : 0,
+        applauded: Boolean(parsed.applauded),
+        saved: Boolean(parsed.saved),
+      })
+    } catch {
+      setEngagement(defaultEngagementState)
+      setShareMessage(null)
+    }
+  }, [engagementStorageKey])
+
+  useEffect(() => {
+    if (!engagementStorageKey) {
+      return
+    }
+
+    window.localStorage.setItem(engagementStorageKey, JSON.stringify(engagement))
+  }, [engagement, engagementStorageKey])
+
+  useEffect(() => {
     if (blog?.external_url && !editing) {
       window.location.assign(blog.external_url)
     }
@@ -202,6 +254,46 @@ const BlogPost = () => {
   ) => {
     setFormState((prev) => ({ ...prev, [key]: value }))
   }
+
+  const handleApplause = () => {
+    setEngagement((prev) => ({
+      ...prev,
+      applauseCount: prev.applauded ? prev.applauseCount : prev.applauseCount + 1,
+      applauded: true,
+    }))
+  }
+
+  const toggleSaved = () => {
+    setEngagement((prev) => ({
+      ...prev,
+      saved: !prev.saved,
+    }))
+  }
+
+  const handleCopyShareUrl = async () => {
+    if (!shareUrl) {
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setShareMessage("Share link copied")
+      window.setTimeout(() => setShareMessage(null), 2000)
+    } catch {
+      setShareMessage("Copy failed")
+      window.setTimeout(() => setShareMessage(null), 2000)
+    }
+  }
+
+  const openShareWindow = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer")
+  }
+
+  const shareTitle = blog?.title ? `${blog.title} | Rajashekar Mudigonda` : "Rajashekar Mudigonda | Backend Engineer"
+  const shareText = blog?.description || blog?.subheader || "Backend engineering, distributed systems, and applied AI."
+  const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
+  const xShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`${shareTitle} - ${shareText}`)}`
+  const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(`${shareTitle} - ${shareText} ${shareUrl}`)}`
 
   const startEdit = () => {
     setError(null)
@@ -604,6 +696,96 @@ const BlogPost = () => {
                 </span>
               ))}
             </div>
+
+            {!editing && (
+              <div className="rounded-[28px] border border-[#e8ddd0] bg-[#fcfaf7] p-4 shadow-[0_16px_40px_rgba(62,45,25,0.04)]">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="space-y-1">
+                    <p className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">
+                      Engage with this post
+                    </p>
+                    <p className="text-sm leading-6 text-[#556772]">
+                      Quick actions for readers who want to save, share, or leave a small applause.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                        engagement.applauded
+                          ? "border-rose-300 bg-rose-50 text-rose-700"
+                          : "border-[#d8cab9] text-[#44535d] hover:bg-[#f5ede3]"
+                      }`}
+                      onClick={handleApplause}
+                      aria-pressed={engagement.applauded}
+                    >
+                      <Heart className={`h-4 w-4 ${engagement.applauded ? "fill-current" : ""}`} />
+                      Clap
+                      <span className="text-xs opacity-70">{engagement.applauseCount}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                        engagement.saved
+                          ? "border-cyan-300 bg-cyan-50 text-cyan-800"
+                          : "border-[#d8cab9] text-[#44535d] hover:bg-[#f5ede3]"
+                      }`}
+                      onClick={toggleSaved}
+                      aria-pressed={engagement.saved}
+                    >
+                      <Bookmark className={`h-4 w-4 ${engagement.saved ? "fill-current" : ""}`} />
+                      {engagement.saved ? "Saved" : "Save"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      onClick={handleCopyShareUrl}
+                      disabled={!shareUrl}
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copy link
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      onClick={() => openShareWindow(linkedInShareUrl)}
+                      disabled={!shareUrl}
+                    >
+                      <Share2 className="h-4 w-4" />
+                      LinkedIn
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      onClick={() => openShareWindow(whatsappShareUrl)}
+                      disabled={!shareUrl}
+                    >
+                      <Link2 className="h-4 w-4" />
+                      WhatsApp
+                    </button>
+
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      onClick={() => openShareWindow(xShareUrl)}
+                      disabled={!shareUrl}
+                    >
+                      <Share2 className="h-4 w-4" />
+                      X
+                    </button>
+                  </div>
+                </div>
+
+                {shareMessage && (
+                  <p className="mt-3 text-sm text-[#7a6c61]">{shareMessage}</p>
+                )}
+              </div>
+            )}
 
             {error && (
               <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
