@@ -31,14 +31,14 @@ const About = () => {
   const terminalCardRef = useRef<HTMLDivElement | null>(null)
 
   const shellCardClass = isDark
-    ? "border-slate-700/70 bg-slate-950/45"
-    : "border-slate-300/70 bg-[#dfe6ea]/90"
+    ? "border-white/10 bg-slate-950/38 shadow-[0_18px_50px_rgba(0,0,0,0.16)] backdrop-blur-2xl"
+    : "border-white/35 bg-white/28 shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur-2xl"
   const terminalSurfaceClass = isDark
-    ? "border-slate-800/80 bg-[#0b1220] text-slate-100"
-    : "border-slate-200/70 bg-[#0f172a] text-white"
+    ? "border-white/10 bg-slate-950/60 text-slate-100"
+    : "border-white/15 bg-white/18 text-slate-900"
   const panelSurfaceClass = isDark
-    ? "border-white/10 bg-white/5"
-    : "border-white/10 bg-white/6"
+    ? "border-white/10 bg-white/6"
+    : "border-white/30 bg-white/28"
   const mutedTextClass = isDark ? "text-slate-300" : "text-white/65"
   const accentTextClass = isDark ? "text-cyan-200" : "text-cyan-200"
   const desktopLabelClass = isDark ? "text-slate-300" : "text-slate-500"
@@ -94,43 +94,15 @@ const About = () => {
         }`}
       />
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-28 hidden justify-center md:flex">
-        <div
-          className={`w-full max-w-[760px] rounded-[28px] border px-5 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur-sm ${
-            isDark ? "border-slate-700/45 bg-slate-950/28" : "border-white/55 bg-white/28"
-          }`}
-        >
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Workspace</p>
-                <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
-                Rajashekar Mudigonda building backend systems, applied AI, and practical software for real users.
-              </p>
-            </div>
-            <div className="hidden items-center gap-2 lg:flex">
-              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
-                Backend systems
-              </span>
-              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
-                Applied AI
-              </span>
-              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
-                Real-time systems
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="relative z-0 mx-auto grid min-h-[calc(100vh-10rem)] max-w-[1480px] gap-6 md:grid-cols-[minmax(280px,390px)_minmax(320px,340px)_minmax(340px,1fr)] md:items-start md:gap-6 lg:gap-6">
         <div ref={terminalAreaRef} className="order-1 relative z-10 min-h-[640px]">
           <div
             ref={terminalCardRef}
-            className={`absolute left-0 top-0 w-full max-w-[400px] overflow-hidden rounded-[28px] border p-3 shadow-2xl backdrop-blur-sm ${shellCardClass} transition-transform`}
+            className={`absolute left-0 top-0 w-full max-w-[400px] overflow-hidden rounded-[28px] border p-3 ${shellCardClass} transition-transform`}
             style={{ transform: `translate3d(${terminalPosition.x}px, ${terminalPosition.y}px, 0)` }}
           >
             {isTerminalOpen ? (
-              <div className={`rounded-[22px] shadow-inner ${terminalSurfaceClass}`}>
+              <div className={`rounded-[22px] ${terminalSurfaceClass}`}>
                 <div
                   className={`flex cursor-move items-center justify-between border-b px-4 py-3 ${isDark ? "border-white/10" : "border-white/10"}`}
                   onPointerDown={(event) => {
@@ -340,7 +312,7 @@ const About = () => {
 
         <div
           className={`order-2 mx-auto w-full max-w-[320px] rounded-[18px] border p-8 text-center shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm md:mt-6 ${
-            isDark ? "border-slate-700/70 bg-slate-950/75 text-slate-100" : "border-white/60 bg-[#faf9f7]/95 text-slate-900"
+            isDark ? "border-white/10 bg-slate-950/45 text-slate-100" : "border-white/35 bg-white/28 text-slate-900"
           }`}
         >
           <div className="mx-auto mb-8 h-42 w-42 overflow-hidden rounded-full">
@@ -400,7 +372,7 @@ const About = () => {
         <div className="order-3 max-w-2xl md:ml-auto md:mr-4 md:pt-2 lg:mr-10">
           <div
             className={`overflow-hidden rounded-[24px] border p-8 shadow-[0_18px_50px_rgba(15,23,42,0.1)] backdrop-blur-md ${
-              isDark ? "border-slate-700/70 bg-slate-950/70 text-slate-100" : "border-white/70 bg-white/78 text-slate-900"
+              isDark ? "border-slate-700/70 bg-slate-950/70 text-slate-100" : "border-white/35 bg-white/28 text-slate-900"
             }`}
           >
             <div className="mb-5 flex items-center justify-between">
@@ -467,7 +439,7 @@ const About = () => {
                 className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-medium transition ${
                   isDark
                     ? "bg-cyan-300 text-slate-950 hover:bg-cyan-200"
-                    : "bg-[#3576c0] text-white hover:bg-[#042030]"
+                    : "bg-slate-900/90 text-white hover:bg-slate-800"
                 }`}
               >
                 Projects
@@ -478,8 +450,8 @@ const About = () => {
                 to="/resume"
                 className={`rounded-full border px-6 py-3 font-medium transition ${
                   isDark
-                    ? "border-slate-600 bg-slate-900/45 text-slate-100 hover:bg-slate-800/80"
-                    : "border-gray-800 text-gray-900 hover:bg-gray-100"
+                    ? "border-white/15 bg-white/6 text-slate-100 hover:bg-white/10"
+                    : "border-white/30 bg-white/18 text-slate-900 hover:bg-white/30"
                 }`}
               >
                 Resume
@@ -488,6 +460,34 @@ const About = () => {
           </div>
         </div>
 
+      </div>
+
+      <div className="mt-6 hidden justify-center md:flex">
+        <div
+          className={`w-full max-w-[760px] rounded-[28px] border px-5 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur-sm ${
+            isDark ? "border-slate-700/45 bg-slate-950/28" : "border-white/55 bg-white/28"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Workspace</p>
+              <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                Rajashekar Mudigonda building backend systems, applied AI, and practical software for real users.
+              </p>
+            </div>
+            <div className="hidden items-center gap-2 lg:flex">
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                Backend systems
+              </span>
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                Applied AI
+              </span>
+              <span className={`rounded-full border px-3 py-1 text-xs ${isDark ? "border-slate-700 bg-slate-900/50 text-slate-300" : "border-slate-200 bg-white/75 text-slate-600"}`}>
+                Real-time systems
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {!isTerminalOpen ? (

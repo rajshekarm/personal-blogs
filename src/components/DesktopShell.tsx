@@ -80,8 +80,8 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
   const headerClass = useMemo(
     () =>
       isDark
-        ? "border-slate-800/70 bg-slate-950/55 text-slate-100"
-        : "border-white/50 bg-white/58 text-slate-900",
+        ? "border-white/10 bg-slate-950/45 text-slate-100 shadow-[0_16px_40px_rgba(0,0,0,0.18)]"
+        : "border-white/35 bg-white/28 text-slate-900 shadow-[0_16px_40px_rgba(15,23,42,0.08)]",
     [isDark]
   )
 
@@ -138,7 +138,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
     <DesktopThemeProvider value={{ theme, isDark }}>
       <main className={`${shellClass} min-h-screen overflow-hidden font-sans transition-colors duration-300`}>
         <header
-          className={`fixed inset-x-0 top-0 z-50 border-b px-2.5 py-1.5 backdrop-blur-2xl sm:px-4 ${headerClass}`}
+          className={`fixed left-3 right-3 top-2.5 z-50 rounded-[24px] border px-3 py-1.5 backdrop-blur-3xl sm:left-4 sm:right-4 sm:px-4 ${headerClass}`}
         >
           <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3">
             <div className="flex items-center gap-1.5">
@@ -203,7 +203,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           </div>
         </header>
 
-        <div className={`fixed inset-x-0 top-[52px] z-30 hidden border-y px-4 py-1.5 backdrop-blur-md md:block ${ribbonClass}`}>
+        <div className={`fixed inset-x-0 top-[64px] z-30 hidden border-y px-4 py-1.5 backdrop-blur-md md:block ${ribbonClass}`}>
           <div className="relative overflow-hidden">
             <div className={`pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
             <div className={`pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
@@ -217,7 +217,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
 
-        <div className="pt-24 pb-22">{children}</div>
+        <div className="pt-28 pb-24">{children}</div>
 
         <button
           type="button"
