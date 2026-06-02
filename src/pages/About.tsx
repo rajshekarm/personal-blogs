@@ -103,8 +103,8 @@ const About = () => {
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${desktopLabelClass}`}>Workspace</p>
-              <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
-                Building backend systems, AI-enabled products, and practical software for real users.
+                <p className={`mt-2 text-sm ${isDark ? "text-slate-200" : "text-slate-700"}`}>
+                Rajashekar Mudigonda building backend systems, applied AI, and practical software for real users.
               </p>
             </div>
             <div className="hidden items-center gap-2 lg:flex">
@@ -409,7 +409,7 @@ const About = () => {
                   Home.md
                 </p>
                 <h1 className={`mt-2 text-4xl font-bold tracking-tight md:text-5xl ${isDark ? "text-slate-50" : "text-gray-900"}`}>
-                  Hi, I'm Rajashekar.
+                  Hi, I’m Rajashekar Mudigonda.
                 </h1>
               </div>
               <div
@@ -422,7 +422,7 @@ const About = () => {
             </div>
 
             <p className={`max-w-2xl text-base leading-relaxed ${isDark ? "text-slate-300" : "text-gray-700"}`}>
-              Backend engineer focused on distributed systems, AI-enabled products, and reliable software for teams that care about scale and quality.
+              Backend engineer focused on distributed systems, applied AI, and reliable software. I build with scale, clarity, and long-term maintainability in mind.
             </p>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -431,7 +431,7 @@ const About = () => {
                   Current focus
                 </p>
                 <p className={`mt-2 text-sm font-medium ${isDark ? "text-slate-100" : "text-slate-900"}`}>
-                  Distributed systems, backend architecture, deep learning, agentic development
+                  Distributed systems, backend architecture, deep learning, applied AI
                 </p>
               </div>
 

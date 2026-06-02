@@ -80,24 +80,24 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
   const headerClass = useMemo(
     () =>
       isDark
-        ? "border-slate-800/70 bg-slate-950/60 text-slate-100"
-        : "border-white/55 bg-white/64 text-slate-900",
+        ? "border-slate-800/70 bg-slate-950/55 text-slate-100"
+        : "border-white/50 bg-white/58 text-slate-900",
     [isDark]
   )
 
   const chipClass = useMemo(
     () =>
       isDark
-        ? "border-slate-700 bg-slate-900/55 text-slate-200"
-        : "border-slate-200 bg-white/72 text-slate-600",
+        ? "border-slate-700 bg-slate-900/50 text-slate-200"
+        : "border-slate-200 bg-white/68 text-slate-600",
     [isDark]
   )
 
   const dockClass = useMemo(
     () =>
       isDark
-        ? "border-slate-800/80 bg-slate-950/92 text-white shadow-[0_-12px_40px_rgba(0,0,0,0.36)]"
-        : "border-slate-700/65 bg-slate-950/92 text-white shadow-[0_-12px_40px_rgba(15,23,42,0.24)]",
+        ? "border-slate-800/75 bg-slate-950/72 text-white shadow-[0_-12px_34px_rgba(0,0,0,0.32)]"
+        : "border-white/20 bg-white/22 text-slate-900 shadow-[0_-12px_34px_rgba(15,23,42,0.14)]",
     [isDark]
   )
 
@@ -138,76 +138,76 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
     <DesktopThemeProvider value={{ theme, isDark }}>
       <main className={`${shellClass} min-h-screen overflow-hidden font-sans transition-colors duration-300`}>
         <header
-          className={`fixed inset-x-0 top-0 z-50 border-b px-3 py-2.5 backdrop-blur-xl sm:px-4 ${headerClass}`}
+          className={`fixed inset-x-0 top-0 z-50 border-b px-2.5 py-1.5 backdrop-blur-2xl sm:px-4 ${headerClass}`}
         >
           <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={handleClose}
-                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                className="group flex h-3 w-3 items-center justify-center rounded-full bg-rose-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
                 aria-label="Close window"
                 title="Close window"
               >
-                <X className="h-2.5 w-2.5 opacity-0 text-rose-950 transition group-hover:opacity-100" />
+                <X className="h-2 w-2 opacity-0 text-rose-950 transition group-hover:opacity-100" />
               </button>
               <button
                 type="button"
                 onClick={handleMinimize}
-                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-400 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                className="group flex h-3 w-3 items-center justify-center rounded-full bg-amber-400 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
                 aria-label="Minimize window"
                 title="Minimize window"
               >
-                <Minus className="h-2.5 w-2.5 opacity-0 text-amber-950 transition group-hover:opacity-100" />
+                <Minus className="h-2 w-2 opacity-0 text-amber-950 transition group-hover:opacity-100" />
               </button>
               <button
                 type="button"
                 onClick={handleZoom}
-                className="group flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
+                className="group flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 shadow-[0_0_0_1px_rgba(15,23,42,0.08)] transition hover:scale-110"
                 aria-label="Zoom window"
                 title="Zoom window"
               >
-                <Square className="h-2.5 w-2.5 opacity-0 text-emerald-950 transition group-hover:opacity-100" />
+                <Square className="h-2 w-2 opacity-0 text-emerald-950 transition group-hover:opacity-100" />
               </button>
             </div>
 
             <div className="flex justify-center">
-              <div className={`rounded-full px-4 py-1.5 text-center backdrop-blur ${chipClass}`}>
-                <p className={`text-sm font-semibold leading-none ${isDark ? "text-slate-100" : "text-slate-900"}`}>
+              <div className={`rounded-full px-3 py-1 text-center backdrop-blur ${chipClass}`}>
+                <p className={`text-xs font-semibold leading-none sm:text-sm ${isDark ? "text-slate-100" : "text-slate-900"}`}>
                   {windowTitle}
                 </p>
                 <p
-                  className={`max-w-[13rem] text-[10px] uppercase leading-tight tracking-[0.22em] ${
+                  className={`hidden max-w-[13rem] text-[10px] uppercase leading-tight tracking-[0.22em] sm:block ${
                     isDark ? "text-slate-300" : "text-slate-500"
                   }`}
                 >
-                  Rajashekar Software Engineer Desktop
+                  Rajashekar Mudigonda | Backend Engineer
                 </p>
               </div>
             </div>
 
-            <div className={`flex items-center gap-2.5 ${isDark ? "text-slate-200" : "text-slate-600"}`}>
-              <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
-                <Wifi className="h-3.5 w-3.5" />
+            <div className={`flex items-center gap-2 ${isDark ? "text-slate-200" : "text-slate-600"}`}>
+              <div className={`hidden items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium sm:flex ${chipClass}`}>
+                <Wifi className="h-3 w-3" />
                 Wi-Fi
               </div>
-              <div className={`hidden items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:flex ${chipClass}`}>
-                <BatteryMedium className="h-3.5 w-3.5" />
+              <div className={`hidden items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium sm:flex ${chipClass}`}>
+                <BatteryMedium className="h-3 w-3" />
                 86%
               </div>
-              <div className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${chipClass}`}>
-                <Clock3 className="h-3.5 w-3.5" />
+              <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium ${chipClass}`}>
+                <Clock3 className="h-3 w-3" />
                 {currentTime}
               </div>
             </div>
           </div>
         </header>
 
-        <div className={`fixed inset-x-0 top-[64px] z-30 hidden border-y px-4 py-2 backdrop-blur-md md:block ${ribbonClass}`}>
+        <div className={`fixed inset-x-0 top-[52px] z-30 hidden border-y px-4 py-1.5 backdrop-blur-md md:block ${ribbonClass}`}>
           <div className="relative overflow-hidden">
             <div className={`pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
             <div className={`pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l ${isDark ? "from-slate-950/90 to-transparent" : "from-white/90 to-transparent"}`} />
-            <div className={`flex w-max items-center gap-6 text-[10px] font-semibold uppercase tracking-[0.32em] ${isDark ? "text-slate-300" : "text-slate-500"} [animation:tech-ribbon-scroll_36s_linear_infinite] motion-reduce:animate-none`}>
+            <div className={`flex w-max items-center gap-5 text-[9px] font-semibold uppercase tracking-[0.3em] ${isDark ? "text-slate-300" : "text-slate-500"} [animation:tech-ribbon-scroll_36s_linear_infinite] motion-reduce:animate-none`}>
               {techRibbonItems.concat(techRibbonItems).map((item, index) => (
                 <span key={`${item}-${index}`} className="whitespace-nowrap">
                   {item}
@@ -217,7 +217,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
 
-        <div className="pt-28 pb-24">{children}</div>
+        <div className="pt-24 pb-22">{children}</div>
 
         <button
           type="button"
@@ -234,19 +234,32 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
           {isDark ? "Light mode" : "Dark mode"}
         </button>
 
-        <nav className={`fixed inset-x-0 bottom-0 z-40 border-t px-3 py-3 backdrop-blur-md ${dockClass}`}>
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              <div className="hidden items-center gap-3 lg:flex">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-200">
-                <TerminalSquare className="h-5 w-5" />
+        <nav className="fixed inset-x-0 bottom-2 z-40 px-3 sm:bottom-3">
+          <div
+            className={`mx-auto flex max-w-7xl items-center justify-between gap-2 rounded-[28px] border px-3 py-2.5 backdrop-blur-2xl sm:px-4 ${dockClass}`}
+          >
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="hidden items-center gap-3 lg:flex">
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-xl border ${
+                  isDark
+                    ? "border-white/10 bg-white/10 text-cyan-200"
+                    : "border-white/35 bg-white/30 text-slate-700"
+                }`}
+              >
+                <TerminalSquare className="h-4.5 w-4.5" />
               </div>
               <div className="max-w-[12rem]">
-                <p className="text-sm font-semibold leading-tight">Rajashekar Software Engineer Desktop</p>
-                <p className="text-xs text-white/55">Click an app to open a page</p>
+                <p className={`text-xs font-semibold leading-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+                  Rajashekar Mudigonda | Backend Engineer
+                </p>
+                <p className={`text-xs ${isDark ? "text-white/55" : "text-slate-600"}`}>
+                  Click an app to open a page
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {appItems.map((item) => {
                 const Icon = item.icon
                 const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to)
@@ -255,21 +268,46 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`group relative flex min-w-[88px] flex-col items-center gap-1 rounded-xl border px-3 py-2 text-center transition hover:-translate-y-0.5 ${
+                    className={`group relative flex min-w-[78px] flex-col items-center gap-1 rounded-xl border px-2.5 py-1.5 text-center transition duration-200 hover:-translate-y-1 hover:scale-105 ${
                       active
-                        ? "border-cyan-300/60 bg-white/14 shadow-[0_0_0_1px_rgba(103,232,249,0.14)]"
-                        : "border-white/10 bg-white/5 hover:border-cyan-300/40 hover:bg-white/10"
+                        ? isDark
+                          ? "border-cyan-300/60 bg-white/14 shadow-[0_0_0_1px_rgba(103,232,249,0.14)]"
+                          : "border-white/55 bg-white/45 shadow-[0_0_0_1px_rgba(255,255,255,0.35)]"
+                        : isDark
+                          ? "border-white/10 bg-white/5 hover:border-cyan-300/40 hover:bg-white/10"
+                          : "border-white/18 bg-white/16 hover:border-white/30 hover:bg-white/26"
                     }`}
                   >
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-lg transition ${active ? "bg-cyan-300/18 text-cyan-100" : "bg-white/10 text-cyan-200 group-hover:bg-cyan-300/15"}`}>
-                      <Icon className="h-4.5 w-4.5" />
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-lg transition duration-200 group-hover:scale-110 ${
+                        active
+                          ? isDark
+                            ? "bg-cyan-300/18 text-cyan-100"
+                            : "bg-slate-900/10 text-slate-900"
+                          : isDark
+                            ? "bg-white/10 text-cyan-200 group-hover:bg-cyan-300/15"
+                            : "bg-white/35 text-slate-700 group-hover:bg-white/55"
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
                     </span>
-                    <span className="text-[11px] font-medium text-white/90">{item.label}</span>
-                    {active && <span className="absolute -bottom-1.5 h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.8)]" />}
+                    <span className={`text-[10px] font-medium ${isDark ? "text-white/90" : "text-slate-800"}`}>
+                      {item.label}
+                    </span>
+                    {active && (
+                      <span
+                        className={`absolute -bottom-1 h-1 w-1 rounded-full ${
+                          isDark
+                            ? "bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.8)]"
+                            : "bg-slate-700 shadow-[0_0_10px_rgba(51,65,85,0.35)]"
+                        }`}
+                      />
+                    )}
                   </Link>
                 )
               })}
             </div>
+          </div>
           </div>
         </nav>
       </main>

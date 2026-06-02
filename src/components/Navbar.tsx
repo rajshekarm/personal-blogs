@@ -4,13 +4,13 @@ import { useState } from "react"
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `px-2 py-1 text-sm font-medium transition border-b-2 ${
     isActive
-      ? "text-[#dadde4] border-[#042161]"
-      : "text-white border-transparent hover:text-[#6d95c2]"
+      ? "text-[#f3f7ff] border-[#7fb3ff]"
+      : "text-white/85 border-transparent hover:text-[#d3e6ff]"
   }`
 
 const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
   `block rounded-md px-3 py-2 text-sm font-medium transition ${
-    isActive ? "bg-[#1d4265] text-white" : "text-white hover:bg-[#1d4265]"
+    isActive ? "bg-white/10 text-white" : "text-white/85 hover:bg-white/8"
   }`
 
 const Navbar = () => {
@@ -22,26 +22,26 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-[#25537e]">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+    <nav className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/85 backdrop-blur-2xl">
+      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 sm:px-6">
         <div className="min-w-0">
-          <h1 className="truncate text-sm font-semibold text-white sm:text-lg">
-            Rajashekar Mudigonda
+          <h1 className="truncate text-sm font-semibold text-white sm:text-base">
+            Rajashekar Mudigonda | Backend Engineer
           </h1>
-          <p className="hidden text-xs font-semibold text-white/90 sm:block">
+          <p className="hidden text-[10px] font-medium uppercase tracking-[0.22em] text-white/70 sm:block">
             Software Engineer
           </p>
         </div>
 
         <button
           type="button"
-          className="rounded-md border border-[#3f6a92] px-3 py-1 text-sm font-medium text-white md:hidden"
+          className="rounded-full border border-white/15 px-3 py-1.5 text-xs font-medium text-white md:hidden"
           onClick={() => setMenuOpen((prev) => !prev)}
         >
           Menu
         </button>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-1.5 md:flex">
           <NavLink to="/" className={linkClass}>
             Home
           </NavLink>
@@ -70,7 +70,7 @@ const Navbar = () => {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-[#3f6a92] px-4 py-3 md:hidden">
+        <div className="border-t border-white/10 bg-slate-950/90 px-4 py-3 md:hidden backdrop-blur-2xl">
           <div className="grid gap-1">
             <NavLink to="/" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
               Home
