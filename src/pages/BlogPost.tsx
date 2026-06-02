@@ -130,11 +130,11 @@ type BlogEngagementState = {
   saved: boolean
 }
 
-const defaultEngagementState: BlogEngagementState = {
-  applauseCount: 12,
+const createDefaultEngagementState = (): BlogEngagementState => ({
+  applauseCount: Math.floor(Math.random() * 10) + 1,
   applauded: false,
   saved: false,
-}
+})
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>()
@@ -168,11 +168,33 @@ const BlogPost = () => {
     image_alt: "",
     children: [],
   })
-  const [engagement, setEngagement] = useState<BlogEngagementState>(defaultEngagementState)
+  const engagementStorageKey = slug ? `blog-engagement:${slug}` : ""
+  const [engagement, setEngagement] = useState<BlogEngagementState>(() => {
+    if (!engagementStorageKey) {
+      return createDefaultEngagementState()
+    }
+
+    try {
+      const stored = window.localStorage.getItem(engagementStorageKey)
+      if (!stored) {
+        return createDefaultEngagementState()
+      }
+
+      const parsed = JSON.parse(stored) as Partial<BlogEngagementState>
+      return {
+        applauseCount:
+          Number.isFinite(parsed.applauseCount) && Number(parsed.applauseCount) > 0
+            ? Number(parsed.applauseCount)
+            : createDefaultEngagementState().applauseCount,
+        applauded: Boolean(parsed.applauded),
+        saved: Boolean(parsed.saved),
+      }
+    } catch {
+      return createDefaultEngagementState()
+    }
+  })
   const [shareMessage, setShareMessage] = useState<string | null>(null)
   const newSectionTitleRef = useRef<HTMLInputElement | null>(null)
-
-  const engagementStorageKey = slug ? `blog-engagement:${slug}` : ""
 
   useEffect(() => {
     if (!slug) {
@@ -209,7 +231,7 @@ const BlogPost = () => {
 
   useEffect(() => {
     if (!engagementStorageKey) {
-      setEngagement(defaultEngagementState)
+      setEngagement(createDefaultEngagementState())
       setShareMessage(null)
       return
     }
@@ -217,19 +239,22 @@ const BlogPost = () => {
     try {
       const stored = window.localStorage.getItem(engagementStorageKey)
       if (!stored) {
-        setEngagement(defaultEngagementState)
+        setEngagement(createDefaultEngagementState())
         setShareMessage(null)
         return
       }
 
       const parsed = JSON.parse(stored) as Partial<BlogEngagementState>
       setEngagement({
-        applauseCount: Number.isFinite(parsed.applauseCount) ? Number(parsed.applauseCount) : 12,
+        applauseCount:
+          Number.isFinite(parsed.applauseCount) && Number(parsed.applauseCount) > 0
+            ? Number(parsed.applauseCount)
+            : createDefaultEngagementState().applauseCount,
         applauded: Boolean(parsed.applauded),
         saved: Boolean(parsed.saved),
       })
     } catch {
-      setEngagement(defaultEngagementState)
+      setEngagement(createDefaultEngagementState())
       setShareMessage(null)
     }
   }, [engagementStorageKey])
