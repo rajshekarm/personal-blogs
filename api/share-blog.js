@@ -256,11 +256,6 @@ const renderSharePage = (blog, shareUrl) => {
             </div>
           </aside>
         </div>
-        <div class="foot">
-          If this preview looks good in LinkedIn, use this share URL for the feature section:
-          <br />
-          ${safeShareUrl}
-        </div>
       </article>
     </main>
   </body>

@@ -34,7 +34,7 @@ const EMPTY_FORM: BlogFormState = {
 }
 
 const readingProseClass =
-  "prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-p:leading-8 prose-p:text-[#344855] prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:leading-8 prose-li:marker:text-[#8b5e3c] prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c]"
+  "prose prose-sm sm:prose-base prose-slate max-w-none prose-headings:font-semibold prose-headings:text-[#19252f] prose-headings:leading-tight prose-h1:text-3xl sm:prose-h1:text-4xl prose-h2:text-2xl sm:prose-h2:text-3xl prose-h3:text-xl sm:prose-h3:text-2xl prose-p:leading-7 prose-p:text-[#344855] prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1 prose-li:leading-7 prose-li:marker:text-[#8b5e3c] prose-strong:text-[#19252f] prose-a:text-[#8b5e3c] prose-code:text-[#8b5e3c] prose-pre:text-sm sm:prose-pre:text-[0.95rem] prose-pre:leading-7 prose-pre:rounded-2xl prose-pre:border prose-pre:border-[#e5d8c8] prose-pre:bg-[#fbf8f3] prose-pre:px-4 prose-pre:py-4 prose-pre:overflow-x-auto"
 
 const markdownComponents: Components = {
   ul: ({ children, ...props }) => (
