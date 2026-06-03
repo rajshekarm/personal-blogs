@@ -647,7 +647,7 @@ const BlogPost = () => {
                   <p className="text-xs uppercase tracking-[0.3em] text-[#8b5e3c]">
                     {editing ? "Editing Article" : "Reading View"}
                   </p>
-                  <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-[#19252f] sm:text-5xl">
+                  <h1 className="max-w-4xl text-[2.5rem] font-semibold leading-[1.04] tracking-tight text-[#19252f] sm:text-[3.15rem] lg:text-[3.35rem]">
                     {displayTitle}
                   </h1>
                   {displaySubheader && (
@@ -723,7 +723,7 @@ const BlogPost = () => {
             </div>
 
             {!editing && (
-              <div className="rounded-[28px] border border-[#e8ddd0] bg-[#fcfaf7] p-4 shadow-[0_16px_40px_rgba(62,45,25,0.04)]">
+              <div className="rounded-[26px] border border-[#e8ddd0] bg-[#fcfaf7]/92 p-3.5 shadow-[0_10px_28px_rgba(62,45,25,0.035)] sm:p-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                   <div className="space-y-1">
                     <p className="text-xs uppercase tracking-[0.28em] text-[#8b5e3c]">
@@ -737,7 +737,7 @@ const BlogPost = () => {
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
-                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition ${
                         engagement.applauded
                           ? "border-rose-300 bg-rose-50 text-rose-700"
                           : "border-[#d8cab9] text-[#44535d] hover:bg-[#f5ede3]"
@@ -752,7 +752,7 @@ const BlogPost = () => {
 
                     <button
                       type="button"
-                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${
+                      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition ${
                         engagement.saved
                           ? "border-cyan-300 bg-cyan-50 text-cyan-800"
                           : "border-[#d8cab9] text-[#44535d] hover:bg-[#f5ede3]"
@@ -766,7 +766,7 @@ const BlogPost = () => {
 
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-3.5 py-1.5 text-[13px] font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
                       onClick={handleCopyShareUrl}
                       disabled={!shareUrl}
                     >
@@ -776,7 +776,7 @@ const BlogPost = () => {
 
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-3.5 py-1.5 text-[13px] font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
                       onClick={() => openShareWindow(linkedInShareUrl)}
                       disabled={!shareUrl}
                     >
@@ -786,7 +786,7 @@ const BlogPost = () => {
 
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-3.5 py-1.5 text-[13px] font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
                       onClick={() => openShareWindow(whatsappShareUrl)}
                       disabled={!shareUrl}
                     >
@@ -796,7 +796,7 @@ const BlogPost = () => {
 
                     <button
                       type="button"
-                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-4 py-2 text-sm font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
+                      className="inline-flex items-center gap-2 rounded-full border border-[#d8cab9] px-3.5 py-1.5 text-[13px] font-medium text-[#44535d] transition hover:bg-[#f5ede3]"
                       onClick={() => openShareWindow(xShareUrl)}
                       disabled={!shareUrl}
                     >
