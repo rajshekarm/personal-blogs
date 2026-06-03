@@ -74,12 +74,14 @@ const chapters: Chapter[] = [
         src: "/nit1.jpeg",
         fallback: "/nit1.jpeg",
         alt: "NIT Trichy visual two",
+        color: true,
         offsetClass: "right-6 top-20 rotate-[5deg]",
       },
       {
         src: "/nit1.jpeg",
         fallback: "/nit1.jpeg",
         alt: "NIT Trichy visual three",
+        color: true,
         offsetClass: "left-10 bottom-4 rotate-[2deg]",
       },
     ],
@@ -238,6 +240,7 @@ const ChapterSection = ({
             alt={frame.alt}
             large={frame.large}
             offsetClass={frame.offsetClass}
+            color={frame.color}
           />
         ))}
       </div>
