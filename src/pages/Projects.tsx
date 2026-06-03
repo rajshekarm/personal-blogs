@@ -219,6 +219,9 @@ const Projects = () => {
     [visibleProjects]
   )
 
+  const healthcareNote =
+    "Outside of my work, healthcare projects feel personal to me. I come from a family of doctors, so when I hear them talk about a real problem I naturally start thinking about how I could build something useful around it."
+
   const orbitProjects = useMemo(
     () => visibleProjects.filter((project) => project.id !== featuredProject?.id),
     [visibleProjects, featuredProject]
@@ -346,6 +349,16 @@ const Projects = () => {
             })}
           </div>
         </div>
+
+        {activeCategory === "healthcare" && (
+          <div
+            className={`mb-6 max-w-3xl rounded-[24px] px-4 py-3 text-sm leading-7 ${
+              isDark ? "bg-white/5 text-slate-300" : "bg-white/65 text-slate-600"
+            }`}
+          >
+            {healthcareNote}
+          </div>
+        )}
 
         <div
           ref={arenaRef}

@@ -95,6 +95,23 @@ const formatDate = (date: string) =>
     year: "numeric",
   }).format(new Date(date))
 
+const getNearestSectionIndex = (root: HTMLElement, sections: HTMLElement[]) => {
+  const target = root.scrollTop + root.clientHeight * 0.42
+  let nearestIndex = 0
+  let nearestDistance = Number.POSITIVE_INFINITY
+
+  sections.forEach((section, index) => {
+    const distance = Math.abs(section.offsetTop - target)
+
+    if (distance < nearestDistance) {
+      nearestDistance = distance
+      nearestIndex = index
+    }
+  })
+
+  return nearestIndex
+}
+
 const EditorialImage = ({ src, fallback, alt, large, offsetClass, color }: EditorialImageProps) => {
   const [currentSrc, setCurrentSrc] = useState(src)
 
@@ -245,16 +262,13 @@ const Education = () => {
       return
     }
 
-    const currentIndex = sections.findIndex((section) => {
-      const rect = section.getBoundingClientRect()
-      const rootRect = root.getBoundingClientRect()
-      return rect.top >= rootRect.top - rootRect.height * 0.2 && rect.top < rootRect.top + rootRect.height * 0.8
-    })
+    const currentIndex = getNearestSectionIndex(root, sections)
 
-    const resolvedIndex = currentIndex === -1 ? 0 : currentIndex
-    const nextIndex = Math.min(Math.max(resolvedIndex + direction, 0), sections.length - 1)
+    const nextIndex = Math.min(Math.max(currentIndex + direction, 0), sections.length - 1)
 
-    sections[nextIndex]?.scrollIntoView({
+    const targetSection = sections[nextIndex]
+
+    targetSection?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     })
@@ -275,7 +289,7 @@ const Education = () => {
 
     window.setTimeout(() => {
       wheelLockRef.current = false
-    }, 900)
+    }, 1100)
   }
 
   return (
