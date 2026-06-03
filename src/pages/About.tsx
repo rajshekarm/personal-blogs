@@ -116,7 +116,7 @@ const About = () => {
             </div>
 
             <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${subtleTextClass}`}>Backend Engineer</p>
-            <h1 className={`mt-4 font-sans text-[2.45rem] font-light leading-[0.95] tracking-[-0.05em] md:text-[2.95rem] ${isDark ? "text-slate-50" : "text-slate-900"}`}>
+            <h1 className={`mt-4 font-sans text-[2.2rem] font-light leading-[0.95] tracking-[-0.05em] md:text-[2.55rem] ${isDark ? "text-slate-50" : "text-slate-900"}`}>
               Rajashekar
               <br />
               Mudigonda
@@ -193,7 +193,7 @@ const About = () => {
             <div>
               <p className={`text-[10px] font-semibold uppercase tracking-[0.35em] ${subtleTextClass}`}>Home.md</p>
               <h2
-                className={`mt-4 max-w-3xl font-sans text-[2.05rem] font-light leading-[1] tracking-[-0.04em] md:text-[2.55rem] lg:text-[2.95rem] ${isDark ? "text-slate-50" : "text-slate-900"}`}
+                className={`mt-4 max-w-3xl font-sans text-[1.85rem] font-light leading-[1] tracking-[-0.04em] md:text-[2.2rem] lg:text-[2.55rem] ${isDark ? "text-slate-50" : "text-slate-900"}`}
               >
                 Backend systems.
                 <br />
@@ -202,7 +202,7 @@ const About = () => {
                 Selective ML.
               </h2>
 
-              <p className={`mt-5 max-w-2xl text-[0.95rem] leading-8 ${mutedTextClass}`}>
+              <p className={`mt-5 max-w-2xl text-[0.88rem] leading-7 ${mutedTextClass}`}>
                 I enjoy building reliable software that feels clear, stable, and useful. Most of my work is in backend engineering and system design, with machine learning used selectively when it improves the product.
               </p>
 
@@ -305,23 +305,23 @@ const About = () => {
                         <FolderOpen className="h-4.5 w-4.5" />
                       </div>
                       <div className="min-w-0">
-                        <p className={`text-sm font-semibold ${isDark ? "text-slate-50" : "text-slate-900"}`}>{activeFolderData.label}</p>
-                        <p className={`mt-1 text-[0.74rem] leading-6 ${mutedTextClass}`}>{activeFolderData.summary}</p>
-                      </div>
-                    </div>
+                    <p className={`text-[0.9rem] font-semibold ${isDark ? "text-slate-50" : "text-slate-900"}`}>{activeFolderData.label}</p>
+                    <p className={`mt-1 text-[0.68rem] leading-5 ${mutedTextClass}`}>{activeFolderData.summary}</p>
+                  </div>
+                </div>
 
-                    <div className="mt-4 space-y-3">
-                      {activeFolderData.sections.map((section) => (
-                        <div key={section.title} className={`rounded-[1.1rem] p-3 ${isDark ? "bg-white/4" : "bg-white/70"}`}>
-                          <p className={`text-[0.67rem] uppercase tracking-[0.24em] ${subtleTextClass}`}>{section.title}</p>
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {section.items.map((item) => (
-                              <span
-                                key={item}
-                                className={`rounded-full px-3 py-1 text-[0.74rem] transition ${
-                                  isDark
-                                    ? "bg-white/6 text-slate-100"
-                                    : "bg-white text-slate-700"
+                <div className="mt-4 space-y-3">
+                  {activeFolderData.sections.map((section) => (
+                    <div key={section.title} className={`rounded-[1.1rem] p-3 ${isDark ? "bg-white/4" : "bg-white/70"}`}>
+                        <p className={`text-[0.62rem] uppercase tracking-[0.24em] ${subtleTextClass}`}>{section.title}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {section.items.map((item) => (
+                            <span
+                              key={item}
+                              className={`rounded-full px-3 py-1 text-[0.68rem] transition ${
+                                isDark
+                                  ? "bg-white/6 text-slate-100"
+                                  : "bg-white text-slate-700"
                                 }`}
                               >
                                 {item}
