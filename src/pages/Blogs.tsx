@@ -228,9 +228,11 @@ const Blogs = () => {
   }, [activeTopic])
 
   return (
-    <main className="min-h-[calc(100vh-64px)] bg-[#fbfbfc] text-[#13202b]">
-      <section className="mx-auto max-w-5xl px-4 py-2 sm:px-6 sm:py-3">
-        <div className="overflow-hidden rounded-[26px] border border-[#e5ebf0] bg-white shadow-[0_10px_26px_rgba(18,32,43,0.035)]">
+    <main className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-white text-[#13202b]">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-50" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,255,255,0))]" />
+      <section className="relative z-10 mx-auto max-w-5xl px-4 py-2 sm:px-6 sm:py-3">
+        <div className="overflow-hidden rounded-[26px] border border-black/10 bg-white shadow-[0_10px_26px_rgba(18,32,43,0.035)]">
           <div className="border-b border-[#edf1f4] px-4 py-4 sm:px-6 sm:py-5">
             <div className="flex items-end justify-between gap-4">
               <div className="max-w-2xl">
@@ -361,7 +363,7 @@ const Blogs = () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 pb-12 pt-4 sm:px-6 sm:pb-16 sm:pt-5">
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pb-12 pt-4 sm:px-6 sm:pb-16 sm:pt-5">
         {loading ? (
           <div className="space-y-4">
             <div className="h-40 animate-pulse rounded-[28px] bg-white shadow-[0_14px_40px_rgba(18,32,43,0.03)]" />
