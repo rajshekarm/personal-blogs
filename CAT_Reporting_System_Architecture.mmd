@@ -1,0 +1,68 @@
+flowchart LR
+    subgraph Trading_Platform
+        OMS[OMS]
+        EMS[EMS]
+        FIX[FIX Gateway]
+        VENUES[Execution Venues]
+        REF[Reference Data]
+        CFG[Client Configuration]
+    end
+
+    OMS --> EC
+    EMS --> EC
+    FIX --> EC
+    VENUES --> EC
+    REF --> ENR
+    CFG --> ENR
+
+    subgraph CAT_Reporting_Platform
+        EC[1 Event Capture System]
+        NORM[2 Normalization Engine]
+        ENR[3 Enrichment Engine]
+        RULES[4 Business Rules Engine]
+        GEN[5 CAT Event Generator]
+
+        VAL[6 Validation Engine]
+        DUP[7 Duplicate Detection]
+        EXC[8 Exception Management]
+
+        SUB[9 Submission Engine]
+        ACK[10 Acknowledgment Processor]
+        ERR[11 Error Processor]
+
+        REC[12 Reconciliation Engine]
+        AUDIT[13 Audit Trail Service]
+        REPLAY[14 Replay Engine]
+
+        MON[15 Monitoring Platform]
+        ALERT[16 Alerting System]
+        DASH[17 Client Dashboard]
+        CONF[18 Client Configuration Platform]
+    end
+
+    EC --> NORM --> ENR --> RULES --> GEN
+    GEN --> VAL
+    VAL --> DUP
+    DUP --> SUB
+    VAL --> EXC
+
+    SUB --> ACK --> ERR
+    ERR --> REC
+
+    REC --> AUDIT
+    AUDIT --> REPLAY
+    REPLAY --> SUB
+
+    CONF --> ENR
+    CONF --> RULES
+    CONF --> VAL
+
+    MON --> ALERT
+    SUB --> MON
+    ACK --> MON
+    ERR --> MON
+    REC --> MON
+
+    REC --> DASH
+    ERR --> DASH
+    ACK --> DASH

@@ -6,10 +6,22 @@ import { useState, type ReactNode } from "react"
 const timelineEntries = [
   {
     year: "2025",
+    role: "Software Engineer, Backend (Python, React, AWS)",
+    org: "Faishion.ai",
+    period: "Oct 2025 - Present",
+    side: "left" as const,
+    tone: "bg-[#cf3a7d]",
+    textTone: "text-white",
+    accent: "from-fuchsia-400/20 to-transparent",
+    summary:
+      "Built real-time trend detection on AWS, scaled catalog ingestion from 50K to 150K+ SKUs, cut p95 latency from 60+ seconds to under 5 seconds, and shipped an AI wardrobe agent with LangGraph.",
+  },
+  {
+    year: "2025",
     role: "Teaching Assistant, Intro to Algorithms",
     org: "Illinois Institute of Technology",
     period: "2024 - 2025",
-    side: "left" as const,
+    side: "right" as const,
     tone: "bg-[#4b8a72]",
     textTone: "text-white",
     accent: "from-emerald-400/20 to-transparent",
@@ -17,52 +29,28 @@ const timelineEntries = [
       "Supported coursework, helped students reason through algorithmic problems, and reinforced fundamentals in data structures.",
   },
   {
-    year: "2025",
-    role: "Computer Science",
-    org: "Illinois Institute of Technology",
-    period: "2023 - 2025",
-    side: "right" as const,
-    tone: "bg-[#bf2d3a]",
-    textTone: "text-white",
-    accent: "from-rose-400/20 to-transparent",
-    summary:
-      "Completed graduate study in Computer Science with an emphasis on systems, software engineering, and applied machine learning.",
-  },
-  {
     year: "2023",
-    role: "Software Engineer, Founding Team",
-    org: "Prognovex",
-    period: "2022 - 2023",
-    side: "left" as const,
-    tone: "bg-[#cf3a7d]",
-    textTone: "text-white",
-    accent: "from-fuchsia-400/20 to-transparent",
-    summary:
-      "Worked on an AI-assisted ECG triage platform for distributed clinics and helped reduce diagnosis turnaround from hours to minutes.",
-  },
-  {
-    year: "2022",
-    role: "Software Engineer",
-    org: "JP Morgan Chase",
-    period: "2021 - 2022",
-    side: "left" as const,
-    tone: "bg-[#9b59c4]",
-    textTone: "text-white",
-    accent: "from-violet-400/20 to-transparent",
-    summary:
-      "Developed secure enterprise software and worked across internal services, integration points, and operational workflows.",
-  },
-  {
-    year: "2020",
-    role: "Associate Software Engineer",
-    org: "SS&C Eze Software",
-    period: "2018 - 2020",
+    role: "Software Engineer - Backend (C++, Python)",
+    org: "SS&C Eze",
+    period: "Aug 2020 - Jul 2023",
     side: "left" as const,
     tone: "bg-[#1f67b4]",
     textTone: "text-white",
     accent: "from-sky-400/20 to-transparent",
     summary:
-      "Built onboarding and workflow tooling with React and ASP.NET Core, improving efficiency and reducing manual effort.",
+      "Built Kafka/PostgreSQL orphan staging, deterministic replay and recovery, low-latency lineage resolution, and a self-service rules platform that improved reporting reliability.",
+  },
+  {
+    year: "2020",
+    role: "Associate Software Engineer - Full Stack (Java, Spring Boot, Kafka Streams)",
+    org: "SS&C Eze",
+    period: "Jun 2018 - Jul 2020",
+    side: "right" as const,
+    tone: "bg-[#9b59c4]",
+    textTone: "text-white",
+    accent: "from-violet-400/20 to-transparent",
+    summary:
+      "Built core CAT classification services, Kafka consumers, FINRA ingestion automation, compliance dashboards, and a high-throughput order pipeline with zero message loss.",
   },
 ]
 

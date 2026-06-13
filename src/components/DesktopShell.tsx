@@ -25,7 +25,7 @@ import { DesktopThemeProvider } from "./desktopTheme"
 
 const appItems = [
   { to: "/", label: "Home", icon: BadgeInfo },
-  { to: "/resume", label: "Resume", icon: NotebookText },
+  { to: "/experience", label: "Experience", icon: NotebookText },
   { to: "/education", label: "Education", icon: GraduationCap },
   { to: "/projects", label: "Projects", icon: FolderKanban },
   { to: "/contact", label: "Contact", icon: MessageSquare },
@@ -115,8 +115,8 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
   )
 
   const windowTitle =
-    pathname === "/resume"
-      ? "Resume"
+    pathname === "/experience" || pathname === "/resume"
+      ? "Experience"
       : pathname === "/education"
         ? "Education"
       : pathname === "/projects"

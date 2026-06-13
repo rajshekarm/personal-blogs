@@ -1,0 +1,81 @@
+flowchart LR
+
+subgraph A["Upstream Inputs"]
+    OMS[OMS/OEMS Order Events]
+    FIX[FIX Execution Reports]
+    ROUTE[Routing Events]
+    REF[Reference Data]
+    CLIENT[Client Reporting Config]
+end
+
+subgraph B["Event Intake Layer"]
+    ADAPTER[Input Event Adapter]
+    NORMALIZED[Normalized Event Contract]
+    RAW[(Raw Event Store)]
+end
+
+subgraph C["Event Classification Engine"]
+    PARSER[Event Parser]
+    REPORTABLE[Reportability Evaluator]
+    TYPE[CAT Event Type Resolver]
+    CLIENTRULES[Client-Specific Rule Resolver]
+    STATECHECK[Order State Dependency Check]
+    DECISION[Classification Decision Builder]
+end
+
+subgraph D["Supporting Services"]
+    STATE[Order Lifecycle State Store]
+    RULESTORE[(Rules / Metadata Store)]
+    CACHE[(Redis / Config Cache)]
+    AUDIT[(Classification Audit Log)]
+end
+
+subgraph E["Classification Outputs"]
+    CATGEN[CAT Event Generation Pipeline]
+    HOLD[Pending / Dependency Hold Queue]
+    NONREPORT[Non-Reportable Event Store]
+    EXCEPTION[Classification Exception Queue]
+end
+
+subgraph F["Observability"]
+    METRICS[Metrics & SLAs]
+    ALERTS[Alerts]
+    DASH[Operations Dashboard]
+end
+
+OMS --> ADAPTER
+FIX --> ADAPTER
+ROUTE --> ADAPTER
+
+ADAPTER --> NORMALIZED
+NORMALIZED --> RAW
+NORMALIZED --> PARSER
+
+REF --> RULESTORE
+CLIENT --> RULESTORE
+RULESTORE --> CACHE
+
+PARSER --> REPORTABLE
+REPORTABLE --> TYPE
+TYPE --> CLIENTRULES
+CLIENTRULES --> STATECHECK
+STATECHECK --> DECISION
+
+CACHE --> REPORTABLE
+CACHE --> TYPE
+CACHE --> CLIENTRULES
+STATE --> STATECHECK
+
+DECISION --> CATGEN
+DECISION --> HOLD
+DECISION --> NONREPORT
+DECISION --> EXCEPTION
+DECISION --> AUDIT
+
+CATGEN --> METRICS
+HOLD --> METRICS
+NONREPORT --> METRICS
+EXCEPTION --> METRICS
+
+METRICS --> ALERTS
+METRICS --> DASH

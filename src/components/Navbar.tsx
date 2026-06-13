@@ -45,8 +45,8 @@ const Navbar = () => {
           <NavLink to="/" className={linkClass}>
             Home
           </NavLink>
-          <NavLink to="/resume" className={linkClass}>
-            Resume
+          <NavLink to="/experience" className={linkClass}>
+            Experience
           </NavLink>
           <NavLink to="/projects" className={linkClass}>
             Projects
@@ -75,8 +75,8 @@ const Navbar = () => {
             <NavLink to="/" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
               Home
             </NavLink>
-            <NavLink to="/resume" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
-              Resume
+            <NavLink to="/experience" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
+              Experience
             </NavLink>
             <NavLink to="/projects" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
               Projects

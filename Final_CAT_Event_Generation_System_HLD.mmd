@@ -1,0 +1,99 @@
+flowchart LR
+
+%% Final High-Level CAT Event Generation System
+%% Grouped into four engineering domains with end-to-end event flow.
+
+subgraph U["Upstream Trading Sources"]
+    OMS[OMS / OEMS Orders]
+    FIX[FIX Messages]
+    EXEC[Execution Reports]
+    ROUTE[Routing Events]
+    REF[Reference Data Feeds]
+    CLIENTDATA[Client / Account Data]
+end
+
+subgraph D1["1. Event Understanding"]
+    INTAKE[Event Intake Adapter]
+    NORMALIZE[Canonical Event Normalizer]
+    DEDUP[Deduplication / Idempotency Check]
+    CLASSIFY[Event Classification]
+    STATE[Order State Management]
+    DEP[Dependency Resolver]
+    LINEAGE[Parent-Child / Lineage Builder]
+end
+
+subgraph D2["2. Regulatory Intelligence"]
+    RULES[Rule Execution Engine]
+    CONFIG[Client Configuration Resolver]
+    ENRICH[Identifier & Reference Enrichment]
+    MAP[Field Mapping Engine]
+    DEFAULTS[Defaulting / Override Engine]
+    DECISION[Classification Decision Builder]
+end
+
+subgraph D3["3. Regulatory Artifact Generation"]
+    PAYLOAD[CAT Payload Builder]
+    SCHEMA[CAT Schema / Version Resolver]
+    VALIDATE[Pre-Submission Validation]
+    SERIALIZE[Payload Serializer]
+    STORE[(Generated CAT Event Store)]
+end
+
+subgraph D4["4. Platform Reliability"]
+    REPLAY[Replay / Reclassification Engine]
+    AUDIT[Audit & Traceability Logger]
+    MONITOR[Metrics / Monitoring]
+    OPS[Exception & Operations Workflow]
+    DASH[Operations / Compliance Dashboard]
+end
+
+subgraph OUT["Downstream Regulatory Flow"]
+    BATCH[Submission Batch Builder]
+    CAT[(CAT Submission Endpoint)]
+    ACK[CAT Acknowledgment / Rejection Feedback]
+end
+
+OMS --> INTAKE
+FIX --> INTAKE
+EXEC --> INTAKE
+ROUTE --> INTAKE
+
+REF --> ENRICH
+CLIENTDATA --> CONFIG
+
+INTAKE --> NORMALIZE --> DEDUP --> CLASSIFY --> STATE --> DEP --> LINEAGE
+
+CLASSIFY --> RULES
+CONFIG --> RULES
+CONFIG --> MAP
+CONFIG --> DEFAULTS
+
+LINEAGE --> ENRICH
+RULES --> DECISION
+ENRICH --> MAP --> DEFAULTS --> DECISION
+
+DECISION --> PAYLOAD --> SCHEMA --> VALIDATE --> SERIALIZE --> STORE --> BATCH --> CAT --> ACK
+
+VALIDATE --> OPS
+ACK --> OPS
+
+STORE --> AUDIT
+DECISION --> AUDIT
+RULES --> AUDIT
+CONFIG --> AUDIT
+LINEAGE --> AUDIT
+
+STORE --> REPLAY
+REPLAY --> CLASSIFY
+REPLAY --> PAYLOAD
+
+INTAKE --> MONITOR
+CLASSIFY --> MONITOR
+DECISION --> MONITOR
+VALIDATE --> MONITOR
+ACK --> MONITOR
+OPS --> MONITOR
+
+MONITOR --> DASH
+OPS --> DASH
+ACK --> DASH

@@ -1,0 +1,87 @@
+flowchart LR
+
+subgraph A["Trading Sources"]
+    OMS[OMS/OEMS]
+    FIX[FIX Gateways]
+    EXE[Execution Venues]
+    REF[Reference Data]
+    CLIENT[Client Config]
+end
+
+subgraph B["High Volume Event Ingestion (5M+ Events/Day)"]
+    CAPTURE[Order Lifecycle Capture]
+    STREAM[Kafka/Event Stream]
+    RAW[(Raw Event Store)]
+end
+
+subgraph C["Event Processing Platform"]
+    NORMALIZE[Normalization Engine]
+    ENRICH[Enrichment Engine]
+    RULES[Rules Engine]
+    GENERATE[CAT Event Generator]
+end
+
+subgraph D["Data Quality Platform"]
+    VALIDATE[Validation Engine]
+    DEDUP[Duplicate Detection]
+    EXCEPTIONS[Exception Management]
+end
+
+subgraph E["Regulatory Submission Platform"]
+    BATCH[Batch Builder]
+    SUBMIT[Submission Engine]
+    CAT[(CAT Gateway)]
+    ACK[Acknowledgement Processor]
+    ERRORS[Error Processor]
+end
+
+subgraph F["Compliance & Reconciliation"]
+    RECON[Reconciliation Engine]
+    CORRECT[Correction Engine]
+    REPLAY[Replay/Backfill Engine]
+    AUDIT[Audit Trail]
+end
+
+subgraph G["Operations & Observability"]
+    DASH[Operations Dashboard]
+    ALERT[Alerting]
+    METRICS[Metrics Platform]
+    REPORTS[Compliance Reports]
+end
+
+OMS --> CAPTURE
+FIX --> CAPTURE
+EXE --> CAPTURE
+
+CAPTURE --> STREAM --> RAW
+RAW --> NORMALIZE
+
+REF --> ENRICH
+CLIENT --> ENRICH
+
+NORMALIZE --> ENRICH --> RULES --> GENERATE
+
+GENERATE --> VALIDATE
+VALIDATE --> DEDUP
+VALIDATE --> EXCEPTIONS
+DEDUP --> BATCH
+
+BATCH --> SUBMIT --> CAT
+CAT --> ACK
+ACK --> ERRORS
+
+ACK --> RECON
+ERRORS --> RECON
+
+RECON --> CORRECT --> REPLAY --> SUBMIT
+RECON --> AUDIT
+CORRECT --> AUDIT
+
+SUBMIT --> METRICS
+ACK --> METRICS
+ERRORS --> METRICS
+RECON --> METRICS
+
+METRICS --> ALERT
+METRICS --> DASH
+DASH --> REPORTS

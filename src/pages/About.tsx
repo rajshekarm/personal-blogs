@@ -218,16 +218,16 @@ const About = () => {
                   Projects
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
-                <Link
-                  to="/resume"
-                  className={`rounded-full border px-5 py-2.5 text-[0.95rem] font-medium transition ${
-                    isDark
-                      ? "border-white/15 bg-white/6 text-slate-100 hover:bg-white/10"
-                      : "border-slate-300 bg-white/18 text-slate-900 hover:bg-white/30"
-                  }`}
-                >
-                  Resume
-                </Link>
+              <Link
+                to="/experience"
+                className={`rounded-full border px-5 py-2.5 text-[0.95rem] font-medium transition ${
+                  isDark
+                    ? "border-white/15 bg-white/6 text-slate-100 hover:bg-white/10"
+                    : "border-slate-300 bg-white/18 text-slate-900 hover:bg-white/30"
+                }`}
+              >
+                  Experience
+              </Link>
               </div>
             </div>
 

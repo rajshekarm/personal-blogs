@@ -19,7 +19,8 @@ const App = () => {
       <DesktopShell>
         <Routes>
           <Route path="/" element={<About />} />
-          <Route path="/resume" element={<Resume />} />
+          <Route path="/experience" element={<Resume />} />
+          <Route path="/resume" element={<Navigate to="/experience" replace />} />
           <Route path="/education" element={<Education />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />

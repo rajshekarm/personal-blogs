@@ -1,0 +1,91 @@
+flowchart LR
+    subgraph A["1. Upstream Trading & Client Inputs"]
+        OMS[OMS / OEMS]
+        EMS[EMS]
+        FIX[FIX Gateway]
+        VENUES[Execution Venues]
+        REF[Reference Data]
+        CFG[Client Configuration]
+    end
+
+    subgraph B["2. Event Capture & Ingestion"]
+        EC[Event Capture System]
+        QUEUE[Event Queue / Stream]
+        RAW[Raw Event Store]
+    end
+
+    subgraph C["3. Normalization & Enrichment"]
+        NORM[Normalization Engine]
+        ENR[Enrichment Engine]
+        CONF[Client Configuration Platform]
+    end
+
+    subgraph D["4. CAT Business Logic & Event Generation"]
+        RULES[Business Rules Engine]
+        GEN[CAT Event Generator]
+        DUP[Duplicate Detection]
+    end
+
+    subgraph E["5. Data Quality & Exception Handling"]
+        VAL[Validation Engine]
+        EXC[Exception Management]
+        DQ[Data Quality Checks]
+    end
+
+    subgraph F["6. Submission & CAT Communication"]
+        SUB[Submission Engine]
+        CAT[(CAT Reporter Portal / Submission Endpoint)]
+        ACK[Acknowledgment Processor]
+        ERR[Error Processor]
+    end
+
+    subgraph G["7. Reconciliation, Correction & Replay"]
+        REC[Reconciliation Engine]
+        CORR[Correction Engine]
+        REPLAY[Replay / Backfill Engine]
+        AUDIT[Audit Trail Service]
+    end
+
+    subgraph H["8. Operations, Monitoring & Client Visibility"]
+        MON[Monitoring Platform]
+        ALERT[Alerting System]
+        DASH[Client / Operations Dashboard]
+        REPORTS[Compliance Reports]
+    end
+
+    OMS --> EC
+    EMS --> EC
+    FIX --> EC
+    VENUES --> EC
+
+    EC --> QUEUE --> RAW --> NORM
+    REF --> ENR
+    CFG --> CONF
+    CONF --> ENR
+    CONF --> RULES
+    CONF --> VAL
+
+    NORM --> ENR --> RULES --> GEN --> DUP --> VAL
+    VAL --> SUB
+    VAL --> EXC
+    DQ --> EXC
+
+    SUB --> CAT --> ACK --> ERR
+    ACK --> REC
+    ERR --> REC
+
+    REC --> CORR --> REPLAY --> SUB
+    REC --> AUDIT
+    CORR --> AUDIT
+    REPLAY --> AUDIT
+
+    SUB --> MON
+    ACK --> MON
+    ERR --> MON
+    REC --> MON
+    MON --> ALERT
+
+    REC --> DASH
+    ERR --> DASH
+    ACK --> DASH
+    DASH --> REPORTS
