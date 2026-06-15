@@ -227,6 +227,17 @@ const Blogs = () => {
     setActiveKeyword("All")
   }, [activeTopic])
 
+  useEffect(() => {
+    if (groupedBlogs[activeTopic].length > 0) {
+      return
+    }
+
+    const firstTopicWithPosts = topicOrder.find((topic) => groupedBlogs[topic].length > 0)
+    if (firstTopicWithPosts && firstTopicWithPosts !== activeTopic) {
+      setActiveTopic(firstTopicWithPosts)
+    }
+  }, [activeTopic, groupedBlogs])
+
   return (
     <main className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-white text-[#13202b]">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-50" />
@@ -282,7 +293,7 @@ const Blogs = () => {
               </div>
               <div className="flex flex-wrap items-end gap-2 self-end text-[0.68rem] text-[#687580]">
                 <span className="rounded-full border border-[#e5ebf0] bg-[#fbfcfd] px-3 py-1">
-                  {visibleBlogs.length} result{visibleBlogs.length === 1 ? "" : "s"}
+                  {activeBlogs.length} result{activeBlogs.length === 1 ? "" : "s"}
                 </span>
                 {query.trim() && (
                   <button

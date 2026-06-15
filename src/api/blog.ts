@@ -6,6 +6,38 @@ type RawBlog = Omit<Partial<Blog>, "blog_type"> & {
   blog_type?: string
 }
 
+const normalizeBlogType = (value?: string): Blog["blog_type"] => {
+  const normalized = value
+    ?.trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+  if (!normalized) {
+    return "AI"
+  }
+
+  if (normalized === "physics" || normalized.includes("science") || normalized.includes("health")) {
+    return "Science and Health Tech"
+  }
+
+  if (normalized.includes("software")) {
+    return "Software Engineering"
+  }
+
+  if (normalized.includes("hardware")) {
+    return "Hardware"
+  }
+
+  if (normalized === "ai" || normalized.includes("artificial intelligence")) {
+    return "AI"
+  }
+
+  return "AI"
+}
+
 const normalizeSection = (section: Partial<BlogSection>): BlogSection => ({
   id: section.id ?? `section-${Math.random().toString(36).slice(2, 10)}`,
   title: section.title ?? "Untitled Section",
@@ -29,14 +61,7 @@ const normalizeBlog = (blog: RawBlog): Blog => ({
   description: blog.description ?? "",
   content: blog.content ?? undefined,
   external_url: blog.external_url ?? undefined,
-  blog_type:
-    blog.blog_type === "Physics"
-      ? "Science and Health Tech"
-      : blog.blog_type === "Hardware" ||
-          blog.blog_type === "Science and Health Tech" ||
-          blog.blog_type === "Software Engineering"
-        ? blog.blog_type
-        : "AI",
+  blog_type: normalizeBlogType(blog.blog_type),
   status: blog.status === "draft" ? "draft" : "published",
   tags: Array.isArray(blog.tags) ? blog.tags.filter(Boolean) : [],
   sections: Array.isArray(blog.sections)

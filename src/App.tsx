@@ -12,6 +12,8 @@ import Games from "./pages/games/Games"
 import Artion from "./pages/Artion"
 import NameToBinary from "./pages/games/NameToBinary"
 import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
+import RegulatoryEventReporting from "./pages/RegulatoryEventReporting"
+import OrderFlowReliability from "./pages/OrderFlowReliability"
 
 const App = () => {
   return (
@@ -29,6 +31,8 @@ const App = () => {
           <Route path="/blogs/:slug" element={<BlogPost />} />
           <Route path="/artion" element={<Artion />} />
           <Route path="/projects/ecg-triage-intelligence" element={<ECGTriageIntelligence />} />
+          <Route path="/projects/regulatory-event-reporting" element={<RegulatoryEventReporting />} />
+          <Route path="/projects/order-flow-reliability" element={<OrderFlowReliability />} />
           <Route path="/games" element={<Games />} />
           <Route path="/artionNextGen" element={<Navigate to="/projects/ecg-triage-intelligence" replace />} />
           <Route path="/games/name-to-binary" element={<NameToBinary />} />

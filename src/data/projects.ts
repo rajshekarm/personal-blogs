@@ -92,6 +92,49 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: "regulatory-event-reporting",
+    title: "Regulatory Event Reporting Pipeline",
+    category: "financial",
+    featured: true,
+    summary:
+      "Anonymized capital markets case study focused on sequencing, reconciling, and submitting millions of order events into compliant daily reports.",
+    bullets: [
+      "Built event processing flows that normalized and sequenced millions of daily order lifecycle events before downstream reporting",
+      "Handled late, duplicate, and out-of-order records with reconciliation rules designed for correctness first",
+      "Created deterministic replay and recovery paths so failed processing windows could be regenerated without manual reconstruction",
+    ],
+    tech: ["Java", "SQL", "Distributed Systems", "Event Processing", "Reconciliation", "Recovery"],
+    link: {
+      href: "/projects/regulatory-event-reporting",
+      label: "Open Case Study",
+    },
+    media: {
+      type: "image",
+      src: "/projects/regulatory-event-reporting.svg",
+    },
+  },
+  {
+    id: "order-flow-reliability",
+    title: "Order Flow Reliability & Replay Platform",
+    category: "financial",
+    summary:
+      "Anonymized trading systems case study on throughput, safe replay, and operator tooling for high-volume order workflows.",
+    bullets: [
+      "Improved a message pipeline to 8,500 messages a second with zero loss by removing bottlenecks and tightening recovery behavior",
+      "Designed replay-oriented recovery paths so operators could restore system state without introducing duplicate downstream actions",
+      "Added internal visibility around flow health, backlog, and failure handling to reduce manual intervention during incidents",
+    ],
+    tech: ["Java", "Messaging", "Observability", "Distributed Systems", "Replay", "Low Latency"],
+    link: {
+      href: "/projects/order-flow-reliability",
+      label: "Open Case Study",
+    },
+    media: {
+      type: "image",
+      src: "/projects/order-flow-reliability.svg",
+    },
+  },
+  {
     id: "realtime-chat",
     title: "Real-time Chat Application",
     category: "financial",

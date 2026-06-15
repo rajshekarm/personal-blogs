@@ -121,6 +121,8 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
         ? "Education"
       : pathname === "/projects"
         ? "Projects"
+        : pathname.startsWith("/projects/")
+          ? "Project"
         : pathname === "/contact"
           ? "Contact"
           : pathname === "/blogs"
@@ -133,9 +135,7 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
                   ? "Artion"
                   : pathname === "/artionNextGen"
                     ? "ECG AI"
-                    : pathname === "/projects/ecg-triage-intelligence"
-                      ? "ECG Intelligence"
-      : "Home"
+                    : "Home"
 
   const handleClose = () => navigate("/")
   const handleMinimize = () => navigate("/")

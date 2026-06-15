@@ -37,6 +37,16 @@ const PROJECT_STYLES: Record<
     accent: "from-violet-300/12 to-transparent",
     border: "border-violet-200/30",
   },
+  "regulatory-event-reporting": {
+    tint: "from-amber-400/14 via-white/10 to-white/6",
+    accent: "from-amber-300/12 to-transparent",
+    border: "border-amber-200/30",
+  },
+  "order-flow-reliability": {
+    tint: "from-indigo-400/14 via-white/10 to-white/6",
+    accent: "from-indigo-300/12 to-transparent",
+    border: "border-indigo-200/30",
+  },
   "realtime-chat": {
     tint: "from-sky-400/14 via-white/10 to-white/6",
     accent: "from-sky-300/12 to-transparent",
@@ -72,6 +82,10 @@ const SHAPE_CLIPS: Record<string, string> = {
     "polygon(6% 0%, 94% 0%, 100% 8%, 100% 94%, 92% 100%, 8% 100%, 0% 94%, 0% 8%)",
   "gpu-medical-image-processing":
     "polygon(0% 14%, 12% 0%, 100% 0%, 100% 86%, 88% 100%, 0% 100%)",
+  "regulatory-event-reporting":
+    "polygon(0% 10%, 12% 0%, 92% 0%, 100% 12%, 100% 90%, 88% 100%, 8% 100%, 0% 88%)",
+  "order-flow-reliability":
+    "polygon(8% 0%, 100% 0%, 100% 88%, 92% 100%, 0% 100%, 0% 14%)",
   "realtime-chat":
     "polygon(10% 0%, 100% 0%, 100% 84%, 90% 100%, 0% 100%, 0% 12%)",
   "llm-cache":
@@ -86,6 +100,8 @@ const SIZE_PRESETS: Record<string, { w: number; h: number }> = {
   "icu-event-processing": { w: 370, h: 460 },
   "medical-image-analysis": { w: 380, h: 470 },
   "gpu-medical-image-processing": { w: 340, h: 430 },
+  "regulatory-event-reporting": { w: 360, h: 450 },
+  "order-flow-reliability": { w: 350, h: 430 },
   "realtime-chat": { w: 330, h: 400 },
   "llm-cache": { w: 330, h: 400 },
   jarvis: { w: 340, h: 420 },

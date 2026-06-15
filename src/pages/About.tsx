@@ -124,10 +124,10 @@ const About = () => {
             <div className="mt-5 h-[2px] w-9 bg-[#5992C6]/80 lg:mx-0" />
 
             <p className={`mt-5 text-[0.92rem] leading-7 ${mutedTextClass}`}>
-              I build reliable backend systems and software that stays readable, maintainable, and calm under pressure.
+              I build reliable systems and the software around them - from event-driven backends to the interfaces people actually use.
             </p>
             <p className={`mt-4 text-[0.68rem] uppercase tracking-[0.24em] ${subtleTextClass}`}>
-              Backend systems, software engineering, selective ML
+              Distributed systems, streaming, full-stack engineering
             </p>
 
             <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -195,16 +195,38 @@ const About = () => {
               <h2
                 className={`mt-4 max-w-3xl font-sans text-[1.85rem] font-light leading-[1] tracking-[-0.04em] md:text-[2.2rem] lg:text-[2.55rem] ${isDark ? "text-slate-50" : "text-slate-900"}`}
               >
-                Backend systems.
+                Distributed systems.
                 <br />
-                Thoughtful software.
+                Full-stack engineering.
                 <br />
-                Selective ML.
+                Event-driven software.
               </h2>
 
               <p className={`mt-5 max-w-2xl text-[0.88rem] leading-7 ${mutedTextClass}`}>
-                I enjoy building reliable software that feels clear, stable, and useful. Most of my work is in backend engineering and system design, with machine learning used selectively when it improves the product.
+                I&apos;m a software engineer with over five years building large-scale systems in capital markets. Most of that was at SS&amp;C Eze, where I worked on FINRA CAT and OATS regulatory reporting - pipelines that turned millions of daily trading events into compliant submissions - and later on the EMS trading team, building low-latency systems that handled massive order volumes. I care about the parts of engineering that matter over time: correctness under load, recovery when things break, and code that stays readable a year later.
               </p>
+
+              <div className="mt-8 max-w-3xl space-y-6">
+                <div>
+                  <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.24em] ${subtleTextClass}`}>What I Do</p>
+                  <p className={`mt-2 text-[0.88rem] leading-7 ${mutedTextClass}`}>
+                    My work spans the full stack. On the backend, I design distributed systems, streaming pipelines, and APIs - things like out-of-order event handling, deterministic replay for recovery, and a Kafka pipeline I scaled to 8,500 messages a second with zero loss. On the front end, I build the tools and self-service platforms that put that power in users&apos; hands, with React and clean, maintainable interfaces. I reach for machine learning when it genuinely improves the product, not for its own sake.
+                  </p>
+                </div>
+
+                <div>
+                  <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.24em] ${subtleTextClass}`}>How I Work</p>
+                  <p className={`mt-2 text-[0.88rem] leading-7 ${mutedTextClass}`}>
+                    I like turning complex, manual processes into systems that are easier to run and trust, so people can spend more time on judgment and less on repetition. I value clarity over cleverness, systems that fail gracefully, and software that stays steady under pressure. After SS&amp;C, I completed an MS in Computer Science at Illinois Tech and have been building real-time AWS pipelines and applied AI products.
+                  </p>
+                </div>
+
+                <div>
+                  <p className={`text-[0.88rem] leading-7 ${mutedTextClass}`}>
+                    I&apos;m always happy to talk about distributed systems, streaming, or anything event-driven. You can find my work in Projects, or reach me through Contact.
+                  </p>
+                </div>
+              </div>
 
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
@@ -218,16 +240,16 @@ const About = () => {
                   Projects
                   <ArrowUpRight className="h-4 w-4" />
                 </Link>
-              <Link
-                to="/experience"
-                className={`rounded-full border px-5 py-2.5 text-[0.95rem] font-medium transition ${
-                  isDark
-                    ? "border-white/15 bg-white/6 text-slate-100 hover:bg-white/10"
-                    : "border-slate-300 bg-white/18 text-slate-900 hover:bg-white/30"
-                }`}
-              >
+                <Link
+                  to="/experience"
+                  className={`rounded-full border px-5 py-2.5 text-[0.95rem] font-medium transition ${
+                    isDark
+                      ? "border-white/15 bg-white/6 text-slate-100 hover:bg-white/10"
+                      : "border-slate-300 bg-white/18 text-slate-900 hover:bg-white/30"
+                  }`}
+                >
                   Experience
-              </Link>
+                </Link>
               </div>
             </div>
 

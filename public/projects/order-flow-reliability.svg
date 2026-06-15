@@ -1,0 +1,35 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="48" fill="#0B1120"/>
+  <rect x="36" y="36" width="1128" height="728" rx="36" fill="url(#bg)"/>
+  <path d="M120 200H1080" stroke="#334155" stroke-width="2"/>
+  <path d="M120 600H1080" stroke="#334155" stroke-width="2"/>
+  <rect x="130" y="250" width="270" height="300" rx="28" fill="#111827" stroke="#818CF8" stroke-opacity="0.35" stroke-width="2"/>
+  <rect x="465" y="170" width="270" height="460" rx="28" fill="#111827" stroke="#60A5FA" stroke-opacity="0.35" stroke-width="2"/>
+  <rect x="800" y="250" width="270" height="300" rx="28" fill="#111827" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="2"/>
+  <text x="180" y="315" fill="#C7D2FE" font-family="Arial, sans-serif" font-size="26" font-weight="700">Ingest</text>
+  <text x="550" y="235" fill="#BFDBFE" font-family="Arial, sans-serif" font-size="26" font-weight="700">Recover</text>
+  <text x="880" y="315" fill="#BAE6FD" font-family="Arial, sans-serif" font-size="26" font-weight="700">Observe</text>
+  <path d="M400 400H465" stroke="#818CF8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M735 400H800" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="465" cy="400" r="18" fill="#818CF8"/>
+  <circle cx="800" cy="400" r="18" fill="#38BDF8"/>
+  <path d="M560 520C590 470 610 470 640 520C670 570 690 570 720 520" stroke="#60A5FA" stroke-width="10" stroke-linecap="round"/>
+  <rect x="172" y="360" width="186" height="20" rx="10" fill="#1F2937"/>
+  <rect x="172" y="400" width="150" height="20" rx="10" fill="#1F2937"/>
+  <rect x="172" y="440" width="170" height="20" rx="10" fill="#1F2937"/>
+  <rect x="507" y="300" width="186" height="20" rx="10" fill="#1F2937"/>
+  <rect x="507" y="340" width="150" height="20" rx="10" fill="#1F2937"/>
+  <rect x="507" y="380" width="170" height="20" rx="10" fill="#1F2937"/>
+  <rect x="507" y="420" width="150" height="20" rx="10" fill="#1F2937"/>
+  <rect x="842" y="360" width="186" height="20" rx="10" fill="#1F2937"/>
+  <rect x="842" y="400" width="150" height="20" rx="10" fill="#1F2937"/>
+  <rect x="842" y="440" width="170" height="20" rx="10" fill="#1F2937"/>
+  <rect x="88" y="92" width="258" height="52" rx="18" fill="#0B1220" stroke="#60A5FA" stroke-opacity="0.25"/>
+  <text x="122" y="125" fill="#F8FAFC" font-family="Arial, sans-serif" font-size="24" font-weight="700">8,500 msgs/sec, zero loss</text>
+  <defs>
+    <linearGradient id="bg" x1="84" y1="72" x2="1085" y2="717" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+</svg>
