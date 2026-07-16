@@ -15,7 +15,27 @@ import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 import RegulatoryEventReporting from "./pages/RegulatoryEventReporting"
 import OrderFlowReliability from "./pages/OrderFlowReliability"
 
+const MAINTENANCE_MODE = true;
+
 const App = () => {
+  
+  if (MAINTENANCE_MODE) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1>Hi there, Thank you visting 🚧 Under Maintenance</h1>
+        <p>We'll be back soon.</p>
+      </div>
+    );
+  }
+  
   return (
     <BrowserRouter>
       <DesktopShell>
