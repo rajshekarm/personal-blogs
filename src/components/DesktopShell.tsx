@@ -53,11 +53,11 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
-      return "dark"
+      return "light"
     }
 
     const storedTheme = window.localStorage.getItem("desktop-theme")
-    return storedTheme === "light" ? "light" : "dark"
+    return storedTheme === "dark" ? "dark" : "light"
   })
 
   const currentTime = new Date().toLocaleTimeString([], {
@@ -75,7 +75,9 @@ const DesktopShell = ({ children }: { children: ReactNode }) => {
   const shellClass = useMemo(
     () =>
       hideChrome
-        ? "bg-white text-black"
+        ? isDark
+          ? "bg-[radial-gradient(circle_at_top,_rgba(89,146,198,0.16),_transparent_28%),linear-gradient(180deg,_#07111f,_#0d1728)] text-slate-100"
+          : "bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.96),_transparent_28%),linear-gradient(180deg,_#f7f7f4,_#e9eef3)] text-slate-900"
         : isDark
           ? "bg-[radial-gradient(circle_at_top_left,_rgba(89,146,198,0.26),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(89,146,198,0.12),_transparent_24%),linear-gradient(180deg,_#08111f,_#101b2f)] text-slate-100"
           : "bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_transparent_28%),linear-gradient(180deg,_#f1f5f7,_#dbe4ea)] text-slate-900",

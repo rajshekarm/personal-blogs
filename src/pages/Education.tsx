@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type RefObject, type WheelEvent } from "react"
 import { ArrowLeft, CalendarDays, GraduationCap, Plus } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useDesktopTheme } from "../components/desktopTheme"
 
 type EditorialImageProps = {
   src: string
@@ -145,10 +146,12 @@ const ChapterSection = ({
   chapter,
   index,
   scrollRootRef,
+  isDark,
 }: {
   chapter: Chapter
   index: number
   scrollRootRef: RefObject<HTMLElement | null>
+  isDark: boolean
 }) => {
   const sectionRef = useRef<HTMLElement | null>(null)
   const [isVisible, setIsVisible] = useState(false)
@@ -194,29 +197,52 @@ const ChapterSection = ({
           isVisible ? "translate-y-0 opacity-100 blur-0" : "translate-y-10 opacity-0 blur-[2px]"
         }`}
       >
-        <div className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.28em] text-black">
+        <div
+          className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.28em] ${
+            isDark
+              ? "border-sky-300/18 bg-slate-950/70 text-slate-100 shadow-[0_10px_24px_rgba(8,17,31,0.18)]"
+              : "border-sky-200 bg-white text-slate-900 shadow-[0_10px_24px_rgba(15,23,42,0.05)]"
+          }`}
+        >
           <GraduationCap className="h-4 w-4" />
           {chapter.label}
         </div>
 
         <div className="space-y-4">
-          <p className="text-[0.72rem] uppercase tracking-[0.42em] text-black/55">
+          <p className={`text-[0.72rem] uppercase tracking-[0.42em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
             Chapter {String(index + 1).padStart(2, "0")}
           </p>
-          <h2 className="max-w-xl text-3xl font-semibold leading-[0.95] tracking-tight text-black sm:text-4xl lg:text-5xl">
+          <h2
+            className={`max-w-xl text-3xl font-semibold leading-[0.95] tracking-tight sm:text-4xl lg:text-5xl ${
+              isDark ? "text-slate-50" : "text-slate-900"
+            }`}
+          >
             {chapter.title}
           </h2>
-          <p className="max-w-xl text-sm leading-7 text-black/70 sm:text-base">{chapter.summary}</p>
+          <p className={`max-w-xl text-sm leading-7 sm:text-base ${isDark ? "text-slate-300" : "text-slate-600"}`}>
+            {chapter.summary}
+          </p>
         </div>
 
-        <div className="grid max-w-xl gap-3 rounded-[1.75rem] border border-black/10 bg-white p-4">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-[0.26em] text-black/60">
+        <div
+          className={`grid max-w-xl gap-3 rounded-[1.75rem] border p-4 ${
+            isDark ? "border-slate-700/70 bg-slate-950/55" : "border-slate-200 bg-white/85"
+          }`}
+        >
+          <div className={`flex items-center gap-2 text-xs uppercase tracking-[0.26em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
             <CalendarDays className="h-4 w-4" />
             {formatDate(chapter.date)}
           </div>
           <div className="grid gap-2 sm:grid-cols-2">
             {chapter.tags.map((item) => (
-              <div key={item} className="rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm font-medium text-black">
+              <div
+                key={item}
+                className={`rounded-2xl border px-3 py-2 text-sm font-medium ${
+                  isDark
+                    ? "border-slate-700/70 bg-slate-900/75 text-slate-200"
+                    : "border-slate-200 bg-white text-slate-700"
+                }`}
+              >
                 {item}
               </div>
             ))}
@@ -230,7 +256,13 @@ const ChapterSection = ({
         }`}
         style={{ transitionDelay: isVisible ? "220ms" : "0ms" }}
       >
-        <div className="absolute inset-x-4 top-10 h-[31rem] rounded-[2.5rem] border border-black/10 bg-white" />
+        <div
+          className={`absolute inset-x-4 top-10 h-[31rem] rounded-[2.5rem] border ${
+            isDark
+              ? "border-slate-700/60 bg-slate-950/55 shadow-[0_20px_45px_rgba(8,17,31,0.2)]"
+              : "border-slate-200 bg-white shadow-[0_20px_45px_rgba(15,23,42,0.05)]"
+          }`}
+        />
 
         {chapter.frames.map((frame) => (
           <EditorialImage
@@ -251,6 +283,7 @@ const ChapterSection = ({
 const Education = () => {
   const scrollRootRef = useRef<HTMLElement | null>(null)
   const wheelLockRef = useRef(false)
+  const { isDark } = useDesktopTheme()
 
   const scrollToChapter = (direction: 1 | -1) => {
     const root = scrollRootRef.current
@@ -299,13 +332,27 @@ const Education = () => {
     <section
       ref={scrollRootRef}
       onWheel={handleWheel}
-      className="relative h-screen snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth bg-white px-4 pb-12 pt-6 text-black md:px-6 md:pt-8"
+      className={`relative h-screen snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth px-4 pb-12 pt-6 md:px-6 md:pt-8 ${
+        isDark
+          ? "bg-[radial-gradient(circle_at_top,_rgba(89,146,198,0.16),_transparent_28%),linear-gradient(180deg,_#07111f,_#0d1728)] text-slate-100"
+          : "bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.95),_transparent_28%),linear-gradient(180deg,_#f7f7f4,_#e9eef3)] text-slate-900"
+      }`}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-50" />
+      <div
+        className={`pointer-events-none absolute inset-0 opacity-50 ${
+          isDark
+            ? "bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:40px_40px]"
+            : "bg-[linear-gradient(to_right,rgba(15,23,42,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"
+        }`}
+      />
 
       <Link
         to="/"
-        className="fixed left-4 top-4 z-40 inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/12 bg-white text-black transition hover:bg-black hover:text-white"
+        className={`fixed left-4 top-4 z-40 inline-flex h-9 w-9 items-center justify-center rounded-full border transition ${
+          isDark
+            ? "border-slate-700/70 bg-slate-950/80 text-slate-100 hover:bg-sky-400 hover:text-slate-950"
+            : "border-slate-200 bg-white text-slate-900 hover:bg-slate-900 hover:text-white"
+        }`}
         aria-label="Back to home"
         title="Back to home"
       >
@@ -315,7 +362,13 @@ const Education = () => {
       <div className="relative z-10 mx-auto max-w-[1500px] pt-4">
         <div className="mt-8 space-y-10">
           {sortedChapters.map((chapter, index) => (
-            <ChapterSection key={chapter.id} chapter={chapter} index={index} scrollRootRef={scrollRootRef} />
+            <ChapterSection
+              key={chapter.id}
+              chapter={chapter}
+              index={index}
+              scrollRootRef={scrollRootRef}
+              isDark={isDark}
+            />
           ))}
         </div>
       </div>
@@ -323,11 +376,19 @@ const Education = () => {
       <button
         type="button"
         onClick={() => scrollToChapter(1)}
-        className="fixed bottom-4 left-1/2 z-30 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-black/12 bg-white px-3 py-2 text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black shadow-[0_10px_26px_rgba(0,0,0,0.06)] transition hover:-translate-y-0.5 hover:bg-black hover:text-white"
+        className={`fixed bottom-4 left-1/2 z-30 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border px-3 py-2 text-[0.68rem] font-medium uppercase tracking-[0.2em] shadow-[0_10px_26px_rgba(0,0,0,0.06)] transition hover:-translate-y-0.5 ${
+          isDark
+            ? "border-slate-700/70 bg-slate-950/80 text-slate-100 hover:bg-sky-400 hover:text-slate-950"
+            : "border-slate-200 bg-white text-slate-900 hover:bg-slate-900 hover:text-white"
+        }`}
         aria-label="Scroll for more"
         title="Scroll for more"
       >
-        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-black/10 bg-white">
+        <span
+          className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${
+            isDark ? "border-slate-700/60 bg-slate-900 text-slate-100" : "border-slate-200 bg-white text-slate-900"
+          }`}
+        >
           <Plus className="h-3 w-3 animate-pulse" />
         </span>
         Scroll for more
@@ -335,7 +396,11 @@ const Education = () => {
 
       <Link
         to="/blogs/new"
-        className="fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-full border border-black/12 bg-white px-3 py-2 text-[0.68rem] font-medium uppercase tracking-[0.2em] text-black shadow-[0_10px_26px_rgba(0,0,0,0.06)] transition hover:-translate-y-0.5 hover:bg-black hover:text-white"
+        className={`fixed bottom-4 right-4 z-30 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-[0.68rem] font-medium uppercase tracking-[0.2em] shadow-[0_10px_26px_rgba(0,0,0,0.06)] transition hover:-translate-y-0.5 ${
+          isDark
+            ? "border-slate-700/70 bg-slate-950/80 text-slate-100 hover:bg-sky-400 hover:text-slate-950"
+            : "border-slate-200 bg-white text-slate-900 hover:bg-slate-900 hover:text-white"
+        }`}
         aria-label="Add achievement"
         title="Add achievement"
       >
