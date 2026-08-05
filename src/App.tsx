@@ -15,7 +15,7 @@ import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 import RegulatoryEventReporting from "./pages/RegulatoryEventReporting"
 import OrderFlowReliability from "./pages/OrderFlowReliability"
 
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 const App = () => {
   

@@ -30,8 +30,8 @@ const timelineEntries = [
   },
   {
     year: "2023",
-    role: "Software Engineer - Backend (C++, Python)",
-    org: "SS&C Eze",
+    role: "Software Engineer II",
+    org: "JP Morgan Securities",
     period: "Aug 2020 - Jul 2023",
     side: "left" as const,
     tone: "bg-[#1f67b4]",
