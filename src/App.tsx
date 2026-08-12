@@ -33,11 +33,7 @@ const App = () => {
        <h1>Hi there, thanks for visiting.</h1>
 
 <p>
-  I'm Rajashekar, a Software Engineer with over five years of experience building customer-facing products and internal tools across a variety of projects.
-
-I'm passionate about technology and currently exploring Artificial Intelligence and how it can be applied to solve meaningful, real-world problems.
-
-I'm glad you're here — let me show you a little more about who I am and what I do..
+  I'm Rajashekar, a Software Engineer with over five years of experience building customer-facing products and internal tools across a variety of projects. I'm passionate about technology and currently exploring Artificial Intelligence and how it can be applied to solve meaningful, real-world problems.I'm glad you're here — let me show you a little more about who I am and what I do..
 </p>
       </div>
     );
