@@ -30,8 +30,13 @@ const App = () => {
           flexDirection: "column",
         }}
       >
-        <h1>Hi there, Thank you visting I am Rajashekar, </h1>
-        <p>a professional Software Engineer with over five years of experience working across mutiple projects developing both customer facing products and internal tools. I am passionate about technology right now Artificial Intelligence and its application to solve problems.</p>
+       <h1>Hi there, thanks for visiting.</h1>
+
+<p>
+  I'm Rajashekar, a Software Engineer with over 5 years of experience building
+  customer-facing products and internal tools. I'm passionate about technology
+  and currently exploring how AI can be used to solve real-world problems.
+</p>
       </div>
     );
   }
