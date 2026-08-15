@@ -14,8 +14,11 @@ import NameToBinary from "./pages/games/NameToBinary"
 import ECGTriageIntelligence from "./pages/ECGTriageIntelligence"
 import RegulatoryEventReporting from "./pages/RegulatoryEventReporting"
 import OrderFlowReliability from "./pages/OrderFlowReliability"
+import BlogsPage from "./pages/blogs/BlogsPage"
+import CreateBlogPage from "./pages/blogs/CreateBlog"
+import BlogArticlePage from "./pages/blogs/BlogArticlePage"
 
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 const App = () => {
   
@@ -50,8 +53,8 @@ const App = () => {
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/blogs/new" element={<NewBlog />} />
-          <Route path="/blogs/:slug" element={<BlogPost />} />
+          <Route path="/blogs/new" element={<CreateBlogPage />} />
+          <Route path="/blogs/:slug" element={<BlogArticlePage />} />
           <Route path="/artion" element={<Artion />} />
           <Route path="/projects/ecg-triage-intelligence" element={<ECGTriageIntelligence />} />
           <Route path="/projects/regulatory-event-reporting" element={<RegulatoryEventReporting />} />
@@ -59,6 +62,10 @@ const App = () => {
           <Route path="/games" element={<Games />} />
           <Route path="/artionNextGen" element={<Navigate to="/projects/ecg-triage-intelligence" replace />} />
           <Route path="/games/name-to-binary" element={<NameToBinary />} />
+          <Route
+          path="/blogspage"
+          element={<BlogsPage />}
+        />
         </Routes>
       </DesktopShell>
     </BrowserRouter>

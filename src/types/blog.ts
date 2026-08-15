@@ -26,3 +26,25 @@ export type Blog = {
   created_at: string
   updated_at: string
 }
+
+export type BlogArticle = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  excerpt: string;
+  slug: string;
+
+  category: string;
+  tags: string[];
+
+  author: {
+    name: string;
+    avatar?: string;
+  };
+
+  publishedAt: string;
+  readingTime: number;
+
+  coverImage?: string;
+  featured?: boolean;
+};
